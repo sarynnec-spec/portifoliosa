@@ -1,0 +1,173 @@
+/* ==========================================================================
+   A personagem enche a secção do contacto. Três camadas sobrepostas — imagem,
+   clip do olhar, clip da reação — todas no mesmo enquadramento, para que
+   trocar de uma para a outra não mexa um píxel.
+   ========================================================================== */
+
+.root {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.camada {
+  position: absolute;
+  inset: 0;
+  /* A caixa do elemento passa a ter exactamente a forma do clip (16:9, altura
+     toda, centrada pelas margens automáticas). Assim a borda da caixa é a
+     borda da imagem, e o `clip-path` abaixo consegue aparar o que é preciso —
+     com `width: 100%` cortava as pontas do elemento, longe do vídeo, e não
+     servia de nada. Centrado por margem e não por `transform`, que é onde o
+     JS põe o espelho quando ele olha para a direita. */
+  width: auto;
+  aspect-ratio: 16 / 9;
+  margin-inline: auto;
+  height: 100%;
+  /* `contain`, não `cover`. Medido quadro a quadro: o sapo ocupa 87% da
+     altura do clip, com apenas 6,4% de folga acima da cabeça e 2,8% abaixo
+     dos ténis. Num palco mais largo do que os 16:9 do clip, `cover` tinha de
+     cortar em altura — e com tão pouca folga cortava-lhe mesmo os pés. Assim
+     ele entra sempre inteiro, e o laranja que sobra dos lados é pintado pelo
+     gradiente do palco, que foi amostrado na borda do próprio clip. */
+  /* `cover` numa caixa que já tem a forma do clip é o mesmo que `contain` —
+     preenche-a exactamente, sem cortar nada. */
+  object-fit: cover;
+  /* Ele está ao meio do quadro; manter aí para as duas faixas de laranja
+     ficarem iguais, que é onde assenta o texto. */
+  object-position: 50% 50%;
+  display: block;
+  /* Apara 3px a cada lado. O quadro em si tem as bordas limpas (medido), mas
+     ao escalá-lo de 1280 para ~1100 o browser deixa uma coluna interpolada de
+     1px, 9 níveis mais clara — via-se como um fio na emenda. Cortada, quem
+     fica ali é o gradiente, que está afinado à cor da coluna seguinte. */
+  clip-path: inset(0 3px);
+  /*
+   * Bordas esbatidas em vez de cores acertadas.
+   *
+   * Os dois clips não têm o mesmo fundo, e o laranja da secção estava afinado
+   * clip a clip para disfarçar a emenda. Isso nunca fecha: basta um nível de
+   * diferença e vê-se o rectângulo do vídeo recortado no laranja — era o que
+   * aparecia ao tocar nos contactos, quando entra o clip da reação, que é o
+   * mais escuro dos dois.
+   *
+   * Com as bordas a desvanecer não há emenda nenhuma para se ver, seja qual
+   * for a cor de cada clip. As margens são escolhidas pelos extremos medidos
+   * da personagem (píxel 40 a 684 em 720, ou seja 5,6% a 95%): o desvanecer
+   * começa depois dos ténis e acaba antes dos óculos, e nunca lhe toca.
+   */
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%),
+    linear-gradient(to bottom, transparent 0, #000 4.5%, #000 96.5%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%),
+    linear-gradient(to bottom, transparent 0, #000 4.5%, #000 96.5%, transparent 100%);
+  mask-composite: intersect;
+  /*
+   * Aumentado a pedido — travado em +10%, que é quanto cabe inteiro.
+   *
+   * O número veio de medir os dois clips fotograma a fotograma — 90 amostras,
+   * e não uma. Ele mexe-se: no extremo vai do píxel 40 ao 684 num quadro de
+   * 720, ou seja 89,4% da altura. O teto absoluto é 1/0,894 = 1,118, e as
+   * tentativas anteriores passaram-no: 1,15 cortava os óculos, 1,12 ficava
+   * com 0 px de folga — encostado à borda no fotograma mais extremo. 1,10
+   * deixa 4 px de cada lado. Para ir além disto é o palco que tem de crescer.
+   *
+   * A origem em 61% compensa as folgas desiguais: centra-o no palco em vez
+   * de o encostar a um dos lados.
+   */
+  transform: scaleX(calc(1.10 * var(--espelho, 1))) scaleY(1.10);
+  transform-origin: 50% 61%;
+}
+
+/* O clip da reação vive por cima e só se vê quando o cursor chega aos
+   contactos. */
+.reacao {
+  opacity: 0;
+  transition: opacity 0.16s var(--ease-out);
+}
+
+/* Ligada enquanto o clip da reação estiver a correr — inclusive na parte que
+   toca depois de o rato sair, que é onde ele baixa os braços e bate o pé. */
+.reagindo .reacao {
+  opacity: 1;
+}
+
+/* ==========================================================================
+   Os dois clips não têm o mesmo fundo. Medido nas bordas: o da reação é cerca
+   de 10 níveis de verde mais escuro do que o do olhar. Como o laranja em volta
+   estava afinado só pelo clip do olhar, assim que a reação entrava via-se o
+   rectângulo do vídeo recortado no laranja — degrau de 13 níveis no p95.
+
+   Por isso o laranja em volta troca de afinação ao mesmo tempo que o clip.
+   Valores amostrados no render real com a reação no ar.
+   ========================================================================== */
+
+/* Enquanto a reação está no ar, as faixas laterais usam o fundo dela. */
+.reagindo {
+  background-image:
+    linear-gradient(
+      180deg,
+      #ff5f02 0%,
+      #ff6003 10%,
+      #ff6004 15%,
+      #ff6003 20%,
+      #ff6002 25%,
+      #ff6001 30%,
+      #ff6101 35%,
+      #ff6103 40%,
+      #ff6203 45%,
+      #ff6303 50%,
+      #ff6302 55%,
+      #ff6402 60%,
+      #ff6502 65%,
+      #ff6701 70%,
+      #ff6b02 75%,
+      #ff6f02 80%,
+      #ff7703 85%,
+      #ff7c03 90%,
+      #ff7f04 95%,
+      #ff7e03 100%
+    ),
+    linear-gradient(
+      180deg,
+      #ff6403 0%,
+      #ff6503 10%,
+      #ff6502 15%,
+      #ff6602 30%,
+      #ff6601 35%,
+      #ff6701 40%,
+      #ff6700 45%,
+      #ff6801 60%,
+      #ff6a01 65%,
+      #ff6d02 70%,
+      #ff7002 75%,
+      #ff7404 80%,
+      #ff7b04 85%,
+      #ff8003 90%,
+      #ff8302 95%,
+      #ff8202 100%
+    );
+  background-size: 50.2% 100%, 50.2% 100%;
+  background-position: left top, right top;
+  background-repeat: no-repeat;
+}
+
+@media (max-width: 62rem) {
+  .camada {
+    /* Em estreito volta a encher o palco todo: aqui `cover` aperta pelos
+       lados e a caixa não pode ter a forma do clip. */
+    width: 100%;
+    aspect-ratio: auto;
+    clip-path: none;
+    /* Em ecrãs estreitos o palco é muito mais alto do que largo, e aí `cover`
+       aperta pelos lados, não pela altura — o sapo continua inteiro de cima a
+       baixo. Mantém-se `cover` para ele não encolher para uma tira no meio de
+       um mar de laranja. */
+    object-fit: cover;
+    /* O recorte central engoliria as faixas de laranja; aqui ele encosta ao
+       cimo e o texto fica por baixo. */
+    object-position: 50% 22%;
+  }
+}

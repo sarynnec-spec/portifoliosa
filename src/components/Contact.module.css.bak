@@ -1,0 +1,230 @@
+.section {
+  /* O laranja medido nos cantos da imagem do sapo: (251,100,1) em cima e
+     (253,126,0) em baixo. Fica por baixo enquanto o vídeo não carrega. */
+  background: linear-gradient(180deg, #fb6401 0%, #fd7e00 100%);
+  color: var(--ink);
+  position: relative;
+  padding-block: clamp(5rem, 14vh, 10rem);
+  /* Palco alto que chegue para a personagem se ver a sério. */
+  min-height: min(100svh, 54rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* O palco da personagem: encostado à direita, a toda a altura da secção. */
+.palco {
+  /* A personagem é o fundo da secção inteira, de margem a margem. */
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* O texto fica por cima do palco, encostado à esquerda. O .container centra e
+   limita a 84rem, e isso afastava tudo da margem e empurrava-o para cima do
+   sapo — aqui essa centragem é desfeita. */
+.frente {
+  position: relative;
+  z-index: 1;
+  max-width: none;
+  margin-inline: 0;
+  padding-inline: clamp(1.25rem, 3.2vw, 3.25rem);
+}
+
+/* Onde acaba a faixa laranja livre, calculado e não estimado: na imagem o sapo
+   ocupa x 660..996 de 1672, ou seja 39,5%–59,6% do quadro. Com `cover` numa
+   secção mais alta que 16:9 vê-se a parte central da imagem, e a borda
+   esquerda dele cai por volta dos 36% da largura do ecrã. Tudo o que é texto
+   tem de morrer antes disso. */
+.frente .title,
+.frente .lede,
+.frente .hire,
+.frente .hireSide {
+  max-width: min(100%, 32vw);
+}
+
+@media (max-width: 62rem) {
+  .frente .title,
+  .frente .lede,
+  .frente .hire,
+  .frente .hireSide {
+    /* Em estreito o sapo sobe e o texto fica com o ecrã todo. */
+    max-width: 100%;
+  }
+}
+
+.title {
+  /* Mais pequeno do que nas outras secções: aqui só tem um terço do ecrã. */
+  font-size: clamp(2rem, 4.55vw, 4.15rem);
+  margin-block: 0.9rem 1.15rem;
+}
+
+.lede {
+  color: rgba(20, 19, 15, 0.78);
+  font-size: clamp(0.9rem, 1.15vw, 1.03rem);
+  line-height: 1.6;
+}
+
+.hire {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+.hireSide {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.7rem;
+  /* Sem min-width: era ele que esticava a fila dos botões para cima do sapo. */
+  min-width: 0;
+}
+
+.cta {
+  font-size: clamp(0.9rem, 1.15vw, 1.03rem);
+  padding: 1rem 1.6rem;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.primary,
+.ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1.35rem;
+  font-size: 0.86rem;
+  border: 1px solid transparent;
+  transition:
+    background-color 0.35s var(--ease-out),
+    color 0.35s var(--ease-out),
+    border-color 0.35s var(--ease-out),
+    gap 0.35s var(--ease-out);
+}
+
+/* Sobre laranja o terracota da marca desaparece; a tinta é o que se lê.
+   #14130f sobre este laranja dá 6,6:1, bem acima do mínimo. */
+.primary {
+  background: var(--ink);
+  color: #fff;
+}
+
+.primary:hover {
+  gap: 1rem;
+  background: #fff;
+  color: var(--ink);
+}
+
+.ghost {
+  border-color: rgba(20, 19, 15, 0.4);
+  color: var(--ink);
+  font-family: inherit;
+}
+
+.ghost:hover {
+  border-color: var(--ink);
+  background: rgba(20, 19, 15, 0.08);
+}
+
+.channels {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+  margin-top: clamp(3rem, 7vw, 5rem);
+  border-top: 1px solid rgba(20, 19, 15, 0.28);
+}
+
+.channel {
+  padding: 1.35rem 1.25rem 1.35rem 0;
+  border-bottom: 1px solid rgba(20, 19, 15, 0.28);
+}
+
+.channel + .channel {
+  border-left: 1px solid rgba(20, 19, 15, 0.28);
+  padding-left: 1.25rem;
+}
+
+.channel dt {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(20, 19, 15, 0.62);
+  margin-bottom: 0.45rem;
+}
+
+.channel dd {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.channel a {
+  border-bottom: 1px solid transparent;
+  transition:
+    color 0.3s var(--ease-out),
+    border-color 0.3s var(--ease-out);
+}
+
+.channel a:hover {
+  color: #fff;
+  border-color: #fff;
+}
+
+/* Em ecrãs estreitos o bicho não cabe ao lado do texto: passa a ser um fundo
+   atrás dele, esbatido para o texto continuar legível. */
+@media (max-width: 62rem) {
+  .palco {
+    inset: 0;
+    width: 100%;
+    justify-content: center;
+    align-items: flex-start;
+    padding: clamp(1rem, 6vw, 3rem) 0 0;
+    opacity: 0.42;
+  }
+
+  .section {
+    min-height: 0;
+  }
+}
+
+@media (max-width: 60rem) {
+  .channels {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .channel:nth-child(odd) {
+    border-left: 0;
+    padding-left: 0;
+    padding-right: 1.25rem;
+  }
+
+  .channel:nth-child(even) {
+    border-left: 1px solid rgba(20, 19, 15, 0.28);
+    padding-left: 1.25rem;
+  }
+}
+
+@media (max-width: 34rem) {
+  .channels {
+    grid-template-columns: 1fr;
+  }
+
+  .channel,
+  .channel + .channel {
+    border-left: 0;
+    padding-left: 0;
+  }
+
+  .primary,
+  .ghost {
+    flex: 1 1 100%;
+    justify-content: space-between;
+  }
+}

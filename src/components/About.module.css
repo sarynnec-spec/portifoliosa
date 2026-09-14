@@ -1,0 +1,232 @@
+.section {
+  border-bottom: 1px solid var(--line);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: start;
+}
+
+.copy {
+  display: grid;
+  gap: 1.15rem;
+  max-width: 34rem;
+}
+
+.heading {
+  font-size: var(--step-lg);
+  margin-block: 0.6rem 0.75rem;
+  max-width: 15ch;
+}
+
+.paragraph {
+  color: var(--muted);
+  line-height: 1.68;
+}
+
+.facts {
+  margin-top: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+  border-top: 1px solid var(--line);
+}
+
+.fact {
+  padding: 1rem 1rem 1rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.fact:nth-child(odd) {
+  border-right: 1px solid var(--line);
+  padding-right: 1.25rem;
+}
+
+.fact:nth-child(even) {
+  padding-left: 1.25rem;
+}
+
+.fact dt {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+  margin-bottom: 0.35rem;
+}
+
+.fact dd {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+/* --- Retrato ------------------------------------------------------------- */
+
+.media {
+  position: sticky;
+  top: clamp(5rem, 12vh, 8rem);
+}
+
+/*
+ * `visible` de propósito: a caixa da revelação começa mais larga do que a
+ * moldura — como no reel — e tem de poder transbordar. `container-type`
+ * serve para a fotografia lá dentro se medir por esta moldura e não pela
+ * caixa que está a crescer.
+ */
+.frame {
+  position: relative;
+  overflow: visible;
+  aspect-ratio: 4 / 5;
+  container-type: size;
+}
+
+/* A caixa que revela: é ela que cresce, e o fundo é dela. */
+.revelacao {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+  background: var(--paper-3);
+}
+
+/* A fotografia fica sempre do tamanho final da moldura — daí as unidades de
+   contentor. Se acompanhasse a caixa, esticava em vez de ser revelada. */
+.dentro {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100cqw;
+  height: 100cqh;
+  transform: translate(-50%, -50%);
+}
+
+/* Sobrepostas no mesmo sítio: uma desvanece na outra sem a moldura mexer. */
+.portrait {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 28%;
+  will-change: transform;
+}
+
+/* --- Os quatro pontos dos cantos ----------------------------------------- */
+
+.ponto {
+  position: absolute;
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 50%;
+  background: var(--ink);
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+
+.cimaEsq {
+  left: 0;
+  top: 0;
+}
+
+.cimaDir {
+  left: 100%;
+  top: 0;
+}
+
+.baixoEsq {
+  left: 0;
+  top: 100%;
+}
+
+.baixoDir {
+  left: 100%;
+  top: 100%;
+}
+
+/* --- O traço laranja a correr o contorno --------------------------------- */
+
+.contorno {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.contorno rect {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.5;
+  /* Sem isto o traço esticava com o `preserveAspectRatio: none` e ficava
+     grosso em cima e em baixo, fino nos lados. */
+  vector-effect: non-scaling-stroke;
+  /* Um quinto do perímetro aceso de cada vez; o resto corre à frente dele. */
+  stroke-dasharray: 0.2 0.8;
+  stroke-dashoffset: 1;
+  animation: correContorno 3.4s linear infinite;
+  /* Só depois de a caixa assentar — antes não há contorno para correr. */
+  animation-delay: 0.85s;
+}
+
+@keyframes correContorno {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contorno rect {
+    animation: none;
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+    opacity: 0.5;
+  }
+}
+
+.caption {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+}
+
+@media (max-width: 60rem) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .media {
+    position: static;
+    order: -1;
+    max-width: 26rem;
+  }
+
+  .copy {
+    max-width: none;
+  }
+}
+
+@media (max-width: 34rem) {
+  .facts {
+    grid-template-columns: 1fr;
+  }
+
+  .fact:nth-child(odd) {
+    border-right: 0;
+    padding-right: 0;
+  }
+
+  .fact:nth-child(even) {
+    padding-left: 0;
+  }
+}

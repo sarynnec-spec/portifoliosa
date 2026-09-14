@@ -1,0 +1,39 @@
+/*
+ * Logótipo do LinkedIn na faixa escura do rodapé.
+ * Em repouso fica com a tinta creme do rodapé, para não abrir um buraco de
+ * cor na barra; ao passar, assume o azul da marca.
+ */
+
+.badge {
+  --li: #0a66c2;
+
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  border: 1px solid var(--night-line);
+  transition:
+    background-color 0.35s var(--ease-out),
+    border-color 0.35s var(--ease-out),
+    transform 0.35s var(--ease-out);
+}
+
+.badge svg {
+  width: 1.05rem;
+  height: 1.05rem;
+  fill: var(--night-text);
+  transition: fill 0.35s var(--ease-out);
+}
+
+.badge:hover,
+.badge:focus-visible {
+  background: var(--li);
+  border-color: var(--li);
+  transform: translateY(-2px);
+}
+
+.badge:hover svg,
+.badge:focus-visible svg {
+  fill: #fff;
+}

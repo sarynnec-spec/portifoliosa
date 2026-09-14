@@ -1,0 +1,447 @@
+/* ==========================================================================
+   Carrossel em vidro — peças de social media
+   Blocos de vidro sobre o fundo do site; a peça central acende com um anel
+   de laranja néon que roda à volta dela.
+   ========================================================================== */
+
+@property --anel-ang {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.wrap {
+  --neon: #ff6a00;
+  --neon-2: #ffb02e;
+  --carta-w: clamp(15.6rem, 26.4vw, 22.8rem);
+
+  display: grid;
+  gap: clamp(1rem, 2vw, 1.6rem);
+}
+
+/* --- Palco ---------------------------------------------------------------- */
+
+/*
+ * Fundo do próprio site: o vidro desfoca o que estiver por trás, e o halo
+ * quente da peça central chega para a destacar sem a caixa escura.
+ */
+.palco {
+  position: relative;
+  overflow: hidden;
+  padding-block: clamp(2.25rem, 5vw, 4rem);
+  background: radial-gradient(
+    70% 80% at 50% 50%,
+    rgba(255, 106, 0, 0.07),
+    transparent 70%
+  );
+  perspective: 1400px;
+  perspective-origin: 50% 50%;
+}
+
+.palco:focus-visible {
+  outline: 2px solid var(--neon);
+  outline-offset: -2px;
+}
+
+/* Esbate as peças que saem de cena, em vez de as cortar a direito. */
+.palco::before,
+.palco::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  width: clamp(2rem, 8vw, 7rem);
+  z-index: 6;
+  pointer-events: none;
+}
+
+.palco::before {
+  left: 0;
+  background: linear-gradient(90deg, var(--paper), transparent);
+}
+
+.palco::after {
+  right: 0;
+  background: linear-gradient(270deg, var(--paper), transparent);
+}
+
+.pista {
+  position: relative;
+  height: calc(var(--carta-w) * 1.25);
+  transform-style: preserve-3d;
+}
+
+/* --- Peça ----------------------------------------------------------------- */
+
+.carta {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: var(--carta-w);
+  height: 100%;
+  margin-left: calc(var(--carta-w) / -2);
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  transition:
+    transform 0.55s var(--ease-out),
+    opacity 0.55s var(--ease-out),
+    filter 0.55s var(--ease-out);
+}
+
+/*
+ * Posições fixas por distância à central. Escritas uma a uma em vez de
+ * calculadas: são cinco estados e assim a curva de cada um é legível.
+ */
+.carta[data-desvio="0"] {
+  transform: translate3d(0, 0, 0) rotateY(0deg) scale(1);
+  opacity: 1;
+  z-index: 5;
+  filter: none;
+}
+
+.carta[data-desvio="-1"] {
+  transform: translate3d(-64%, 0, -110px) rotateY(27deg) scale(0.9);
+  opacity: 0.6;
+  z-index: 4;
+  filter: saturate(0.6) contrast(0.92);
+}
+
+.carta[data-desvio="1"] {
+  transform: translate3d(64%, 0, -110px) rotateY(-27deg) scale(0.9);
+  opacity: 0.6;
+  z-index: 4;
+  filter: saturate(0.6) contrast(0.92);
+}
+
+.carta[data-desvio="-2"] {
+  transform: translate3d(-112%, 0, -230px) rotateY(35deg) scale(0.8);
+  opacity: 0.28;
+  z-index: 3;
+  filter: saturate(0.35) contrast(0.88);
+}
+
+.carta[data-desvio="2"] {
+  transform: translate3d(112%, 0, -230px) rotateY(-35deg) scale(0.8);
+  opacity: 0.28;
+  z-index: 3;
+  filter: saturate(0.35) contrast(0.88);
+}
+
+.carta[data-desvio="-3"],
+.carta[data-desvio="3"] {
+  opacity: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.carta[data-desvio="-3"] {
+  transform: translate3d(-150%, 0, -320px) rotateY(38deg) scale(0.72);
+}
+
+.carta[data-desvio="3"] {
+  transform: translate3d(150%, 0, -320px) rotateY(-38deg) scale(0.72);
+}
+
+/* --- Bloco de vidro ------------------------------------------------------- */
+
+.vidro {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  padding: clamp(0.8rem, 1.5vw, 1.25rem);
+  border-radius: 1.1rem;
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  background:
+    linear-gradient(150deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.38) 52%),
+    rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(16px) saturate(1.25);
+  -webkit-backdrop-filter: blur(16px) saturate(1.25);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 22px 50px rgba(20, 19, 15, 0.16);
+  overflow: hidden;
+}
+
+/* Brilho que atravessa o vidro na diagonal, como no vidro real. */
+.vidro::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 41%,
+    rgba(255, 255, 255, 0.16) 47%,
+    transparent 53%
+  );
+  pointer-events: none;
+}
+
+/*
+ * `contain`: as peças vêm em formatos diferentes (1:1, 4:5, 3:4) e cortar
+ * qualquer uma comeria preço ou número de telefone. O vidro fica à vista à
+ * volta da fotografia — é o enquadramento, não um defeito.
+ */
+.vidro img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  border-radius: 0.7rem;
+  display: block;
+}
+
+/* --- Anel de cor da peça central ------------------------------------------ */
+
+.anel {
+  position: absolute;
+  inset: -2px;
+  border-radius: 1.25rem;
+  opacity: 0;
+  transition: opacity 0.7s var(--ease-out);
+  pointer-events: none;
+}
+
+/* A cor corre à volta da peça: é o gradiente cónico que roda, não a peça. */
+.anel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 2px;
+  background: conic-gradient(
+    from var(--anel-ang),
+    var(--neon),
+    var(--neon-2) 22%,
+    #fff3d6 34%,
+    var(--neon) 52%,
+    var(--neon-2) 74%,
+    var(--neon) 100%
+  );
+  /* Só a moldura fica pintada: o miolo é recortado pela máscara. */
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+}
+
+/* Halo por baixo, para a cor tocar no fundo escuro à volta da peça. */
+.anel::after {
+  content: "";
+  position: absolute;
+  inset: -14px;
+  border-radius: 1.75rem;
+  background: conic-gradient(
+    from var(--anel-ang),
+    var(--neon),
+    var(--neon-2) 30%,
+    var(--neon) 60%,
+    var(--neon-2) 100%
+  );
+  filter: blur(20px);
+  opacity: 0.42;
+  z-index: -1;
+}
+
+.carta[data-central] .anel {
+  opacity: 1;
+  animation:
+    anelGira 5.5s linear infinite,
+    anelPulsa 3.2s var(--ease-inout) infinite;
+}
+
+@keyframes anelGira {
+  to {
+    --anel-ang: 360deg;
+  }
+}
+
+@keyframes anelPulsa {
+  50% {
+    filter: brightness(1.22);
+  }
+}
+
+/* --- Barra e pontos ------------------------------------------------------- */
+
+.barra {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.75rem, 2vw, 1.5rem);
+}
+
+.legenda {
+  flex: 1;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.seta {
+  flex: none;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: grid;
+  place-items: center;
+  font-size: 1.4rem;
+  line-height: 1;
+  color: var(--ink);
+  background: none;
+  border: 1px solid var(--line);
+  cursor: pointer;
+  transition:
+    border-color 0.35s var(--ease-out),
+    color 0.35s var(--ease-out),
+    background-color 0.35s var(--ease-out);
+}
+
+.seta:hover,
+.seta:focus-visible {
+  color: var(--neon);
+  border-color: var(--neon);
+  background: rgba(255, 106, 0, 0.08);
+}
+
+.pontos {
+  display: flex;
+  justify-content: center;
+  gap: 0.45rem;
+}
+
+.pontos button {
+  width: 1.9rem;
+  height: 2px;
+  padding: 0;
+  border: 0;
+  background: var(--line-strong);
+  cursor: pointer;
+  transition:
+    background-color 0.4s var(--ease-out),
+    box-shadow 0.4s var(--ease-out);
+}
+
+.pontos button[data-ativo] {
+  background: var(--neon);
+  box-shadow: 0 0 10px rgba(255, 106, 0, 0.7);
+}
+
+/* ==========================================================================
+   Variante "aparelho" — ecrãs de app numa roda
+   As artes de social media ficam numa fila; os aparelhos ficam numa roda, a
+   curvar para trás. Cada peça assenta num ângulo do eixo e vira-se para fora
+   com ele, e os que estão mais longe desfocam — a profundidade de campo é o
+   que faz a roda parecer roda e não recortes encostados.
+   ========================================================================== */
+
+.wrap[data-variante="aparelho"] {
+  --carta-w: clamp(9rem, 15vw, 13.5rem);
+  /*
+   * Raio da roda. A conta que importa é a corda entre peças vizinhas,
+   * 2·R·sen(passo/2): tem de ser maior do que a largura do aparelho, senão
+   * os vizinhos trepam por cima do central. A 1,7 larguras com passo de 40°
+   * a corda dá ~1,16 larguras — abre a curva e deixa ver o intervalo.
+   */
+  --raio: calc(var(--carta-w) * 1.7);
+}
+
+.wrap[data-variante="aparelho"] .palco {
+  perspective: 1150px;
+  perspective-origin: 50% 46%;
+}
+
+.wrap[data-variante="aparelho"] .pista {
+  /* 9 : 19,5 — a proporção do próprio aparelho. */
+  height: calc(var(--carta-w) * 2.1667);
+  /* Recua o eixo todo: assim a peça da frente fica no plano do ecrã, e não
+     a flutuar por cima dele. A inclinação é o ponto de vista da referência. */
+  transform: translateZ(calc(var(--raio) * -1)) rotateX(5deg);
+}
+
+/*
+ * A posição vem toda do ângulo — sem deslocações escritas à mão. Girar e
+ * depois afastar pelo raio é o que põe a peça na circunferência, já virada
+ * para fora.
+ */
+.wrap[data-variante="aparelho"] .carta[data-desvio] {
+  transform: rotateY(var(--ang, 0deg)) translateZ(var(--raio));
+}
+
+.wrap[data-variante="aparelho"] .carta[data-desvio="0"] {
+  opacity: 1;
+  filter: none;
+}
+
+.wrap[data-variante="aparelho"] .carta[data-desvio="-1"],
+.wrap[data-variante="aparelho"] .carta[data-desvio="1"] {
+  opacity: 0.92;
+  filter: blur(1.4px) brightness(0.93);
+}
+
+.wrap[data-variante="aparelho"] .carta[data-desvio="-2"],
+.wrap[data-variante="aparelho"] .carta[data-desvio="2"] {
+  opacity: 0.62;
+  filter: blur(3.4px) brightness(0.86);
+}
+
+.wrap[data-variante="aparelho"] .carta[data-desvio="-3"],
+.wrap[data-variante="aparelho"] .carta[data-desvio="3"] {
+  opacity: 0;
+  filter: blur(5px);
+}
+
+/* Sem laranja nesta variante: o ponto ativo marca-se com a tinta do texto. */
+.wrap[data-variante="aparelho"] .pontos button[data-ativo] {
+  background: var(--ink);
+  box-shadow: none;
+}
+
+.wrap[data-variante="aparelho"] .seta:hover,
+.wrap[data-variante="aparelho"] .seta:focus-visible {
+  color: var(--ink);
+  border-color: var(--line-strong);
+  background: var(--paper-2);
+}
+
+.wrap[data-variante="aparelho"] .palco:focus-visible {
+  outline-color: var(--ink);
+}
+
+@media (max-width: 640px) {
+  .wrap[data-variante="aparelho"] {
+    --carta-w: min(46vw, 11rem);
+  }
+}
+
+/* --- Telemóvel ------------------------------------------------------------ */
+
+@media (max-width: 640px) {
+  .wrap {
+    --carta-w: min(74vw, 18rem);
+  }
+
+  .carta[data-desvio="-2"],
+  .carta[data-desvio="2"] {
+    opacity: 0.22;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .carta {
+    transition-duration: 0.001s;
+  }
+
+  .carta[data-central] .anel {
+    animation: none;
+  }
+}

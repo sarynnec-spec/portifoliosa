@@ -1,0 +1,570 @@
+.section {
+  border-bottom: 1px solid var(--line);
+  overflow: clip;
+}
+
+.head {
+  max-width: 46rem;
+  margin-bottom: clamp(3rem, 7vw, 5.5rem);
+}
+
+.title {
+  font-size: var(--step-xl);
+  margin-block: 0.75rem 1.25rem;
+}
+
+.lede {
+  color: var(--muted);
+}
+
+.list {
+  display: grid;
+  gap: clamp(4rem, 10vw, 8rem);
+}
+
+/* --- Projeto ------------------------------------------------------------- */
+
+.project {
+  display: grid;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.header {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr);
+  align-items: baseline;
+  gap: 0.35rem clamp(1rem, 2.5vw, 2.5rem);
+  border-top: 1px solid var(--line);
+  padding-top: 1.25rem;
+}
+
+.index {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  grid-row: 1 / span 2;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2.25rem, 5.5vw, 4.25rem);
+  line-height: 0.95;
+  letter-spacing: -0.025em;
+}
+
+/*
+ * Nome do projeto com a marca do cliente à frente. A margem que o título
+ * traz passa para esta linha, para o selo e o nome ficarem centrados um
+ * com o outro em vez de o nome subir os 4 px da margem assimétrica.
+ */
+.titleLine {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.7rem, 1.5vw, 1.25rem);
+  min-width: 0;
+  margin-block: 0.75rem 1.25rem;
+}
+
+.titleLine .title {
+  margin-block: 0;
+}
+
+.brandLogo {
+  flex: none;
+  height: clamp(3.5rem, 7.5vw, 5.5rem);
+  width: auto;
+}
+
+/* Com logótipo a linha do nome é alta: a numeração centra-se em vez de
+   assentar na linha de base, que a deixava colada ao topo do selo. */
+.header:has(.titleLine) {
+  align-items: center;
+}
+
+.category {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+  grid-column: 2;
+}
+
+.body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  /* Centrada: encostada ao topo, a coluna de texto ficava muito acima da
+     janela do site e a linha de base das duas não coincidia. */
+  align-items: center;
+}
+
+/* Projetos ímpares invertem a ordem — quebra a monotonia da grelha. */
+.project:nth-child(even) .mediaCol {
+  order: 2;
+}
+
+.mediaCol {
+  min-width: 0;
+}
+
+.cover {
+  display: block;
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: var(--paper-3);
+  padding: 0;
+  aspect-ratio: 4 / 3;
+}
+
+
+
+.project[data-ratio="square"] .cover {
+  aspect-ratio: 1 / 1;
+  max-width: 34rem;
+}
+
+.coverImage {
+  width: 100%;
+  height: 112%;
+  object-fit: cover;
+  object-position: 50% 0%;
+  transition: transform 0.9s var(--ease-out);
+  will-change: transform;
+}
+
+
+.cover:hover .coverImage {
+  transform: scale(1.035);
+}
+
+.zoom {
+  position: absolute;
+  left: 1rem;
+  bottom: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.45rem 0.8rem;
+  background: var(--night);
+  color: var(--night-text);
+  opacity: 0;
+  transform: translateY(0.4rem);
+  transition:
+    opacity 0.4s var(--ease-out),
+    transform 0.4s var(--ease-out);
+}
+
+.cover:hover .zoom,
+.cover:focus-visible .zoom {
+  opacity: 1;
+  transform: none;
+}
+
+.infoCol {
+  display: grid;
+  gap: 1.35rem;
+  align-content: center;
+}
+
+.description {
+  color: var(--muted);
+  font-size: clamp(1.08rem, 1.25vw, 1.28rem);
+  line-height: 1.6;
+  max-width: 60ch;
+}
+
+.highlights {
+  display: grid;
+  gap: 0.7rem;
+  border-top: 1px solid var(--line);
+  padding-top: 1.1rem;
+}
+
+.highlights li {
+  position: relative;
+  padding-left: 1.35rem;
+  font-size: 1.02rem;
+  line-height: 1.5;
+  max-width: 62ch;
+  color: var(--muted);
+}
+
+.highlights li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 0.35rem;
+  height: 0.35rem;
+  background: var(--accent);
+  transform: rotate(45deg);
+}
+
+.stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.stack li {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  padding: 0.35rem 0.65rem;
+  border: 1px solid var(--line);
+  color: var(--muted);
+}
+
+.link {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid var(--line-strong);
+  transition:
+    color 0.3s var(--ease-out),
+    border-color 0.3s var(--ease-out),
+    gap 0.3s var(--ease-out);
+}
+
+.link:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  gap: 0.85rem;
+}
+
+/* --- Janela de site ------------------------------------------------------
+   As capturas são páginas inteiras (até 1:3.9). Em vez de as recortar, a
+   imagem corre de cima até ao fim dentro da moldura: com rato, ao passar por
+   cima; sem rato, sozinha quando entra em vista.
+   -------------------------------------------------------------------------- */
+
+.window {
+  margin: 0;
+  border: 1px solid var(--line);
+  background: var(--paper-3);
+}
+
+.chrome {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.6rem 0.8rem;
+  background: var(--paper-2);
+  border-bottom: 1px solid var(--line);
+}
+
+.dots {
+  display: inline-flex;
+  gap: 0.3rem;
+  flex-shrink: 0;
+}
+
+.dots i {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: var(--line-strong);
+  opacity: 0.55;
+}
+
+.chromeLabel {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.shot {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  overflow: hidden;
+  aspect-ratio: 4 / 5;
+  background: var(--paper-3);
+  cursor: zoom-in;
+}
+
+.shot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 0%;
+  transition: object-position 6.5s ease-in-out;
+}
+
+@media (hover: hover) {
+  .shot:hover img,
+  .shot:focus-visible img {
+    object-position: 50% 100%;
+  }
+}
+
+@media (hover: none) {
+  .window[data-inview] .shot img {
+    object-position: 50% 100%;
+  }
+}
+
+.shot .zoom {
+  left: 50%;
+  transform: translateX(-50%) translateY(0.4rem);
+}
+
+.shot:hover .zoom,
+.shot:focus-visible .zoom {
+  opacity: 1;
+  transform: translateX(-50%);
+}
+
+/* --- Pré-visualização ao vivo (projeto em destaque) ----------------------- */
+
+.livePill {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.livePill::before {
+  content: "";
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: livePulse 2.4s var(--ease-out) infinite;
+}
+
+@keyframes livePulse {
+  50% {
+    opacity: 0.25;
+  }
+}
+
+.liveFrame {
+  height: clamp(22rem, 66svh, 40rem);
+  overflow: hidden;
+  background-size: cover;
+  background-position: 50% 0%;
+  background-color: var(--paper-3);
+}
+
+.liveFrame iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  /* O rato atravessa: nunca prende o scroll da página dentro do iframe. */
+  pointer-events: none;
+}
+
+/* --- Projeto com carrossel ----------------------------------------------- */
+
+/*
+ * A alternância par/ímpar existe para quebrar a monotonia de media-à-esquerda;
+ * numa coluna só ela limitava-se a empurrar a animação para baixo do texto.
+ */
+.project[data-galeria="carrossel"]:nth-child(even) .mediaCol {
+  order: 0;
+}
+
+/* A animação ocupa a largura toda e o texto assenta por baixo dela. */
+.project[data-galeria="carrossel"] .body {
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(1.75rem, 4vw, 3rem);
+  align-items: start;
+}
+
+.project[data-galeria="carrossel"] .infoCol {
+  align-content: start;
+  justify-items: start;
+}
+
+/* --- Projeto em destaque ------------------------------------------------- */
+
+.project[data-featured] .body {
+  grid-template-columns: 1fr;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.project[data-featured] .infoCol {
+  align-content: start;
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  align-items: start;
+  gap: clamp(1.5rem, 4vw, 4rem);
+}
+
+.project[data-featured] .description {
+  max-width: 54ch;
+}
+
+.project[data-featured] .title {
+  font-size: clamp(2.75rem, 7vw, 5.5rem);
+}
+
+@media (max-width: 60rem) {
+  .project[data-featured] .infoCol {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --- Aparelho 3D (projetos de app) --------------------------------------- */
+
+.coverPhone {
+  display: block;
+  width: 100%;
+  padding: 2.5rem 0 1rem;
+  background: none;
+  position: relative;
+  cursor: zoom-in;
+  /* O aparelho gira: precisa de folga para não bater nos limites. */
+  overflow: visible;
+}
+
+.thumbPhone {
+  display: block;
+  width: 100%;
+  padding: 0;
+  background: none;
+  cursor: zoom-in;
+  transition: transform 0.5s var(--ease-out);
+}
+
+.thumbPhone:hover,
+.thumbPhone:focus-visible {
+  transform: translateY(-0.5rem);
+}
+
+.coverPhone .zoom {
+  left: 50%;
+  transform: translateX(-50%) translateY(0.4rem);
+}
+
+.coverPhone:hover .zoom,
+.coverPhone:focus-visible .zoom {
+  opacity: 1;
+  transform: translateX(-50%);
+}
+
+.coverLaptop {
+  display: block;
+  width: 100%;
+  padding: 0;
+  background: none;
+  cursor: zoom-in;
+  overflow: visible;
+}
+
+/* --- Galeria ------------------------------------------------------------- */
+
+.galleryWrap {
+  margin-top: 0.5rem;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+  gap: clamp(0.75rem, 1.5vw, 1.25rem);
+}
+
+.thumb {
+  display: block;
+  width: 100%;
+  padding: 0;
+  overflow: hidden;
+  background: var(--paper-3);
+  aspect-ratio: 1 / 1;
+}
+
+/* Ecrãs de app são estreitos: cabem todos numa linha em ecrãs largos. */
+.project[data-ratio="phone"] .gallery {
+  grid-template-columns: repeat(9, minmax(0, 1fr));
+}
+
+
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 20%;
+  transition:
+    transform 0.8s var(--ease-out),
+    filter 0.5s var(--ease-out);
+}
+
+
+.thumb:hover img {
+  transform: scale(1.05);
+}
+
+.thumbCaption {
+  margin-top: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+}
+
+@media (max-width: 60rem) {
+  .body {
+    grid-template-columns: 1fr;
+  }
+
+  .project:nth-child(even) .mediaCol {
+    order: 0;
+  }
+
+  .project[data-ratio="phone"] .cover,
+  .project[data-ratio="square"] .cover {
+    max-width: none;
+  }
+}
+
+@media (max-width: 68rem) {
+  .project[data-ratio="phone"] .gallery {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 34rem) {
+  .project[data-ratio="phone"] .gallery {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .header {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .index {
+    grid-row: auto;
+  }
+
+  .category {
+    grid-column: 1;
+  }
+
+  .gallery {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

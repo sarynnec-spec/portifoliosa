@@ -1,0 +1,65 @@
+.bar {
+  --speed: 46s;
+  --cell-w: clamp(6.5rem, 10vw, 9rem);
+  --cell-h: clamp(2.4rem, 4vw, 3.25rem);
+  position: relative;
+  overflow: hidden;
+  border-block: 1px solid var(--line);
+  padding-block: clamp(1.1rem, 2.6vw, 1.75rem);
+  background: var(--paper);
+  user-select: none;
+  /* esbatimento nas pontas, para os logos entrarem e saírem sem corte seco */
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 8%,
+    #000 92%,
+    transparent
+  );
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+}
+
+.track {
+  display: flex;
+  width: max-content;
+  animation: slide var(--speed) linear infinite;
+}
+
+.bar:hover .track {
+  animation-play-state: paused;
+}
+
+.group {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--cell-w);
+  height: var(--cell-h);
+  padding-inline: clamp(0.6rem, 1.6vw, 1.1rem);
+}
+
+.logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+@keyframes slide {
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track {
+    animation: none;
+  }
+}

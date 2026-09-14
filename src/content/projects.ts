@@ -1,0 +1,236 @@
+/**
+ * Projetos reais.
+ * Fonte: portfolio-sarynne (secções PULSE, Websites, Trabalhos) + CV.
+ * Cada campo opcional só é preenchido quando a informação existe nos ficheiros.
+ */
+
+export type ProjectImage = {
+  src: string;
+  alt: string;
+  caption?: string;
+};
+
+export type Project = {
+  slug: string;
+  index: string;
+  title: string;
+  category: string;
+  year?: string;
+  description: string;
+  highlights?: string[];
+  stack?: string[];
+  link?: { href: string; label: string };
+  /** URL embebido num iframe: a pré-visualização acompanha o site publicado. */
+  live?: string;
+  /** Projeto principal — ocupa a largura toda no topo da secção. */
+  featured?: boolean;
+  /** Reel vertical reproduzido dentro do aparelho. */
+  video?: string;
+  /** Marca do cliente: aparece antes do nome, no cabeçalho do projeto. */
+  logo?: ProjectImage;
+  cover: ProjectImage;
+  gallery?: ProjectImage[];
+  /**
+   * "carousel": a galeria passa a carrossel em perspetiva, com a peça central
+   * de frente e as vizinhas recuadas. Sem isto, fica a fila de miniaturas.
+   */
+  galleryMode?: "carousel";
+  /** Proporção usada na moldura da capa. */
+  coverRatio: "phone" | "page" | "square" | "laptop" | "video";
+  /**
+   * Só para capturas largas: substitui o 4/5 da moldura de janela, que é
+   * feito para páginas inteiras e cortaria uma tira estreita de um hero.
+   */
+  coverAspect?: string;
+};
+
+export const projects: Project[] = [
+  {
+    slug: "sofia-sales",
+    index: "01",
+    title: "Sofia Sales Clinic",
+    category: "Website · Clínica de Medicina Estética",
+    description:
+      "Site para uma clínica de medicina estética em Rio Tinto, Porto: a direção clínica, os tratamentos de rosto, corpo e pele, a tecnologia de cada protocolo e a experiência da clínica, até à marcação. Percurso de 15 secções em bordô e dourado, com tipografia serifada e movimento contínuo.",
+    highlights: [
+      "Abertura com o logótipo a nascer de um portal de luz, animada em GSAP",
+      "Introdução e rituais atravessam o ecrã na horizontal enquanto se rola a página",
+      "Linhas cinéticas a separar os andamentos, alternando fundo claro e bordô",
+      "Scroll suave em Lenis, cursor próprio e contador de secção fixo, de 00 a 14",
+    ],
+    stack: ["Next.js 15", "React 19", "GSAP", "Identidade visual"],
+    live: "https://sofia-sales-clinic.vercel.app",
+    link: { href: "https://sofia-sales-clinic.vercel.app", label: "Abrir o site" },
+    featured: true,
+    coverRatio: "page",
+    cover: {
+      src: "/media/web/poster-sofia-sales.jpg",
+      alt: "Página inicial do site da Sofia Sales Clinic",
+    },
+  },
+  {
+    slug: "nexus-industrial",
+    index: "02",
+    title: "NEXUS Industrial 3D",
+    category: "Modelação e Visualização 3D · Unidade Fabril",
+    description:
+      "Representação tridimensional de uma nova unidade fabril para a Atlantic Tech Industries: modelação, materiais, iluminação e renderização em Blender. O estudo percorre as oito zonas funcionais, da produção e robótica ao armazém, logística e administração.",
+    highlights: [
+      "Implantação de 60 × 40 m e 12 m de altura, com 2 400 m² de área coberta",
+      "Oito zonas funcionais modeladas: exterior, produção, robótica, qualidade e embalagem, armazém, logística, segurança e administração",
+      "21 renderizações finais, com planta geral e anexo de verificação dimensional",
+      "Materiais e paleta tirados do próprio modelo — sinalética, betão e carcaça de máquina",
+    ],
+    stack: ["Blender", "Modelação 3D", "Render", "Visualização industrial"],
+    link: { href: "/projetos/nexus-industrial/", label: "Ver o estudo completo" },
+    coverRatio: "laptop",
+    cover: {
+      src: "/media/web/nexus-capa.jpg",
+      alt: "Vista aérea da unidade fabril modelada em 3D para a Atlantic Tech Industries",
+    },
+  },
+  {
+    slug: "lode",
+    index: "03",
+    title: "LODÊ",
+    category: "Website · Cabeleireiro de Autor",
+    description:
+      "Site do atelier LODÊ, no Porto — cor de autor, corte à medida e marcação por WhatsApp. Apresenta o atelier, os serviços, os últimos trabalhos e leva o visitante até à marcação.",
+    stack: ["Website", "Marcação online", "Identidade visual"],
+    link: { href: "https://lode-atelier.vercel.app/", label: "Abrir o site" },
+    coverRatio: "page",
+    cover: {
+      src: "/media/web/full-lode.jpg",
+      alt: "Página completa do site do atelier LODÊ",
+    },
+  },
+  {
+    slug: "pulse",
+    index: "04",
+    title: "PULSE",
+    category: "UX/UI Design · App de Ginásio",
+    description:
+      "Design completo de um aplicativo de ginásio: do onboarding ao acompanhamento de treino. Um fluxo pensado para motivar o utilizador a cada sessão, com hierarquia visual clara, identidade energética e componentes reutilizáveis.",
+    highlights: [
+      "15+ ecrãs: splash, login, recuperação de senha, início, aulas, detalhe de aula, plano de treino, exercícios, perfil e suporte",
+      "Fluxo de reserva de aulas completo, com confirmação e gestão de vagas",
+      "Sistema de cores por categoria (Força, HIIT, Funcional, Yoga) e dashboard de progresso",
+      "Tema escuro, tipografia forte e microinterações — construído no Figma",
+    ],
+    stack: ["Figma", "Mobile App", "Design System", "Prototipagem"],
+    link: {
+      href: "https://www.figma.com/design/19qBnui0RXYD2OoyL2KlLT/PULSE-%E2%80%94-App-de-Gin%C3%A1sio",
+      label: "Abrir no Figma",
+    },
+    coverRatio: "phone",
+    galleryMode: "carousel",
+    cover: {
+      src: "/media/pulse/pulse-3-inicio.jpg",
+      alt: "PULSE — ecrã de início do app de ginásio",
+    },
+    gallery: [
+      { src: "/media/pulse/pulse-1-splash.jpg", alt: "PULSE — Splash", caption: "01 · Splash" },
+      { src: "/media/pulse/pulse-2-login.jpg", alt: "PULSE — Login", caption: "02 · Login" },
+      { src: "/media/pulse/pulse-3-inicio.jpg", alt: "PULSE — Início", caption: "03 · Início" },
+      { src: "/media/pulse/pulse-4-aulas.jpg", alt: "PULSE — Aulas", caption: "04 · Aulas" },
+      { src: "/media/pulse/pulse-5-reserva.jpg", alt: "PULSE — Reserva confirmada", caption: "05 · Reserva" },
+      { src: "/media/pulse/pulse-6-treino.jpg", alt: "PULSE — Plano de treino", caption: "06 · Treino" },
+      { src: "/media/pulse/pulse-7-exercicio.jpg", alt: "PULSE — Detalhe do exercício", caption: "07 · Exercício" },
+      { src: "/media/pulse/pulse-8-perfil.jpg", alt: "PULSE — Perfil", caption: "08 · Perfil" },
+      { src: "/media/pulse/pulse-9-apoio.jpg", alt: "PULSE — Apoio ao cliente", caption: "09 · Apoio" },
+    ],
+  },
+  {
+    slug: "verde-facil",
+    index: "05",
+    title: "Verde Fácil",
+    category: "Aplicação Web · Branding & Anúncios",
+    description:
+      "Plataforma para emissão de recibos verdes e faturação: calculadora de IRS, dashboard fiscal, portal do cliente e módulos TVDE/Frota. Trabalhei também a identidade da marca e as campanhas para redes sociais.",
+    stack: ["Next.js 15", "React", "SaaS Fiscal"],
+    coverRatio: "page",
+    cover: {
+      src: "/media/web/full-verdefacil.jpg",
+      alt: "Website da aplicação Verde Fácil",
+    },
+  },
+  {
+    slug: "autoshop",
+    index: "06",
+    title: "AutoShop",
+    category: "Website · Stand de Automóveis",
+    description:
+      "Stand de automóveis premium: catálogo de viaturas com fichas detalhadas, reserva online e lista de favoritos. Tema escuro e design responsivo.",
+    stack: ["PHP", "MySQL", "Catálogo"],
+    /*
+     * Exportação estática do catálogo: o site corre em PHP+MySQL, que a Vercel
+     * não aloja. A capa é o hero capturado a 1440 px — dentro da moldura o
+     * iframe ao vivo abria em layout de telemóvel, com o cabeçalho partido.
+     */
+    link: { href: "https://autoshop-estatico.vercel.app/", label: "Ver o catálogo" },
+    coverRatio: "page",
+    coverAspect: "1440 / 639",
+    cover: {
+      src: "/media/web/autoshop-capa.jpg",
+      alt: "Página inicial do AutoShop — stand de automóveis",
+    },
+  },
+  {
+    slug: "eco-sem-fio",
+    index: "07",
+    title: "ECO SEM FIO",
+    category: "Website · Projeto Conceptual de Segurança Digital",
+    description:
+      "Marca fictícia criada como exercício: a ECO SEM FIO propõe testar a segurança da rede Wi-Fi de quem a visita. A landing page apresenta as soluções de proteção da ligação, explica o funcionamento em quatro passos e leva o visitante até ao teste da rede. Construída em HTML, CSS e JavaScript, sem framework.",
+    highlights: [
+      "Escudo em SVG animado, com gradientes e desfoque, como peça central do hero",
+      "Campo de partículas em canvas, com linhas a ligar as que estão próximas",
+      "Brilho a seguir o cursor, que cresce sobre os elementos interativos",
+      "Ecrã de carregamento que dá início às animações de entrada, e revelação ao rolar",
+    ],
+    stack: ["HTML", "CSS", "JavaScript", "Animação"],
+    live: "https://eco-sem-fio.vercel.app/",
+    link: { href: "https://eco-sem-fio.vercel.app/", label: "Abrir o site" },
+    coverRatio: "page",
+    cover: {
+      src: "/media/web/poster-eco-sem-fio.jpg",
+      alt: "Página inicial do site ECO SEM FIO — internet segura",
+    },
+  },
+  {
+    slug: "rafalice",
+    index: "08",
+    title: "Salgados Rafalice",
+    category: "Identidade · Social Media & Ads",
+    description:
+      "Identidade visual e peças promocionais para a marca: logotipo com mascote, poster de campanha e arte para redes sociais. Faço também a gestão das páginas e das campanhas de anúncios no Facebook e no Instagram.",
+    stack: ["Identidade visual", "Gestão de páginas", "Facebook Ads", "Instagram Ads"],
+    coverRatio: "square",
+    /* O logótipo sobe para junto do nome — deixa de ser mais uma miniatura. */
+    logo: {
+      /* Recorte do PNG original: o quadrado trazia 16% de margem transparente
+         em baixo, que desalinhava o selo do nome. */
+      src: "/media/brand/rafalice-logo-trim.png",
+      alt: "Logótipo Salgados Rafalice — mascote com chapéu de chefe",
+    },
+    cover: {
+      src: "/media/brand/rafalice-poster.jpg",
+      alt: "Poster promocional Salgados Rafalice",
+    },
+    galleryMode: "carousel",
+    gallery: [
+      {
+        src: "/media/brand/rafalice-artesanais.jpg",
+        alt: "Post “Salgados artesanais, feitos com amor”, com coxinhas e empadas em creme e dourado",
+        caption: "Post · Salgados artesanais",
+      },
+      { src: "/media/brand/rafalice-poster.jpg", alt: "Poster 50 salgados por 20€", caption: "Poster de campanha" },
+      { src: "/media/brand/rafalice-promo.jpg", alt: "Post promocional 50 salgadinhos", caption: "Post · Redes sociais" },
+      {
+        src: "/media/brand/rafalice-combo.jpg",
+        alt: "Post com os dois pacotes: 50 salgados por 20€ e 50 salgados com 20 doces por 35€",
+        caption: "Post · Pacotes 20€ e 35€",
+      },
+    ],
+  },
+];

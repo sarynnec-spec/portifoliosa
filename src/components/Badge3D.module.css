@@ -1,0 +1,228 @@
+/* Crachá suspenso — pendurado no vão entre as duas linhas do nome. */
+
+.stage {
+  position: absolute;
+  /* Abaixo da barra de navegação: a fita não a pode atravessar. */
+  top: 4.2rem;
+  left: 52%;
+  z-index: 3;
+  width: 15rem;
+  height: 78%;
+  transform: translateX(-50%);
+  perspective: 1200px;
+  touch-action: none;
+  cursor: grab;
+  user-select: none;
+}
+
+.stage[data-ativo] {
+  cursor: grabbing;
+}
+
+/* Gancho fixo no topo, de onde tudo pende. */
+.gancho {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 2.6rem;
+  height: 0.55rem;
+  transform: translateX(-50%);
+  border-radius: 0 0 0.3rem 0.3rem;
+  background: linear-gradient(180deg, #6d675c, #35322b);
+  box-shadow: 0 0.15rem 0.4rem rgba(0, 0, 0, 0.5);
+}
+
+.pivot {
+  position: absolute;
+  top: 0.4rem;
+  left: 50%;
+  margin-left: -7.5rem;
+  width: 15rem;
+  transform-origin: 50% 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  will-change: transform;
+}
+
+/* Fita com o texto repetido, como nas credenciais de evento. */
+.fita {
+  position: relative;
+  width: 2.15rem;
+  height: clamp(4rem, 10vh, 6.8rem);
+  overflow: hidden;
+  background: linear-gradient(90deg, #8f3a1a 0%, #c2481f 22%, #e2632f 50%, #c2481f 78%, #8f3a1a 100%);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.25);
+  display: grid;
+  place-items: center;
+}
+
+.fitaTexto {
+  font-family: var(--font-mono);
+  font-size: 0.42rem;
+  letter-spacing: 0.22em;
+  color: rgba(255, 245, 235, 0.75);
+  white-space: nowrap;
+  transform: rotate(-90deg);
+}
+
+/* Mola metálica que liga a fita ao cartão. */
+.mola {
+  width: 1.1rem;
+  height: 1.1rem;
+  margin-top: -0.15rem;
+  border: 2px solid #8a8a8a;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #c9c9c9, #6d6d6d);
+  box-shadow: 0 0.1rem 0.3rem rgba(0, 0, 0, 0.45);
+}
+
+/* --- Cartão --------------------------------------------------------------- */
+
+.cartao {
+  position: relative;
+  margin-top: 0.35rem;
+  width: 13.5rem;
+  padding: 1.5rem 1rem 1.1rem;
+  border-radius: 0.9rem;
+  background: linear-gradient(165deg, #ffffff 0%, #f6f6f6 55%, #e9e9e9 100%);
+  color: var(--ink);
+  transform-style: preserve-3d;
+  will-change: transform;
+  box-shadow:
+    0 1.5rem 2.5rem -0.75rem rgba(0, 0, 0, 0.55),
+    0 0.35rem 0.9rem -0.3rem rgba(0, 0, 0, 0.35),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.7);
+}
+
+.furo {
+  position: absolute;
+  top: 0.55rem;
+  left: 50%;
+  width: 2.6rem;
+  height: 0.42rem;
+  transform: translateX(-50%);
+  border-radius: 100px;
+  background: #dcdcdc;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+
+.topo {
+  display: grid;
+  place-items: center;
+  margin-bottom: 0.65rem;
+}
+
+.foto {
+  width: 4.4rem;
+  height: 4.4rem;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: 50% 22%;
+  border: 2px solid var(--accent);
+  box-shadow: 0 0.3rem 0.8rem rgba(0, 0, 0, 0.25);
+}
+
+.nome {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  line-height: 1.15;
+  text-align: center;
+  letter-spacing: -0.01em;
+}
+
+.cargo {
+  margin-top: 0.15rem;
+  font-family: var(--font-mono);
+  font-size: 0.48rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--accent);
+}
+
+.campos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem 0.6rem;
+  margin-top: 0.9rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid rgba(20, 19, 15, 0.14);
+}
+
+.campos dt {
+  font-family: var(--font-mono);
+  font-size: 0.38rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+}
+
+.campos dd {
+  margin: 0.1rem 0 0;
+  font-size: 0.55rem;
+  line-height: 1.25;
+  font-weight: 500;
+}
+
+.disponivel {
+  color: #2f7d4f;
+}
+
+.disponivel::before {
+  content: "";
+  display: inline-block;
+  width: 0.3rem;
+  height: 0.3rem;
+  margin-right: 0.25rem;
+  border-radius: 50%;
+  background: currentColor;
+  vertical-align: middle;
+}
+
+/* Faixa de barras decorativa — sem número inventado. */
+.barras {
+  display: block;
+  height: 1.1rem;
+  margin-top: 0.85rem;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--ink) 0 1px,
+    transparent 1px 3px,
+    var(--ink) 3px 5px,
+    transparent 5px 8px
+  );
+  opacity: 0.55;
+}
+
+.dica {
+  margin-top: 0.9rem;
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(240, 236, 227, 0.45);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+@media (max-width: 64rem) {
+  /* Continua centrado: ancorá-lo à direita punha o cartão fora do ecrã,
+     porque o pivot tem largura fixa maior do que a do palco. */
+  .stage {
+    width: 12rem;
+    scale: 0.8;
+    transform-origin: top center;
+  }
+}
+
+@media (max-width: 40rem) {
+  .stage {
+    left: 50%;
+    scale: 0.58;
+  }
+
+  .dica {
+    display: none;
+  }
+}

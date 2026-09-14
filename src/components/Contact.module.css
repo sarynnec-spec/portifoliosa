@@ -1,0 +1,426 @@
+.section {
+  /* A faixa acima do palco tem de ser exactamente a cor da primeira linha do
+     quadro, senão vê-se uma risca horizontal por cima da cabeça do sapo —
+     era o que se via: um degrau de 15 níveis no centro.
+
+     O topo do quadro não é liso: tem vinheta, e o verde vai de 108 nas bordas
+     a 119 ao meio. Por isso a faixa leva um gradiente horizontal e não uma cor
+     só. Medido na linha logo abaixo do palco em 1280, 1440, 1519 e 1920, com
+     mediana entre os quatro (e só sobre píxeis laranja, para o texto por cima
+     não sujar a amostra). */
+  background: linear-gradient(
+    90deg,
+      #ff6c02 0%,
+      #ff6d02 10%,
+      #ff6e02 15%,
+      #ff7003 20%,
+      #ff7203 25%,
+      #ff7304 30%,
+      #ff7404 35%,
+      #ff7505 40%,
+      #ff7605 45%,
+      #ff7704 50%,
+      #ff7604 55%,
+      #ff7603 60%,
+      #ff7604 65%,
+      #ff7504 75%,
+      #ff7404 80%,
+      #ff7304 85%,
+      #ff7203 90%,
+      #ff7202 95%,
+      #ff7202 100%
+  );
+  color: var(--ink);
+  position: relative;
+  padding-block: clamp(5rem, 14vh, 10rem);
+  /* Palco alto que chegue para a personagem se ver a sério. */
+  min-height: min(100svh, 54rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+
+  /* Medidos no site publicado, em todas as larguras: a barra do menu é fixa e
+     tem 88px; o rodapé preto tem 108px. Eram estes dois que decapitavam o
+     sapo — a barra tapava-lhe a cabeça por cima, e o rodapé, ao empurrar a
+     secção para cima no fim da página, escondia mais um tanto. */
+  --barra: 88px;
+  --rodape: 108px;
+}
+
+/* Enquanto a reação está no ar, a faixa acima do palco troca para o fundo
+   desse clip. Fica por baixo do palco (é pintada antes dele), por isso só se
+   vê onde o palco não chega — que é exactamente a faixa. Anima a opacidade
+   porque `background-image` não interpola. */
+.section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.16s var(--ease-out);
+  background: linear-gradient(
+    90deg,
+      #ff6102 0%,
+      #ff6302 5%,
+      #ff6604 10%,
+      #ff6903 15%,
+      #ff6c03 20%,
+      #ff6f03 25%,
+      #ff7103 30%,
+      #ff7203 35%,
+      #ff7303 40%,
+      #ff7404 45%,
+      #ff7504 50%,
+      #ff7404 65%,
+      #ff7304 75%,
+      #ff7103 80%,
+      #ff6e03 85%,
+      #ff6a02 90%,
+      #ff6702 95%,
+      #ff6602 100%
+  );
+}
+
+.reagindo::before {
+  opacity: 1;
+}
+
+/* O palco da personagem. Não é a secção toda: começa abaixo da faixa que a
+   barra fixa e o rodapé roubam, que é a única janela onde o sapo aparece
+   sempre inteiro.
+
+   A conta, para o caso que importa (fim da página, que é onde se chega):
+   o topo da secção fica em `Vh − rodapé − secção`, e o palco começa
+   `barra + rodapé` abaixo disso, ou seja em `Vh − secção + barra`. Como a
+   secção nunca passa de 100svh, isso é sempre ≥ barra — o palco nasce
+   sempre abaixo do menu, em qualquer altura de ecrã. */
+.palco {
+  position: absolute;
+  /* Quanto é preciso recuar para o sapo nascer abaixo do menu.
+     No fim da página o topo da secção fica em `Vh − rodapé − secção`; para o
+     palco começar abaixo da barra é preciso descê-lo
+     `barra + rodapé + secção − Vh`. Quando a secção cabe no ecrã isso dá
+     negativo — aí não há nada a recuar e o palco usa a secção inteira, que é
+     o que deixa o sapo maior. */
+  /* Recuo que põe o TOPO DO QUADRO abaixo da barra. O `1rem` é folga de
+     segurança: sem ele a cabeça ficava a encostar ao rebordo (medido: −1px em
+     390×844). */
+  --recuo: calc(var(--barra) + var(--rodape) + 1rem + 100% - 100svh);
+
+  /* Recuo mínimo. Não é preciso descer o quadro inteiro — só a cabeça tem de
+     ficar livre, e acima dela há 6,4% de quadro vazio (medido nos clips). Daí
+     o `93,6%` e a divisão por 0,936. Abaixo disto a barra volta a cortar-lhe
+     a cabeça. */
+  --recuo-min: calc(
+    (var(--barra) + var(--rodape) + 1.25rem + 93.6% - 100svh) / 0.936
+  );
+
+  /* Os −15% pedidos, mas travados no mínimo: em ecrãs largos passam inteiros
+     (o sapo cresce), em telemóvel o travão entra e segura-o onde tem de ser. */
+  top: max(0px, var(--recuo-min), calc(var(--recuo) * 0.85));
+  right: 0;
+  bottom: 0;
+  left: 0;
+  pointer-events: none;
+  /* O laranja de fundo do próprio clip, amostrado na borda esquerda e na
+     borda direita do vídeo já desenhado pelo browser (ok_1920x1080), de 5 em
+     5% da altura, com mediana numa janela de 7 linhas para o texto por cima
+     não contaminar a amostra.
+
+     São dois gradientes e não um: medido, a borda direita do clip é ~5
+     níveis mais clara do que a esquerda, por causa da luz da cena. Um
+     gradiente só acertava de um lado e falhava do outro. Cada metade do
+     palco leva o gradiente do seu lado; a emenda entre as duas metades cai no
+     meio, escondida por trás do sapo. */
+  background-image:
+    linear-gradient(
+      180deg,
+      #ff6c02 0%,
+      #ff6a01 10%,
+      #ff6b02 15%,
+      #ff6c02 20%,
+      #ff6d02 25%,
+      #ff6c02 30%,
+      #ff6a01 35%,
+      #ff6901 40%,
+      #ff6801 55%,
+      #ff6900 60%,
+      #ff6a01 65%,
+      #ff6c01 70%,
+      #ff6f01 75%,
+      #ff7202 80%,
+      #ff7903 85%,
+      #ff7f04 90%,
+      #ff8103 95%,
+      #ff7f02 100%
+    ),
+    linear-gradient(
+      180deg,
+      #ff7202 0%,
+      #ff7102 5%,
+      #ff7002 20%,
+      #ff6f02 25%,
+      #ff6d02 30%,
+      #ff6c02 40%,
+      #ff6d02 55%,
+      #ff6e03 60%,
+      #ff6f04 65%,
+      #ff7104 70%,
+      #ff7305 75%,
+      #ff7704 80%,
+      #ff7d03 85%,
+      #ff8402 90%,
+      #ff8602 95%,
+      #ff8602 100%
+    );
+  background-size: 50.2% 100%, 50.2% 100%;
+  background-position: left top, right top;
+  background-repeat: no-repeat;
+}
+
+/* O texto fica por cima do palco, encostado à esquerda. O .container centra e
+   limita a 84rem, e isso afastava tudo da margem e empurrava-o para cima do
+   sapo — aqui essa centragem é desfeita. */
+.frente {
+  position: relative;
+  z-index: 1;
+  max-width: none;
+  margin-inline: 0;
+  padding-inline: clamp(1.25rem, 3.2vw, 3.25rem);
+  /* Tres colunas: o texto a esquerda, a faixa do meio livre para a personagem
+     e os botoes a direita. */
+  display: grid;
+  grid-template-columns: minmax(0, 32vw) 1fr minmax(0, 22rem);
+  grid-template-areas:
+    "texto  bicho  botoes"
+    "canais canais canais";
+  align-items: center;
+  column-gap: clamp(1rem, 3vw, 3rem);
+}
+
+/* Coluna esquerda, com o texto centrado no seu proprio eixo. */
+.texto {
+  grid-area: texto;
+  text-align: center;
+}
+
+.canais {
+  grid-area: canais;
+}
+
+/* Onde acaba a faixa laranja livre, calculado e não estimado: na imagem o sapo
+   ocupa x 660..996 de 1672, ou seja 39,5%–59,6% do quadro. Com `cover` numa
+   secção mais alta que 16:9 vê-se a parte central da imagem, e a borda
+   esquerda dele cai por volta dos 36% da largura do ecrã. Tudo o que é texto
+   tem de morrer antes disso. */
+.frente .title,
+.frente .lede {
+  max-width: 100%;
+}
+
+/* Em estreito o sapo sobe e tudo passa a uma coluna so. */
+@media (max-width: 62rem) {
+  .frente {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "texto"
+      "botoes"
+      "canais";
+  }
+
+  /* Empilhados, os botões precisam de respirar abaixo do texto. */
+  .hire {
+    margin-top: clamp(2rem, 4vw, 3rem);
+  }
+}
+
+.title {
+  /* Mais pequeno do que nas outras secções: aqui só tem um terço do ecrã. */
+  font-size: clamp(2rem, 4.55vw, 4.15rem);
+  margin-block: 0.9rem 1.15rem;
+}
+
+.lede {
+  color: rgba(20, 19, 15, 0.78);
+  font-size: clamp(0.9rem, 1.15vw, 1.03rem);
+  line-height: 1.6;
+}
+
+.hire {
+  grid-area: botoes;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: clamp(1rem, 3vw, 2.5rem);
+}
+
+.hireSide {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+  /* Sem min-width: era ele que esticava a fila dos botões para cima do sapo. */
+  min-width: 0;
+}
+
+.cta {
+  font-size: clamp(0.9rem, 1.15vw, 1.03rem);
+  padding: 1rem 1.6rem;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.primary,
+.ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1.35rem;
+  font-size: 0.86rem;
+  border: 1px solid transparent;
+  transition:
+    background-color 0.35s var(--ease-out),
+    color 0.35s var(--ease-out),
+    border-color 0.35s var(--ease-out),
+    gap 0.35s var(--ease-out);
+}
+
+/* Sobre laranja o terracota da marca desaparece; a tinta é o que se lê.
+   #14130f sobre este laranja dá 6,6:1, bem acima do mínimo. */
+.primary {
+  background: var(--ink);
+  color: #fff;
+}
+
+.primary:hover {
+  gap: 1rem;
+  background: #fff;
+  color: var(--ink);
+}
+
+.ghost {
+  border-color: rgba(20, 19, 15, 0.4);
+  color: var(--ink);
+  font-family: inherit;
+}
+
+.ghost:hover {
+  border-color: var(--ink);
+  background: rgba(20, 19, 15, 0.08);
+}
+
+.channels {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+  margin-top: clamp(3rem, 7vw, 5rem);
+  border-top: 1px solid rgba(20, 19, 15, 0.28);
+}
+
+.channel {
+  padding: 1.35rem 1.25rem 1.35rem 0;
+  border-bottom: 1px solid rgba(20, 19, 15, 0.28);
+}
+
+.channel + .channel {
+  border-left: 1px solid rgba(20, 19, 15, 0.28);
+  padding-left: 1.25rem;
+}
+
+.channel dt {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(20, 19, 15, 0.62);
+  margin-bottom: 0.45rem;
+}
+
+.channel dd {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.channel a {
+  border-bottom: 1px solid transparent;
+  transition:
+    color 0.3s var(--ease-out),
+    border-color 0.3s var(--ease-out);
+}
+
+.channel a:hover {
+  color: #fff;
+  border-color: #fff;
+}
+
+/* Em ecrãs estreitos o bicho não cabe ao lado do texto: passa a ser um fundo
+   atrás dele, esbatido para o texto continuar legível. */
+@media (max-width: 62rem) {
+  .palco {
+    /* Em estreito volta a ser o que era: a personagem é o fundo da secção
+       inteira, esbatida atrás do texto. A conta do desktop não serve aqui —
+       encolhia o palco e punha o sapo a dominar o ecrã em vez de ser fundo.
+
+       O único recuo que fica é o mínimo para a barra não lhe cortar a cabeça
+       quando a secção encosta ao topo: a cabeça está a 6,4% da altura do
+       palco, por isso basta descer `(barra − 6,4%) / 0,936`. Dá 6px num
+       390×844 — o tamanho da personagem fica igual ao de antes. */
+    --barra: 72px;
+    /* O `0.75rem` é folga: sem ele a cabeça assentava exactamente no rebordo
+       da barra (medido: y=72 com a barra a acabar em 72). Custa 13px de
+       palco em 1026 — 1% do tamanho da personagem. */
+    top: max(0px, calc((var(--barra) + 0.75rem - 6.4%) / 0.936));
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    padding: clamp(1rem, 6vw, 3rem) 0 0;
+    opacity: 0.42;
+  }
+
+  .section {
+    min-height: 0;
+  }
+}
+
+@media (max-width: 60rem) {
+  .channels {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .channel:nth-child(odd) {
+    border-left: 0;
+    padding-left: 0;
+    padding-right: 1.25rem;
+  }
+
+  .channel:nth-child(even) {
+    border-left: 1px solid rgba(20, 19, 15, 0.28);
+    padding-left: 1.25rem;
+  }
+}
+
+@media (max-width: 34rem) {
+  .channels {
+    grid-template-columns: 1fr;
+  }
+
+  .channel,
+  .channel + .channel {
+    border-left: 0;
+    padding-left: 0;
+  }
+
+  .primary,
+  .ghost {
+    flex: 1 1 100%;
+    justify-content: space-between;
+  }
+}

@@ -1,0 +1,331 @@
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  background: var(--night);
+  color: var(--night-text);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.media {
+  position: absolute;
+  inset: -8% 0 -8% 0;
+  z-index: 0;
+}
+
+.video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  filter: saturate(0.72) contrast(1.05);
+}
+
+.scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(20, 19, 15, 0.72) 0%, rgba(20, 19, 15, 0.38) 38%, rgba(20, 19, 15, 0.92) 100%),
+    radial-gradient(120% 90% at 20% 10%, rgba(20, 19, 15, 0.35), transparent 60%);
+}
+
+.inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: var(--maxw);
+  margin-inline: auto;
+  padding: clamp(6.5rem, 12vh, 9rem) var(--gutter) clamp(1.75rem, 4vh, 3rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: clamp(2rem, 6vh, 4rem);
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.5rem;
+  font-family: var(--font-mono);
+  font-size: var(--step-xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(240, 236, 227, 0.72);
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.pulse {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 0 rgba(194, 72, 31, 0.55);
+  animation: pulse 2.6s var(--ease-out) infinite;
+}
+
+@keyframes pulse {
+  70% {
+    box-shadow: 0 0 0 0.6rem rgba(194, 72, 31, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(194, 72, 31, 0);
+  }
+}
+
+.clock {
+  text-align: right;
+}
+
+/* --- Nome ---------------------------------------------------------------- */
+
+.name {
+  margin: 0;
+  display: grid;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--step-hero);
+  line-height: 0.86;
+  letter-spacing: -0.03em;
+}
+
+.lineMask {
+  display: block;
+  overflow: hidden;
+  padding-block: 0.06em;
+}
+
+.line {
+  display: block;
+  will-change: transform;
+}
+
+/* Primeira linha: preenchida a laranja, com uma banda de luz a percorrê-la.
+   O gradiente é recortado pelo texto e desliza — mesma cadência do contorno. */
+.lineSolid {
+  background: linear-gradient(
+    100deg,
+    #c2481f 0%,
+    #e2632f 32%,
+    #ffdcc7 50%,
+    #e2632f 68%,
+    #c2481f 100%
+  );
+  background-size: 260% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: shine 5s linear infinite;
+}
+
+@keyframes shine {
+  from {
+    background-position: 160% 0;
+  }
+  to {
+    background-position: -60% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lineSolid {
+    animation: none;
+    background-position: 50% 0;
+  }
+}
+
+.lineOutline {
+  position: relative;
+  align-self: end;
+  text-align: right;
+  color: transparent;
+  /* Laranja mais aberto que o --accent: sobre o vídeo cinzento, o tom da
+     marca perdia contraste e o contorno desaparecia nos hexágonos claros. */
+  -webkit-text-stroke: 1px #e2632f;
+}
+
+/* Faixa de luz a atravessar o contorno. */
+.sweep {
+  position: absolute;
+  inset: 0;
+  color: transparent;
+  -webkit-text-stroke: 1px #f3b49a;
+  -webkit-mask-image: linear-gradient(
+    100deg,
+    transparent 38%,
+    #000 47%,
+    #000 53%,
+    transparent 62%
+  );
+  mask-image: linear-gradient(
+    100deg,
+    transparent 38%,
+    #000 47%,
+    #000 53%,
+    transparent 62%
+  );
+  -webkit-mask-size: 260% 100%;
+  mask-size: 260% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  animation: sweep 5s linear infinite;
+}
+
+@keyframes sweep {
+  from {
+    -webkit-mask-position: 160% 0;
+    mask-position: 160% 0;
+  }
+  to {
+    -webkit-mask-position: -60% 0;
+    mask-position: -60% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sweep {
+    display: none;
+  }
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* --- Rodapé do hero ------------------------------------------------------ */
+
+.bottom {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  border-top: 1px solid rgba(240, 236, 227, 0.18);
+  padding-top: clamp(1rem, 2.5vh, 1.75rem);
+}
+
+.role {
+  font-size: clamp(1.05rem, 2vw, 1.6rem);
+  font-family: var(--font-display);
+  letter-spacing: 0.01em;
+}
+
+.availability {
+  grid-column: 1;
+  max-width: 32ch;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: rgba(240, 236, 227, 0.62);
+}
+
+.scroll {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.85rem;
+  font-family: var(--font-mono);
+  font-size: var(--step-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.scrollTrack {
+  position: relative;
+  display: block;
+  width: 1px;
+  height: 3rem;
+  background: rgba(255, 255, 255, 0.28);
+  overflow: hidden;
+}
+
+.scrollDot {
+  position: absolute;
+  inset-inline: 0;
+  height: 1.1rem;
+  background: var(--accent);
+  animation: trickle 2.4s var(--ease-inout) infinite;
+}
+
+@keyframes trickle {
+  0% {
+    transform: translateY(-110%);
+  }
+  60%,
+  100% {
+    transform: translateY(310%);
+  }
+}
+
+@media (max-width: 48rem) {
+  /* Em ecrãs altos e estreitos o nome ancora em baixo, junto à linha de meta. */
+  .inner {
+    justify-content: flex-start;
+  }
+
+  .name {
+    margin-top: auto;
+  }
+
+  .top {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .clock {
+    text-align: left;
+  }
+
+  .lineOutline {
+    text-align: left;
+    -webkit-text-stroke-width: 0.75px;
+  }
+
+  .sweep {
+    -webkit-text-stroke-width: 0.75px;
+  }
+
+  .bottom {
+    grid-template-columns: 1fr;
+  }
+
+  .scroll {
+    grid-column: 1;
+    grid-row: auto;
+    margin-top: 0.5rem;
+  }
+
+  .scrollTrack {
+    width: 3rem;
+    height: 1px;
+  }
+
+  .scrollDot {
+    inset: 0 auto 0 0;
+    width: 1.1rem;
+    height: 100%;
+    animation: trickleX 2.4s var(--ease-inout) infinite;
+  }
+
+  @keyframes trickleX {
+    0% {
+      transform: translateX(-110%);
+    }
+    60%,
+    100% {
+      transform: translateX(310%);
+    }
+  }
+}
