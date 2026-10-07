@@ -183,11 +183,12 @@ export const projects: Project[] = [
       href: "https://github.com/sarynnec-spec/verdefacil-agro-showcase",
       label: "Conceito e arquitetura no GitHub",
     },
+    video: "/media/web/verdefacil-agro-demo.mp4",
     coverRatio: "page",
     coverAspect: "16 / 9",
     cover: {
-      src: "/media/web/verdefacil-agro.jpg",
-      alt: "VerdeFácil Agro — vertical agrícola da plataforma VerdeFácil",
+      src: "/media/web/poster-verdefacil-agro.jpg",
+      alt: "VerdeFácil Agro — registo por voz, Recibo do Apoio e painéis do banco e do município",
     },
   },
   {
@@ -204,6 +205,10 @@ export const projects: Project[] = [
      * iframe ao vivo abria em layout de telemóvel, com o cabeçalho partido.
      */
     link: { href: "https://autoshop-estatico.vercel.app/", label: "Ver o catálogo" },
+    repo: {
+      href: "https://github.com/sarynnec-spec/loja9952",
+      label: "Código no GitHub",
+    },
     coverRatio: "page",
     coverAspect: "1440 / 639",
     cover: {
@@ -270,8 +275,36 @@ export const projects: Project[] = [
     ],
   },
   {
-    slug: "nexus-industrial",
+    slug: "imobai",
     index: "09",
+    title: "ImobAI",
+    category: "Motor em Python · Visão computacional",
+    year: "2026",
+    description:
+      "Motor que transforma a fotografia de um imóvel em vídeo com movimento de câmara tridimensional real, preservando a geometria e os píxeis originais. Estimativa de profundidade em ONNX sobre CPU, reprojeção 3D e tratamento da disoclusão — o que fica a descoberto quando a câmara se desloca e a fotografia nunca registou. São 84 ficheiros Python e 16 883 linhas, com uma aplicação web própria para o correr.",
+    highlights: [
+      "A regra que define o projeto: qualquer píxel que já existia na fotografia permanece exatamente igual — verificado, não assumido, com outside_hole = 0.00000000 em todos os planos",
+      "A descoberta que mudou o produto: o dolly é o único eixo cujo modo de falha é irreparável a partir de uma fotografia. Trocar de eixo levou o artefacto a zero exato",
+      "Regra de seleção de movimento saída da medição do gradiente das margens, não de um palpite",
+      "Portas de qualidade automáticas e benchmark congelado, corrido antes e depois de cada alteração — várias hipóteses minhas foram refutadas pelos números",
+      "Aplicação web em Python que decide quantos renders faz em paralelo a partir da RAM livre: 222 s e pico de 547 MB por render de 1920×1080",
+    ],
+    stack: ["Python", "NumPy", "OpenCV", "ONNX Runtime", "Depth Anything V2", "FFmpeg"],
+    repo: {
+      href: "https://github.com/sarynnec-spec/imobai-showcase",
+      label: "Arquitetura e método no GitHub",
+    },
+    video: "/media/web/imobai-demo.mp4",
+    coverRatio: "page",
+    coverAspect: "16 / 9",
+    cover: {
+      src: "/media/web/imobai.jpg",
+      alt: "ImobAI — movimento de câmara 3D gerado a partir de uma fotografia",
+    },
+  },
+  {
+    slug: "nexus-industrial",
+    index: "10",
     title: "NEXUS Industrial 3D",
     category: "Modelação e Visualização 3D · Unidade Fabril",
     description:
