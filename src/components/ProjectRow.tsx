@@ -43,19 +43,16 @@ export default function ProjectRow({ project, onOpen }: ProjectRowProps) {
   const isPhone = project.coverRatio === "phone";
   const isVideo = project.coverRatio === "video";
   /*
-   * A regra dela: «os sites como o LODÊ, e os vídeos ficam nas laterais».
+   * Largura total — peça em cima, texto centrado por baixo — SÓ quando não há
+   * destaques. Aí o texto é curto demais para encher uma coluna ao lado de uma
+   * peça alta: no LODÊ eram 86 px de texto contra 1571 px de captura, medido a
+   * 1440. Afeta LODÊ, AutoShop e Salgados Rafalice.
    *
-   * Largura total, com o texto centrado por baixo:
-   *   · capturas de página inteira — são altas e estreitas numa coluna;
-   *   · projetos sem destaques, onde o texto não enche a coluna (no LODÊ eram
-   *     86 px de texto ao lado de 1571 px de captura, medido a 1440).
-   *
-   * Ficam nas duas colunas, com a peça ao lado da descrição:
-   *   · tudo o que tem vídeo;
-   *   · a Sofia Sales, que é `featured` e ela mandou deixar como estava.
+   * Tudo o resto fica em duas colunas, com a peça ao lado do texto — ela
+   * mandou corrigir o VerdeFácil, que em largura total ficava «muito grande»:
+   * com seis destaques, o texto enche a coluna de sobra.
    */
-  const solo =
-    !project.video && (!project.highlights?.length || (isSite && !project.featured));
+  const solo = !project.highlights?.length;
   const liveHost = project.live ? new URL(project.live).host : null;
   const windowRef = useRef<HTMLElement | null>(null);
   const [inView, setInView] = useState(false);
