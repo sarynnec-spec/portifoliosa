@@ -43,14 +43,19 @@ export default function ProjectRow({ project, onOpen }: ProjectRowProps) {
   const isPhone = project.coverRatio === "phone";
   const isVideo = project.coverRatio === "video";
   /*
-   * Uma só coluna — peça ampla em cima, texto centrado por baixo — apenas
-   * quando não há destaques: aí o texto é curto demais para encher a coluna ao
-   * lado de uma peça alta (no LODÊ sobravam 1485 px de vazio, medido a 1440).
+   * A regra dela: «os sites como o LODÊ, e os vídeos ficam nas laterais».
    *
-   * Os projetos com vídeo mantêm as duas colunas, por decisão dela: a peça fica
-   * ao lado da descrição e a ficha técnica passa por baixo, em `.specs`.
+   * Largura total, com o texto centrado por baixo:
+   *   · capturas de página inteira — são altas e estreitas numa coluna;
+   *   · projetos sem destaques, onde o texto não enche a coluna (no LODÊ eram
+   *     86 px de texto ao lado de 1571 px de captura, medido a 1440).
+   *
+   * Ficam nas duas colunas, com a peça ao lado da descrição:
+   *   · tudo o que tem vídeo;
+   *   · a Sofia Sales, que é `featured` e ela mandou deixar como estava.
    */
-  const solo = !project.highlights?.length;
+  const solo =
+    !project.video && (!project.highlights?.length || (isSite && !project.featured));
   const liveHost = project.live ? new URL(project.live).host : null;
   const windowRef = useRef<HTMLElement | null>(null);
   const [inView, setInView] = useState(false);
