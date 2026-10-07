@@ -177,6 +177,18 @@ function arranjarMotor(): AudioContext | null {
 }
 
 /**
+ * O mesmo motor, para quem mais precise de som na página.
+ *
+ * Um browser só deixa ter um punhado de `AudioContext` abertos, e cada um
+ * paga de novo a aquisição da saída — e as armadilhas acima (o relógio que
+ * ainda não anda, o desbloqueio do iPhone) voltariam todas. Por isso há um
+ * motor e emprestam-se nós, em vez de haver um motor por componente.
+ */
+export function motorDeAudio(): AudioContext | null {
+  return arranjarMotor();
+}
+
+/**
  * Agenda a banda sonora e devolve uma forma de a calar — se a pessoa saltar
  * a abertura a meio, o som tem de ir atrás.
  *
