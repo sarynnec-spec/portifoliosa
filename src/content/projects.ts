@@ -26,6 +26,12 @@ export type Project = {
   live?: string;
   /** Projeto principal — ocupa a largura toda no topo da secção. */
   featured?: boolean;
+  /**
+   * Peça em largura total, com o texto centrado por baixo, em vez das duas
+   * colunas. Só vale a pena em capturas baixas e com pouco texto — numa peça
+   * alta, o texto cai para fora do ecrã (foi o que aconteceu no LODÊ).
+   */
+  larguraTotal?: boolean;
   /** Reel vertical reproduzido dentro do aparelho. */
   video?: string;
   /** Falso quando o ficheiro não leva faixa de áudio: o botão de som não aparece. */
@@ -139,7 +145,7 @@ export const projects: Project[] = [
     coverAspect: "16 / 9",
     cover: {
       src: "/media/web/poster-verdefacil-agro.jpg",
-      alt: "VerdeFácil Agro — registo por voz, Recibo do Apoio e painéis do banco e do município",
+      alt: "VerdeFácil Agro — a aplicação a correr: VerdeScore da exploração, registo por voz e Recibo do Apoio com o valor que fica no bolso",
     },
   },
   {
@@ -237,6 +243,7 @@ export const projects: Project[] = [
   },
   {
     slug: "autoshop",
+    larguraTotal: true,
     index: "07",
     title: "AutoShop",
     category: "Website · Stand de Automóveis",
@@ -284,6 +291,7 @@ export const projects: Project[] = [
   },
   {
     slug: "rafalice",
+    larguraTotal: true,
     index: "09",
     title: "Salgados Rafalice",
     category: "Identidade · Social Media & Ads",

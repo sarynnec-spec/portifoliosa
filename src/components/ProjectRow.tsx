@@ -43,16 +43,14 @@ export default function ProjectRow({ project, onOpen }: ProjectRowProps) {
   const isPhone = project.coverRatio === "phone";
   const isVideo = project.coverRatio === "video";
   /*
-   * Largura total — peça em cima, texto centrado por baixo — SÓ quando não há
-   * destaques. Aí o texto é curto demais para encher uma coluna ao lado de uma
-   * peça alta: no LODÊ eram 86 px de texto contra 1571 px de captura, medido a
-   * 1440. Afeta LODÊ, AutoShop e Salgados Rafalice.
+   * Largura total — peça em cima, texto centrado por baixo. É DECLARADO por
+   * projeto (`larguraTotal`), não deduzido: a regra automática pelo texto
+   * acertava no AutoShop e no Rafalice mas falhava no LODÊ, cuja captura tem
+   * 1571 px de altura e, a toda a largura, empurrava o texto para fora do ecrã.
    *
-   * Tudo o resto fica em duas colunas, com a peça ao lado do texto — ela
-   * mandou corrigir o VerdeFácil, que em largura total ficava «muito grande»:
-   * com seis destaques, o texto enche a coluna de sobra.
+   * Por omissão fica tudo em duas colunas, com a peça ao lado do texto.
    */
-  const solo = !project.highlights?.length;
+  const solo = project.larguraTotal === true;
   const liveHost = project.live ? new URL(project.live).host : null;
   const windowRef = useRef<HTMLElement | null>(null);
   const [inView, setInView] = useState(false);
