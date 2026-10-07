@@ -76,6 +76,7 @@ export const navItems = [
   { id: "servicos", label: "Serviços" },
   { id: "motion", label: "Motion" },
   { id: "trabalho", label: "Trabalho" },
+  { id: "competencias", label: "Competências" },
   { id: "percurso", label: "Percurso" },
   { id: "github", label: "GitHub", href: profile.github },
   { id: "contacto", label: "Contacto" },

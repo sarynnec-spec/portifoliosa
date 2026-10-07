@@ -257,7 +257,50 @@
   color: var(--muted);
 }
 
-/* Marca do GitHub no link do repositório. */
+/* --- Botões de projeto -----------------------------------------------------
+   Dois pesos: o acento da casa leva ao site publicado; o branco com a marca do
+   GitHub leva ao código. Cantos retos, como o resto da identidade.
+   -------------------------------------------------------------------------- */
+.botaoPrimario,
+.botaoSecundario {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1.6rem;
+  font-size: 0.95rem;
+  line-height: 1;
+  border: 1px solid transparent;
+  transition:
+    background-color 0.3s var(--ease-out),
+    border-color 0.3s var(--ease-out),
+    color 0.3s var(--ease-out),
+    gap 0.3s var(--ease-out);
+}
+
+.botaoPrimario {
+  background: var(--accent);
+  color: #fff;
+}
+
+.botaoPrimario:hover {
+  background: var(--ink);
+  gap: 0.95rem;
+}
+
+.botaoSecundario {
+  background: var(--paper);
+  color: var(--ink);
+  border-color: var(--line-strong);
+}
+
+.botaoSecundario:hover {
+  border-color: var(--ink);
+  background: var(--paper-2);
+  gap: 0.95rem;
+}
+
+/* Marca do GitHub no botão do repositório. */
 .octocat {
   flex: none;
   display: block;

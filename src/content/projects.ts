@@ -55,7 +55,7 @@ export const projects: Project[] = [
     title: "Sofia Sales Clinic",
     category: "Website · Clínica de Medicina Estética",
     description:
-      "Site para uma clínica de medicina estética em Rio Tinto, Porto: a direção clínica, os tratamentos de rosto, corpo e pele, a tecnologia de cada protocolo e a experiência da clínica, até à marcação. Percurso de 15 secções em bordô e dourado, com tipografia serifada e movimento contínuo.",
+      "Site para uma clínica de medicina estética em Rio Tinto: tratamentos, tecnologia de cada protocolo e marcação. Quinze secções em bordô e dourado, com movimento contínuo.",
     highlights: [
       "Abertura com o logótipo a nascer de um portal de luz, animada em GSAP",
       "Introdução e rituais atravessam o ecrã na horizontal enquanto se rola a página",
@@ -64,7 +64,7 @@ export const projects: Project[] = [
     ],
     stack: ["Next.js 15", "React 19", "GSAP", "Identidade visual"],
     live: "https://sofia-sales-clinic.vercel.app",
-    link: { href: "https://sofia-sales-clinic.vercel.app", label: "Abrir o site" },
+    link: { href: "https://sofia-sales-clinic.vercel.app", label: "Ver o site" },
     featured: true,
     coverRatio: "page",
     cover: {
@@ -80,7 +80,7 @@ export const projects: Project[] = [
     description:
       "Site do atelier LODÊ, no Porto — cor de autor, corte à medida e marcação por WhatsApp. Apresenta o atelier, os serviços, os últimos trabalhos e leva o visitante até à marcação.",
     stack: ["Website", "Marcação online", "Identidade visual"],
-    link: { href: "https://lode-atelier.vercel.app/", label: "Abrir o site" },
+    link: { href: "https://lode-atelier.vercel.app/", label: "Ver o site" },
     coverRatio: "page",
     cover: {
       src: "/media/web/full-lode.jpg",
@@ -93,7 +93,7 @@ export const projects: Project[] = [
     title: "PULSE",
     category: "UX/UI Design · App de Ginásio",
     description:
-      "Design completo de um aplicativo de ginásio: do onboarding ao acompanhamento de treino. Um fluxo pensado para motivar o utilizador a cada sessão, com hierarquia visual clara, identidade energética e componentes reutilizáveis.",
+      "Design completo de uma app de ginásio, do onboarding ao acompanhamento de treino, com componentes reutilizáveis e hierarquia visual clara.",
     highlights: [
       "15+ ecrãs: splash, login, recuperação de senha, início, aulas, detalhe de aula, plano de treino, exercícios, perfil e suporte",
       "Fluxo de reserva de aulas completo, com confirmação e gestão de vagas",
@@ -103,7 +103,7 @@ export const projects: Project[] = [
     stack: ["Figma", "Mobile App", "Design System", "Prototipagem"],
     link: {
       href: "https://www.figma.com/design/19qBnui0RXYD2OoyL2KlLT/PULSE-%E2%80%94-App-de-Gin%C3%A1sio",
-      label: "Abrir no Figma",
+      label: "Ver no Figma",
     },
     coverRatio: "phone",
     galleryMode: "carousel",
@@ -130,7 +130,7 @@ export const projects: Project[] = [
     category: "SaaS Fiscal · Full Stack, IA e Automação",
     year: "2026",
     description:
-      "Plataforma de faturação e obrigações fiscais para trabalhadores independentes e pequenas empresas em Portugal, construída de raiz: o levantamento do problema, o modelo de dados, a arquitetura, o código, os testes e a infraestrutura. São cerca de 74 000 linhas e 345 commits ao longo de quatro meses e meio. Emissão de faturas com conformidade fiscal portuguesa, delegação de acesso a contabilistas, assistente fiscal sobre modelos de linguagem e automações de cobrança, prazos e exportação SAF-T.",
+      "Plataforma SaaS de faturação e obrigações fiscais para trabalhadores independentes em Portugal, construída de raiz — do modelo de dados aos testes. Cerca de 74 000 linhas e 345 commits em quatro meses e meio.",
     highlights: [
       "Multi-tenant com isolamento garantido na própria base de dados: 139 políticas de Row Level Security sobre 54 tabelas, com FORCE RLS — validado em produção com duas organizações a tentar aceder aos dados uma da outra",
       "API pública versionada com contrato em OpenAPI, autenticação por chave e webhooks de saída cujo URL de destino é validado para impedir alcance à rede interna",
@@ -156,7 +156,7 @@ export const projects: Project[] = [
     ],
     repo: {
       href: "https://github.com/sarynnec-spec/verdefacil-showcase",
-      label: "Arquitetura e estrutura no GitHub",
+      label: "Ver no GitHub",
     },
     coverRatio: "page",
     cover: {
@@ -171,7 +171,7 @@ export const projects: Project[] = [
     category: "Produto & Arquitetura · Vertical agrícola",
     year: "2026",
     description:
-      "Vertical agrícola do VerdeFácil, a concurso no Prémio Empreendedorismo e Inovação do Crédito Agrícola, categoria Desenvolvimento Local. Responde a uma pergunta que o pequeno agricultor português não consegue responder hoje: quanto ganho realmente em cada cultura? Levei-o da identificação do problema à arquitetura aprovada e aos protótipos. A funcionalidade agrícola está por implementar — a plataforma que a suporta, essa, já está em produção.",
+      "Vertical agrícola do VerdeFácil, a concurso no Prémio Empreendedorismo e Inovação do Crédito Agrícola. Responde ao que o pequeno agricultor não consegue responder hoje: quanto ganho realmente em cada cultura? Da identificação do problema à arquitetura aprovada.",
     highlights: [
       "A concurso na 13.ª edição do Prémio Empreendedorismo e Inovação do Crédito Agrícola, categoria Desenvolvimento Local",
       "Problema validado em fontes oficiais: mais de 27,8% do rendimento agrícola vem de subsídios (INE), pagos sobretudo entre novembro e junho, e tributados como rendimento (CIRS art. 31.º)",
@@ -183,7 +183,7 @@ export const projects: Project[] = [
     stack: ["Arquitetura", "ADR", "Investigação de mercado", "Modelação de dados", "Prototipagem"],
     repo: {
       href: "https://github.com/sarynnec-spec/verdefacil-agro-showcase",
-      label: "Conceito e arquitetura no GitHub",
+      label: "Ver no GitHub",
     },
     video: "/media/web/verdefacil-agro-demo.mp4",
     coverRatio: "page",
@@ -200,7 +200,7 @@ export const projects: Project[] = [
     category: "Motor em Python · Visão computacional",
     year: "2026",
     description:
-      "Motor que transforma a fotografia de um imóvel em vídeo com movimento de câmara tridimensional real, preservando a geometria e os píxeis originais. Estimativa de profundidade em ONNX sobre CPU, reprojeção 3D e tratamento da disoclusão — o que fica a descoberto quando a câmara se desloca e a fotografia nunca registou. São 84 ficheiros Python e 16 883 linhas, com uma aplicação web própria para o correr.",
+      "Motor em Python que transforma a fotografia de um imóvel em vídeo com movimento de câmara 3D real, preservando os píxeis originais. Profundidade em ONNX sobre CPU, reprojeção e tratamento da disoclusão. 84 ficheiros e 16 883 linhas.",
     highlights: [
       "A regra que define o projeto: qualquer píxel que já existia na fotografia permanece exatamente igual — verificado, não assumido, com outside_hole = 0.00000000 em todos os planos",
       "A descoberta que mudou o produto: o dolly é o único eixo cujo modo de falha é irreparável a partir de uma fotografia. Trocar de eixo levou o artefacto a zero exato",
@@ -220,13 +220,16 @@ export const projects: Project[] = [
     ],
     repo: {
       href: "https://github.com/sarynnec-spec/imobai-showcase",
-      label: "Arquitetura e método no GitHub",
+      label: "Ver no GitHub",
     },
-    video: "/media/web/imobai-paris.mp4",
-    // A faixa de áudio saiu: a origem da música não está registada em lado
-    // nenhum, e material sem licença confirmada não vai para o portfólio.
+    video: "/media/web/imobai-motor.mp4",
+    // Sem faixa de áudio: a origem da música não está registada em lado nenhum,
+    // e material sem licença confirmada não vai para o portfólio.
     temSom: false,
-    coverRatio: "video",
+    // O ficheiro é 1280×854 (3:2) — horizontal. Na moldura de telemóvel do
+    // VideoMockup, que é 9:16, saía deformado.
+    coverRatio: "page",
+    coverAspect: "3 / 2",
     cover: {
       src: "/media/web/poster-imobai.jpg",
       alt: "ImobAI — tour de um apartamento em Paris com movimento de câmara gerado a partir de fotografias",
@@ -248,7 +251,7 @@ export const projects: Project[] = [
     link: { href: "https://autoshop-estatico.vercel.app/", label: "Ver o catálogo" },
     repo: {
       href: "https://github.com/sarynnec-spec/loja9952",
-      label: "Código no GitHub",
+      label: "Ver no GitHub",
     },
     coverRatio: "page",
     coverAspect: "1440 / 639",
@@ -272,7 +275,7 @@ export const projects: Project[] = [
     ],
     stack: ["HTML", "CSS", "JavaScript", "Animação"],
     live: "https://eco-sem-fio.vercel.app/",
-    link: { href: "https://eco-sem-fio.vercel.app/", label: "Abrir o site" },
+    link: { href: "https://eco-sem-fio.vercel.app/", label: "Ver o site" },
     coverRatio: "page",
     cover: {
       src: "/media/web/poster-eco-sem-fio.jpg",

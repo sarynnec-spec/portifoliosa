@@ -277,7 +277,7 @@ export default function ProjectRow({ project, onOpen }: ProjectRowProps) {
               <div className={styles.links}>
                 {project.link && (
                   <a
-                    className={styles.link}
+                    className={styles.botaoPrimario}
                     href={project.link.href}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -288,7 +288,7 @@ export default function ProjectRow({ project, onOpen }: ProjectRowProps) {
                 )}
                 {project.repo && (
                   <a
-                    className={styles.link}
+                    className={styles.botaoSecundario}
                     href={project.repo.href}
                     target="_blank"
                     rel="noopener noreferrer"

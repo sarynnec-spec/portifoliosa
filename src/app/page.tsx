@@ -9,6 +9,7 @@ import Services from "@/components/Services";
 import LogoMarquee from "@/components/LogoMarquee";
 import Work from "@/components/Work";
 import Motion from "@/components/Motion";
+import Competencias from "@/components/Competencias";
 import Experience from "@/components/Experience";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
@@ -29,6 +30,7 @@ export default function Home() {
         <Motion />
         <LogoMarquee />
         <Work />
+        <Competencias />
         <Experience />
         <Contact />
       </main>
