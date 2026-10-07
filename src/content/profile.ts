@@ -8,8 +8,13 @@ export const profile = {
   firstName: "Sarynne",
   lastName: "Ferreira",
   fullName: "Sarynne Laís Coelho Ferreira",
-  role: "Desenvolvimento Full Stack · IA e Automação",
-  roleShort: "Full Stack · IA e Automação",
+  /*
+   * As duas frentes têm de aparecer: ela candidata-se a vagas de
+   * desenvolvimento E de design, e o `role` vai para o <title> da página — com
+   * só uma delas, metade dos recrutadores fecha o separador.
+   */
+  role: "Full Stack, IA e Automação · Design Digital",
+  roleShort: "Full Stack · IA · Design Digital",
   status: "Técnica de Multimédia · IEFP",
   location: "Aveiro, Portugal",
   timeZone: "Europe/Lisbon",
@@ -31,14 +36,14 @@ export const profile = {
 
 /** Perfil profissional — resumo do CV. */
 export const summary =
-  "Construo aplicações web de ponta a ponta — interface, lógica de negócio, base de dados e APIs — com formação de Técnica de Multimédia no IEFP e uma base comercial de anos em atendimento, gestão de loja e consultoria. O VerdeFácil, plataforma SaaS de faturação fiscal que desenvolvi de raiz, junta as duas coisas: perceber o problema de quem o vai usar e construir o software que o resolve.";
+  "Construo aplicações web de ponta a ponta — interface, lógica de negócio, base de dados e APIs — e trabalho igualmente em design gráfico, motion design e UX/UI. Técnica de Multimédia pelo IEFP (nível 4), formação que junta programação e design, com uma base comercial de anos em atendimento, gestão de loja e consultoria. O VerdeFácil, plataforma SaaS de faturação fiscal que desenvolvi de raiz, junta as duas coisas: perceber o problema de quem o vai usar e construir o produto que o resolve.";
 
 /** Frase-manifesto revelada palavra a palavra no scroll. Construída a partir do perfil do CV. */
 export const manifesto =
   "Levo um produto da ideia ao código em produção: desenho a base de dados, construo a interface, ligo as APIs e escrevo os testes que provam que funciona.";
 
 export const about = {
-  heading: "Da gestão comercial ao software em produção.",
+  heading: "Da gestão comercial ao software e ao design.",
   paragraphs: [
     "Depois de anos em atendimento ao público, gestão de loja e consultoria comercial e financeira, a formação de Técnica de Multimédia no IEFP deu-me as bases de design e interface. Daí fui à procura do que faltava: construir o produto inteiro, e não apenas o que se vê.",
     "Hoje trabalho de ponta a ponta — modelo de dados, lógica de negócio, APIs e testes. O VerdeFácil nasceu assim, de raiz: uma plataforma de faturação fiscal onde cada decisão técnica foi minha, e onde aprendi que a parte difícil não é escrever código, é provar que está certo.",
