@@ -26,9 +26,9 @@ export default function Home() {
         <Marquee items={disciplines} />
         <PostsTunnel />
         <Services />
+        <Motion />
         <LogoMarquee />
         <Work />
-        <Motion />
         <Experience />
         <Contact />
       </main>

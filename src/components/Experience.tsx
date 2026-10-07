@@ -17,10 +17,16 @@ export default function Experience() {
             </Reveal>
           </div>
           <Reveal delay={0.1}>
-            <a className={styles.cv} href={profile.cvFile} download>
-              Descarregar currículo
-              <span aria-hidden="true">↓</span>
-            </a>
+            <div className={styles.cvGroup}>
+              <a className={styles.cv} href={profile.cvFile} download hrefLang="pt">
+                Currículo <span className={styles.cvLang}>PT</span>
+                <span aria-hidden="true">↓</span>
+              </a>
+              <a className={styles.cv} href={profile.cvFileEn} download hrefLang="en">
+                Resume <span className={styles.cvLang}>EN</span>
+                <span aria-hidden="true">↓</span>
+              </a>
+            </div>
           </Reveal>
         </div>
 

@@ -28,6 +28,8 @@ export type Project = {
   featured?: boolean;
   /** Reel vertical reproduzido dentro do aparelho. */
   video?: string;
+  /** Falso quando o ficheiro não leva faixa de áudio: o botão de som não aparece. */
+  temSom?: boolean;
   /** Marca do cliente: aparece antes do nome, no cabeçalho do projeto. */
   logo?: ProjectImage;
   cover: ProjectImage;
@@ -192,8 +194,47 @@ export const projects: Project[] = [
     },
   },
   {
-    slug: "autoshop",
+    slug: "imobai",
     index: "06",
+    title: "ImobAI",
+    category: "Motor em Python · Visão computacional",
+    year: "2026",
+    description:
+      "Motor que transforma a fotografia de um imóvel em vídeo com movimento de câmara tridimensional real, preservando a geometria e os píxeis originais. Estimativa de profundidade em ONNX sobre CPU, reprojeção 3D e tratamento da disoclusão — o que fica a descoberto quando a câmara se desloca e a fotografia nunca registou. São 84 ficheiros Python e 16 883 linhas, com uma aplicação web própria para o correr.",
+    highlights: [
+      "A regra que define o projeto: qualquer píxel que já existia na fotografia permanece exatamente igual — verificado, não assumido, com outside_hole = 0.00000000 em todos os planos",
+      "A descoberta que mudou o produto: o dolly é o único eixo cujo modo de falha é irreparável a partir de uma fotografia. Trocar de eixo levou o artefacto a zero exato",
+      "Regra de seleção de movimento saída da medição do gradiente das margens, não de um palpite",
+      "Portas de qualidade automáticas e benchmark congelado, corrido antes e depois de cada alteração — várias hipóteses minhas foram refutadas pelos números",
+      "Aplicação web em Python que decide quantos renders faz em paralelo a partir da RAM livre: 222 s e pico de 547 MB por render de 1920×1080",
+      "Mapa tridimensional do bairro construído a partir de dados abertos do OpenStreetMap, com a localização deliberadamente aproximada e a fonte creditada",
+    ],
+    stack: [
+      "Python",
+      "NumPy",
+      "OpenCV",
+      "ONNX Runtime",
+      "Depth Anything V2",
+      "OpenStreetMap",
+      "FFmpeg",
+    ],
+    repo: {
+      href: "https://github.com/sarynnec-spec/imobai-showcase",
+      label: "Arquitetura e método no GitHub",
+    },
+    video: "/media/web/imobai-paris.mp4",
+    // A faixa de áudio saiu: a origem da música não está registada em lado
+    // nenhum, e material sem licença confirmada não vai para o portfólio.
+    temSom: false,
+    coverRatio: "video",
+    cover: {
+      src: "/media/web/poster-imobai.jpg",
+      alt: "ImobAI — tour de um apartamento em Paris com movimento de câmara gerado a partir de fotografias",
+    },
+  },
+  {
+    slug: "autoshop",
+    index: "07",
     title: "AutoShop",
     category: "Website · Stand de Automóveis",
     description:
@@ -218,7 +259,7 @@ export const projects: Project[] = [
   },
   {
     slug: "eco-sem-fio",
-    index: "07",
+    index: "08",
     title: "ECO SEM FIO",
     category: "Website · Projeto Conceptual de Segurança Digital",
     description:
@@ -240,7 +281,7 @@ export const projects: Project[] = [
   },
   {
     slug: "rafalice",
-    index: "08",
+    index: "09",
     title: "Salgados Rafalice",
     category: "Identidade · Social Media & Ads",
     description:
@@ -273,34 +314,6 @@ export const projects: Project[] = [
         caption: "Post · Pacotes 20€ e 35€",
       },
     ],
-  },
-  {
-    slug: "imobai",
-    index: "09",
-    title: "ImobAI",
-    category: "Motor em Python · Visão computacional",
-    year: "2026",
-    description:
-      "Motor que transforma a fotografia de um imóvel em vídeo com movimento de câmara tridimensional real, preservando a geometria e os píxeis originais. Estimativa de profundidade em ONNX sobre CPU, reprojeção 3D e tratamento da disoclusão — o que fica a descoberto quando a câmara se desloca e a fotografia nunca registou. São 84 ficheiros Python e 16 883 linhas, com uma aplicação web própria para o correr.",
-    highlights: [
-      "A regra que define o projeto: qualquer píxel que já existia na fotografia permanece exatamente igual — verificado, não assumido, com outside_hole = 0.00000000 em todos os planos",
-      "A descoberta que mudou o produto: o dolly é o único eixo cujo modo de falha é irreparável a partir de uma fotografia. Trocar de eixo levou o artefacto a zero exato",
-      "Regra de seleção de movimento saída da medição do gradiente das margens, não de um palpite",
-      "Portas de qualidade automáticas e benchmark congelado, corrido antes e depois de cada alteração — várias hipóteses minhas foram refutadas pelos números",
-      "Aplicação web em Python que decide quantos renders faz em paralelo a partir da RAM livre: 222 s e pico de 547 MB por render de 1920×1080",
-    ],
-    stack: ["Python", "NumPy", "OpenCV", "ONNX Runtime", "Depth Anything V2", "FFmpeg"],
-    repo: {
-      href: "https://github.com/sarynnec-spec/imobai-showcase",
-      label: "Arquitetura e método no GitHub",
-    },
-    video: "/media/web/imobai-demo.mp4",
-    coverRatio: "page",
-    coverAspect: "16 / 9",
-    cover: {
-      src: "/media/web/imobai.jpg",
-      alt: "ImobAI — movimento de câmara 3D gerado a partir de uma fotografia",
-    },
   },
   {
     slug: "nexus-industrial",

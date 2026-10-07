@@ -1,23 +1,38 @@
 .stage {
   width: 100%;
-  /*
-   * Limitado também pela altura da janela: com 9:16, a altura é a largura
-   * vezes 1,78. A 40svh de largura o conjunto ocupa ~71svh e cabe sempre no
-   * ecrã, sem obrigar a rolar para ver o fim do vídeo.
-   */
-  max-width: min(20rem, 40svh);
   margin-inline: auto;
   perspective: 1600px;
   perspective-origin: 50% 45%;
 }
 
+/*
+ * As duas larguras não são gosto: são a conta que deixa os dois aparelhos
+ * com a MESMA ALTURA em cena. Com a moldura a 2,4% da largura de cada lado,
+ * um 9:16 mede 1,826 larguras de alto e um 4:5 mede 1,298 — por isso o 4:5
+ * tem de ser 1,407 vezes mais largo para acabar à mesma altura.
+ * Limitadas também pela altura da janela, para nunca obrigar a rolar.
+ */
+.stageFone {
+  max-width: min(20rem, 40svh);
+}
+
+.stageFeed {
+  max-width: min(28rem, 56svh);
+}
+
+/*
+ * A altura vem do ecrã, que tem a proporção do vídeo. O aparelho é só a
+ * moldura à volta: assim a imagem enche de aresta a aresta em qualquer
+ * formato, sem sobrar fundo nem cortar nada.
+ */
 .device {
   position: relative;
   width: 100%;
-  /* 9:16 — a mesma proporção do vídeo. Com 9:19,5 o `cover` cortava as pontas. */
-  aspect-ratio: 9 / 16;
   padding: 2.4%;
-  border-radius: 13% / 6%;
+  /* Raio em rem, não em percentagem: em percentagem o canto acompanha a
+     largura, e o aparelho 4:5 — que é mais largo — saía com os cantos
+     muito mais redondos do que o 9:16, ao lado. */
+  border-radius: 2.25rem;
   transform-style: preserve-3d;
   will-change: transform;
   background: linear-gradient(150deg, #4a463d 0%, #1b1915 18%, #0c0b09 50%, #14120e 78%, #3d3931 100%);
@@ -26,21 +41,27 @@
     inset 0 0 0 1px rgba(255, 255, 255, 0.09);
 }
 
+/*
+ * ⚠️ A proporção é posta aqui por `style`, não no aparelho. O `padding` da
+ * moldura é uma percentagem da LARGURA e aplica-se também em cima e em
+ * baixo: com a proporção no aparelho, o ecrã saía a 0,792 em vez de 0,800
+ * e sobrava sempre uma fatia de fundo a toda a largura.
+ */
 .screen {
   position: relative;
   display: block;
   width: 100%;
-  height: 100%;
   overflow: hidden;
-  border-radius: 11% / 5%;
+  border-radius: 1.5rem;
   background: #05060d;
 }
 
 .screen video {
   width: 100%;
   height: 100%;
-  /* contain: mesmo que a proporção mude um dia, nunca corta a imagem. */
-  object-fit: contain;
+  /* O ecrã já tem a proporção do ficheiro: aqui o `cover` não corta nada —
+     só garante que nenhum arredondamento deixa um fio de fundo à vista. */
+  object-fit: cover;
   background: #05060d;
   display: block;
 }
@@ -96,9 +117,27 @@
   color: var(--paper);
 }
 
+/*
+ * No telemóvel a coluna é a página toda: se a peça central ocupasse tudo,
+ * as vizinhas não cabiam e o carrossel voltava a parecer uma peça só. Recua
+ * o suficiente para sobrar aresta dos dois lados — e o 4:5 recua mais do
+ * que a conta pedia, senão não sobrava aresta nenhuma.
+ */
 @media (max-width: 48rem) {
-  .stage {
-    max-width: min(17rem, 38svh);
+  .stageFone {
+    max-width: min(14.5rem, 36svh);
+  }
+
+  .stageFeed {
+    max-width: min(17.5rem, 44svh);
+  }
+
+  .device {
+    border-radius: 1.6rem;
+  }
+
+  .screen {
+    border-radius: 1.05rem;
   }
 
   .som {

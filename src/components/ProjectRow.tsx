@@ -110,6 +110,7 @@ export default function ProjectRow({ project, onOpen }: ProjectRowProps) {
               alt={project.cover.alt}
               rotateY={reduced ? undefined : deviceRotateY}
               rotateX={reduced ? undefined : deviceRotateX}
+              temSom={project.temSom}
             />
           ) : project.live ? (
             /*
@@ -234,6 +235,16 @@ export default function ProjectRow({ project, onOpen }: ProjectRowProps) {
             </Reveal>
           )}
 
+        </div>
+      </div>
+
+      {/*
+       * Ficha técnica por baixo das duas colunas, em largura total e centrada.
+       * Dentro da coluna de texto, as etiquetas empurravam-na para baixo do
+       * vídeo e as duas deixavam de estar lado a lado.
+       */}
+      {(project.stack || project.link || project.repo) && (
+        <div className={styles.specs}>
           {project.stack && (
             <Reveal as="ul" className={styles.stack} delay={0.14}>
               {project.stack.map((item) => (
@@ -282,7 +293,7 @@ export default function ProjectRow({ project, onOpen }: ProjectRowProps) {
             </Reveal>
           )}
         </div>
-      </div>
+      )}
 
       {project.gallery && project.gallery.length > 1 && !carrossel && (
         <Reveal className={styles.galleryWrap} delay={0.06}>

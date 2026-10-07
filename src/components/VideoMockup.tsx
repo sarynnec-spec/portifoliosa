@@ -10,6 +10,15 @@ type VideoMockupProps = {
   alt: string;
   rotateY?: MotionValue<number>;
   rotateX?: MotionValue<number>;
+  /**
+   * Proporção do ficheiro. Todas as peças vão dentro de um aparelho — o que
+   * muda é a forma dele, que acompanha o vídeo. Assim a imagem enche o ecrã
+   * de aresta a aresta **e** não se corta nada: num ecrã 9:16 fixo, um 4:5
+   * ou sobrava em faixas (que se leem como corte) ou tinha de ser cortado.
+   */
+  ratio?: "9/16" | "4/5";
+  /** Falso quando o ficheiro não leva faixa de áudio: o botão não aparece. */
+  temSom?: boolean;
 };
 
 const EASE = [0.16, 1, 0.3, 1] as const;
@@ -21,11 +30,20 @@ const EASE = [0.16, 1, 0.3, 1] as const;
  * gasta bateria e largura de banda sem ninguém o ver. Arranca sem som porque
  * os browsers bloqueiam autoplay com áudio; o botão liga o som.
  */
-export default function VideoMockup({ src, poster, alt, rotateY, rotateX }: VideoMockupProps) {
+export default function VideoMockup({
+  src,
+  poster,
+  alt,
+  rotateY,
+  rotateX,
+  ratio = "9/16",
+  temSom = true,
+}: VideoMockupProps) {
   const ref = useRef<HTMLDivElement | null>(null);
   const video = useRef<HTMLVideoElement | null>(null);
   const [comSom, setComSom] = useState(false);
   const reduced = useReducedMotion();
+  const feed = ratio === "4/5";
 
   useEffect(() => {
     const node = ref.current;
@@ -53,7 +71,10 @@ export default function VideoMockup({ src, poster, alt, rotateY, rotateX }: Vide
   };
 
   return (
-    <div className={styles.stage} ref={ref}>
+    <div
+      className={`${styles.stage} ${feed ? styles.stageFeed : styles.stageFone}`}
+      ref={ref}
+    >
       <motion.div
         className={styles.device}
         style={rotateY && !reduced ? { rotateY, rotateX } : undefined}
@@ -63,7 +84,16 @@ export default function VideoMockup({ src, poster, alt, rotateY, rotateX }: Vide
         transition={{ duration: 1.15, ease: EASE }}
       >
         <span className={styles.island} aria-hidden="true" />
-        <span className={styles.screen}>
+        {/*
+         * A proporção vive no ECRÃ, não no aparelho. O `padding` da moldura
+         * é uma percentagem da largura e aplica-se também em cima e em
+         * baixo: posto no aparelho, o ecrã ficava a 0,792 em vez de 0,800 e
+         * sobrava sempre uma fatia de fundo.
+         */}
+        <span
+          className={styles.screen}
+          style={{ aspectRatio: feed ? "4 / 5" : "9 / 16" }}
+        >
           <video
             ref={video}
             src={src}
@@ -78,10 +108,12 @@ export default function VideoMockup({ src, poster, alt, rotateY, rotateX }: Vide
         </span>
       </motion.div>
 
-      <button type="button" className={styles.som} onClick={alternarSom}>
-        {comSom ? "Desligar som" : "Ouvir com som"}
-        <span aria-hidden="true">{comSom ? "◼" : "▶"}</span>
-      </button>
+      {temSom && (
+        <button type="button" className={styles.som} onClick={alternarSom}>
+          {comSom ? "Desligar som" : "Ouvir com som"}
+          <span aria-hidden="true">{comSom ? "◼" : "▶"}</span>
+        </button>
+      )}
     </div>
   );
 }

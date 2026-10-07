@@ -106,8 +106,14 @@ export default function Contact() {
             <div className={styles.channel}>
               <dt>Currículo</dt>
               <dd>
-                <a href={profile.cvFile} download>
-                  PDF ↓
+                <a href={profile.cvFile} download hrefLang="pt">
+                  PT ↓
+                </a>
+                <span className={styles.canalSep} aria-hidden="true">
+                  ·
+                </span>
+                <a href={profile.cvFileEn} download hrefLang="en">
+                  EN ↓
                 </a>
               </dd>
             </div>

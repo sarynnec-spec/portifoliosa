@@ -348,6 +348,11 @@
   font-size: 0.95rem;
 }
 
+.canalSep {
+  margin-inline: 0.5rem;
+  color: rgba(20, 19, 15, 0.4);
+}
+
 .channel a {
   border-bottom: 1px solid transparent;
   transition:

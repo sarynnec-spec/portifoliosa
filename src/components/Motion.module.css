@@ -5,7 +5,7 @@
 
 .head {
   max-width: 46rem;
-  margin-bottom: clamp(3rem, 7vw, 5.5rem);
+  margin-bottom: clamp(2.5rem, 6vw, 4.5rem);
 }
 
 .title {
@@ -17,41 +17,210 @@
   color: var(--muted);
 }
 
-.lista {
-  display: grid;
-  gap: clamp(3.5rem, 9vw, 7rem);
-}
-
-/* Aparelho de um lado, ficha do outro; alternam para a grelha não marchar. */
-.reel {
-  display: grid;
-  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
-  gap: clamp(1.75rem, 5vw, 4.5rem);
-  align-items: center;
+/*
+ * Palco do carrossel, em três andares: o vídeo ao meio, os comandos logo
+ * por baixo dele e só depois a ficha escrita. Com o texto ao lado do vídeo
+ * — como esteve — a coluna do vídeo ficava estreita e as peças vizinhas
+ * não tinham onde caber sem colidir com a leitura.
+ */
+.palco {
+  position: relative;
   border-top: 1px solid var(--line);
   padding-top: clamp(1.5rem, 3vw, 2.5rem);
+  display: grid;
 }
 
-.reel:nth-child(even) .palco {
-  order: 2;
+.palco:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1rem;
 }
 
-.palco {
-  min-width: 0;
+/*
+ * A fila do vídeo: a peça a tocar ao centro e as duas vizinhas de cada
+ * lado. O `overflow: hidden` só chega a cortar alguma coisa no telemóvel,
+ * onde não cabem inteiras — e aí é o corte que diz «isto continua».
+ * O `min-height` é o que impede o salto entre uma peça 4:5 (mais baixa) e
+ * uma 9:16 (mais alta).
+ */
+.palcoVideo {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  overflow: hidden;
+  padding-block: clamp(0.5rem, 1.5vw, 1.5rem);
 }
+
+/*
+ * A caixa que dá às vizinhas a aresta de onde se afastam. Repete o tecto de
+ * largura do `VideoMockup` de propósito: sem largura própria não havia
+ * aresta nenhuma e as vizinhas iam medir-se ao palco inteiro — ficavam a
+ * meia página do vídeo, fora do corte.
+ */
+.grupo {
+  position: relative;
+}
+
+/* Acompanham os tectos do `VideoMockup`: o 4:5 é mais largo de propósito,
+   para os dois aparelhos acabarem à mesma altura em cena. */
+.grupoFone {
+  width: min(20rem, 40svh);
+}
+
+.grupoFeed {
+  width: min(28rem, 56svh);
+}
+
+.centro {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  cursor: grab;
+  touch-action: pan-y;
+}
+
+.centro:active {
+  cursor: grabbing;
+}
+
+.vizinho {
+  position: absolute;
+  top: 50%;
+  z-index: 1;
+  width: clamp(5rem, 10vw, 9.5rem);
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  opacity: 0.62;
+  filter: grayscale(0.2);
+  translate: 0 -50%;
+  /* Agarradas à aresta do bloco do vídeo, uma de cada lado. */
+  transition:
+    opacity 0.4s var(--ease-out),
+    scale 0.4s var(--ease-out),
+    filter 0.4s var(--ease-out);
+}
+
+/*
+ * A borda escura não é decoração: metade das capas é quase branca (a Midea,
+ * a Imaginar) e sobre papel branco a peça vizinha desaparecia — ficava a
+ * parecer um espaço vazio em vez da peça seguinte.
+ */
+/* Cada capa na proporção da sua peça, como o aparelho do centro: nenhuma
+   é cortada e nenhuma leva faixas de fundo. */
+.vizinho img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border: 1px solid var(--line-strong);
+  box-shadow: 0 1rem 2rem -1rem rgba(20, 19, 15, 0.4);
+}
+
+.vizinhoAnt {
+  right: 100%;
+}
+
+.vizinhoSeg {
+  left: 100%;
+}
+
+.vizinho:hover,
+.vizinho:focus-visible {
+  opacity: 0.92;
+  filter: grayscale(0);
+  scale: 1.06;
+}
+
+/* ---- Comandos: as setas e o contador, colados ao vídeo ---- */
+
+.comandos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1.25rem, 4vw, 2.75rem);
+  margin-top: clamp(1.25rem, 2.5vw, 2rem);
+}
+
+.seta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 1.1rem;
+  background: none;
+  border: 1px solid var(--line-strong);
+  color: var(--ink);
+  cursor: pointer;
+  transition:
+    background-color 0.35s var(--ease-out),
+    border-color 0.35s var(--ease-out),
+    color 0.35s var(--ease-out);
+}
+
+.seta:hover,
+.seta:focus-visible {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--paper);
+}
+
+.setaTexto {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.setaIcone {
+  width: 2.1rem;
+  height: 0.75rem;
+  flex: none;
+  overflow: visible;
+}
+
+/* Contador: dois números e um risco, na mesma mono das fichas técnicas. */
+.conta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+}
+
+.contaAtual {
+  color: var(--accent);
+}
+
+.contaBarra {
+  width: 2rem;
+  height: 1px;
+  background: var(--line-strong);
+}
+
+.contaTotal {
+  color: var(--muted-2);
+}
+
+/* ---- A ficha escrita, por baixo de tudo ---- */
 
 .texto {
+  width: min(100%, 68rem);
+  margin-inline: auto;
+  margin-top: clamp(2rem, 4vw, 3.25rem);
+  padding-top: clamp(1.5rem, 3vw, 2.25rem);
+  border-top: 1px solid var(--line);
   display: grid;
-  gap: 1.1rem;
-  align-content: center;
-  justify-items: start;
+  gap: clamp(1.5rem, 3vw, 2.25rem);
+  justify-items: center;
 }
 
 .cabeca {
   display: grid;
-  grid-template-columns: 3rem minmax(0, 1fr);
-  align-items: baseline;
-  gap: 0.3rem clamp(0.75rem, 2vw, 1.5rem);
+  justify-items: center;
+  gap: 0.5rem;
+  text-align: center;
 }
 
 .index {
@@ -59,19 +228,17 @@
   font-size: 0.7rem;
   letter-spacing: 0.1em;
   color: var(--accent);
-  grid-row: 1 / span 2;
 }
 
 .nome {
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: clamp(1.9rem, 4vw, 3.1rem);
+  font-size: clamp(2.1rem, 4.5vw, 3.4rem);
   line-height: 1;
   letter-spacing: -0.02em;
 }
 
 .categoria {
-  grid-column: 2;
   font-family: var(--font-mono);
   font-size: 0.7rem;
   letter-spacing: 0.12em;
@@ -81,6 +248,7 @@
 
 /* Ficha técnica: o que um cliente de vídeo quer saber em primeiro lugar. */
 .ficha {
+  margin-top: 0.4rem;
   font-family: var(--font-mono);
   font-size: 0.68rem;
   letter-spacing: 0.1em;
@@ -90,9 +258,19 @@
   padding: 0.4rem 0.7rem;
 }
 
+/* Descrição de um lado, pontos do outro: a secção não cresce em altura à
+   custa de linhas curtas e a leitura fica entre os 58 e os 60 caracteres. */
+.corpo {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: start;
+}
+
 .descricao {
   color: var(--muted);
-  font-size: clamp(1.05rem, 1.2vw, 1.2rem);
+  font-size: clamp(1.05rem, 1.15vw, 1.18rem);
   line-height: 1.6;
   max-width: 58ch;
 }
@@ -100,14 +278,12 @@
 .pontos {
   display: grid;
   gap: 0.65rem;
-  border-top: 1px solid var(--line);
-  padding-top: 1rem;
 }
 
 .pontos li {
   position: relative;
   padding-left: 1.35rem;
-  font-size: 1rem;
+  font-size: 0.98rem;
   line-height: 1.5;
   max-width: 60ch;
   color: var(--muted);
@@ -127,6 +303,7 @@
 .stack {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 0.4rem;
 }
 
@@ -139,12 +316,76 @@
   color: var(--muted);
 }
 
-@media (max-width: 860px) {
-  .reel {
-    grid-template-columns: minmax(0, 1fr);
+@media (min-width: 61rem) {
+  /* Altura do 9:16, a peça mais alta — trava o salto ao mudar de formato. */
+  .palcoVideo {
+    min-height: min(37rem, 73svh);
   }
 
-  .reel:nth-child(even) .palco {
-    order: 0;
+  /* Aqui cabem inteiras ao lado do vídeo, com folga a separá-las dele. */
+  .vizinhoAnt {
+    margin-right: clamp(1.5rem, 4vw, 3.5rem);
+  }
+
+  .vizinhoSeg {
+    margin-left: clamp(1.5rem, 4vw, 3.5rem);
+  }
+}
+
+@media (max-width: 60.99rem) {
+  /*
+   * Também aqui a altura do aparelho mais alto (o 9:16): no telemóvel os
+   * dois formatos ficam a 58 px de diferença, e sem isto a página saltava
+   * esse tanto sempre que se passava de uma 4:5 para uma 9:16.
+   */
+  .palcoVideo {
+    min-height: min(26rem, 52svh);
+  }
+
+  /*
+   * No telemóvel não há folga para dar: encostam ao vídeo e é a aresta do
+   * palco que as corta. O que se vê é meia peça, e chega para perceber.
+   */
+  .corpo {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+  }
+
+  .descricao,
+  .pontos li {
+    max-width: none;
+  }
+}
+
+/* Abaixo dos 48rem o `VideoMockup` encolhe a peça; acompanhar, senão o
+   bloco central ficava mais largo do que o vídeo que tem lá dentro. */
+@media (max-width: 48rem) {
+  .grupoFone {
+    width: min(14.5rem, 36svh);
+  }
+
+  .grupoFeed {
+    width: min(17.5rem, 44svh);
+  }
+}
+
+@media (max-width: 40rem) {
+  .comandos {
+    gap: 0.75rem;
+    justify-content: space-between;
+  }
+
+  .setaTexto {
+    display: none;
+  }
+
+  .seta {
+    padding: 0.7rem 0.9rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .centro {
+    cursor: auto;
   }
 }
