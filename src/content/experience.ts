@@ -69,8 +69,23 @@ export const education: Education[] = [
   },
 ];
 
-/** Competências e habilidades — lista literal do CV. */
+/**
+ * Competências e habilidades.
+ *
+ * ⚠️ As técnicas abriram a lista a 2026-10-07 e **não constam do CV** — vêm do
+ * VerdeFácil e do ImobAI. Ao atualizar o currículo, acrescentá-las lá também:
+ * senão o portfólio e o PDF em anexo contam histórias diferentes.
+ */
 export const skills: string[] = [
+  "Desenvolvimento web full stack — TypeScript, React e Next.js",
+  "PostgreSQL — modelação de dados, consultas e migrações",
+  "APIs REST — desenvolvimento, autenticação e documentação em OpenAPI",
+  "Integração de modelos de linguagem (LLM) por API",
+  "Automação — webhooks, tarefas agendadas e filas de processamento",
+  "Testes automatizados e depuração — Vitest e Playwright",
+  "Git, trabalho com branches e CI/CD com GitHub Actions",
+  "Python — processamento de imagem e de dados",
+  "Segurança — autenticação, permissões e proteção de credenciais",
   "Design gráfico e identidade visual",
   "Criação de conteúdo e posts para redes sociais",
   "Campanhas de tráfego pago (Meta, Google, TikTok e YouTube Ads)",

@@ -21,6 +21,8 @@ export const profile = {
   whatsapp: "https://wa.me/351932326515",
   linkedin: "https://www.linkedin.com/in/sarynne-coelho-ferreira",
   linkedinHandle: "/sarynne-coelho-ferreira",
+  github: "https://github.com/sarynnec-spec",
+  githubHandle: "@sarynnec-spec",
   cvFile: "/Curriculo-Sarynne-Ferreira.pdf",
   cvFileEn: "/Resume-Sarynne-Ferreira.pdf",
   portrait: "/media/me/sarynne.png",
@@ -64,11 +66,17 @@ export const disciplines = [
   "Criação de Conteúdo",
 ];
 
+/**
+ * `href` só existe nos destinos externos. Sem ele, o item é uma âncora para a
+ * secção com o mesmo `id` — e é por essas que o observador decide qual está
+ * ativa, pelo que os externos ficam de fora sem precisar de exceção.
+ */
 export const navItems = [
   { id: "sobre", label: "Sobre" },
   { id: "servicos", label: "Serviços" },
   { id: "motion", label: "Motion" },
   { id: "trabalho", label: "Trabalho" },
   { id: "percurso", label: "Percurso" },
+  { id: "github", label: "GitHub", href: profile.github },
   { id: "contacto", label: "Contacto" },
 ];

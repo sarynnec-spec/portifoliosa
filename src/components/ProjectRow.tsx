@@ -42,6 +42,15 @@ export default function ProjectRow({ project, onOpen }: ProjectRowProps) {
   const isSite = project.coverRatio === "page";
   const isPhone = project.coverRatio === "phone";
   const isVideo = project.coverRatio === "video";
+  /*
+   * Uma só coluna — peça ampla em cima, texto centrado por baixo — apenas
+   * quando não há destaques: aí o texto é curto demais para encher a coluna ao
+   * lado de uma peça alta (no LODÊ sobravam 1485 px de vazio, medido a 1440).
+   *
+   * Os projetos com vídeo mantêm as duas colunas, por decisão dela: a peça fica
+   * ao lado da descrição e a ficha técnica passa por baixo, em `.specs`.
+   */
+  const solo = !project.highlights?.length;
   const liveHost = project.live ? new URL(project.live).host : null;
   const windowRef = useRef<HTMLElement | null>(null);
   const [inView, setInView] = useState(false);
@@ -94,7 +103,12 @@ export default function ProjectRow({ project, onOpen }: ProjectRowProps) {
         <p className={styles.category}>{project.category}</p>
       </Reveal>
 
-      <div className={styles.body}>
+      {/*
+       * Projetos sem destaques têm pouco texto, e ao lado de uma captura de
+       * página inteira sobrava um vazio enorme na coluna da esquerda. Nesses,
+       * a peça passa a ocupar a largura toda e o texto vai para baixo, centrado.
+       */}
+      <div className={solo ? `${styles.body} ${styles.bodySolo}` : styles.body}>
         <Reveal className={styles.mediaCol}>
           {carrossel ? (
             <GlassCarousel

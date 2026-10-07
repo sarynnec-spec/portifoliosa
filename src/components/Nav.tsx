@@ -69,9 +69,10 @@ export default function Nav() {
           {navItems.map((item) => (
             <a
               key={item.id}
-              href={`#${item.id}`}
+              href={item.href ?? `#${item.id}`}
               className={styles.link}
               data-active={active === item.id || undefined}
+              {...(item.href ? { target: "_blank", rel: "noopener noreferrer" } : {})}
             >
               {item.label}
             </a>
@@ -100,10 +101,11 @@ export default function Nav() {
           {navItems.map((item, i) => (
             <a
               key={item.id}
-              href={`#${item.id}`}
+              href={item.href ?? `#${item.id}`}
               className={styles.sheetLink}
               style={{ transitionDelay: `${0.06 * i + 0.08}s` }}
               onClick={() => setOpen(false)}
+              {...(item.href ? { target: "_blank", rel: "noopener noreferrer" } : {})}
             >
               <span className={styles.sheetIndex}>{String(i + 1).padStart(2, "0")}</span>
               {item.label}
