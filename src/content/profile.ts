@@ -8,12 +8,12 @@ export const profile = {
   firstName: "Sarynne",
   lastName: "Ferreira",
   fullName: "Sarynne Laís Coelho Ferreira",
-  role: "Design Digital & Multimédia",
-  roleShort: "Designer & Técnica de Multimédia",
+  role: "Desenvolvimento Full Stack · IA e Automação",
+  roleShort: "Full Stack · IA e Automação",
   status: "Técnica de Multimédia · IEFP",
   location: "Aveiro, Portugal",
   timeZone: "Europe/Lisbon",
-  availability: "Disponível para trabalho a partir de 3 de novembro de 2026",
+  availability: "Disponível para trabalho",
   internshipHours: "210h",
   email: "sarynnec@gmail.com",
   phone: "+351 932 326 515",
@@ -22,23 +22,25 @@ export const profile = {
   linkedin: "https://www.linkedin.com/in/sarynne-coelho-ferreira",
   linkedinHandle: "/sarynne-coelho-ferreira",
   cvFile: "/Curriculo-Sarynne-Ferreira.pdf",
+  cvFileEn: "/Resume-Sarynne-Ferreira.pdf",
   portrait: "/media/me/sarynne.png",
   showreel: "/media/me/showreel.mp4",
 } as const;
 
 /** Perfil profissional — resumo do CV. */
 export const summary =
-  "Profissional criativa com formação de Técnica de Multimédia no IEFP, com experiência sólida em atendimento ao público, gestão comercial e coordenação de equipas. Atualmente dedico-me ao design gráfico, motion design, web design, criação de conteúdo para redes sociais, gestão de campanhas de anúncios e design de interfaces (UX/UI).";
+  "Construo aplicações web de ponta a ponta — interface, lógica de negócio, base de dados e APIs — com formação de Técnica de Multimédia no IEFP e uma base comercial de anos em atendimento, gestão de loja e consultoria. O VerdeFácil, plataforma SaaS de faturação fiscal que desenvolvi de raiz, junta as duas coisas: perceber o problema de quem o vai usar e construir o software que o resolve.";
 
 /** Frase-manifesto revelada palavra a palavra no scroll. Construída a partir do perfil do CV. */
 export const manifesto =
-  "Orientada para resultados, organizada e comprometida, uno visão de negócio a competências digitais e criativas. Desenho interfaces, crio conteúdo e giro campanhas.";
+  "Levo um produto da ideia ao código em produção: desenho a base de dados, construo a interface, ligo as APIs e escrevo os testes que provam que funciona.";
 
 export const about = {
-  heading: "Da gestão comercial ao design digital.",
+  heading: "Da gestão comercial ao software em produção.",
   paragraphs: [
-    "Depois de anos em atendimento ao público, gestão de loja e consultoria comercial e financeira, decidi unir essa vivência com a criatividade. A formação de Técnica de Multimédia no IEFP deu-me as bases em design gráfico, edição de imagem e vídeo, criação de conteúdo e desenvolvimento de interfaces.",
-    "Trago organização, foco em resultados e um olhar de quem entende o cliente — porque já estive dos dois lados do balcão. Procuro uma equipa onde possa aplicar o que aprendi e continuar a crescer.",
+    "Depois de anos em atendimento ao público, gestão de loja e consultoria comercial e financeira, a formação de Técnica de Multimédia no IEFP deu-me as bases de design e interface. Daí fui à procura do que faltava: construir o produto inteiro, e não apenas o que se vê.",
+    "Hoje trabalho de ponta a ponta — modelo de dados, lógica de negócio, APIs e testes. O VerdeFácil nasceu assim, de raiz: uma plataforma de faturação fiscal onde cada decisão técnica foi minha, e onde aprendi que a parte difícil não é escrever código, é provar que está certo.",
+    "Trago organização, foco em resultados e um olhar de quem entende o cliente — porque já estive dos dois lados do balcão. Procuro uma equipa onde possa aplicar o que construí e continuar a crescer.",
   ],
   facts: [
     { label: "Base", value: "Aveiro, Portugal" },
@@ -65,8 +67,8 @@ export const disciplines = [
 export const navItems = [
   { id: "sobre", label: "Sobre" },
   { id: "servicos", label: "Serviços" },
-  { id: "trabalho", label: "Trabalho" },
   { id: "motion", label: "Motion" },
+  { id: "trabalho", label: "Trabalho" },
   { id: "percurso", label: "Percurso" },
   { id: "contacto", label: "Contacto" },
 ];

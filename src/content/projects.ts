@@ -169,8 +169,9 @@ export const projects: Project[] = [
     category: "Produto & Arquitetura · Vertical agrícola",
     year: "2026",
     description:
-      "Vertical agrícola do VerdeFácil, que responde a uma pergunta que o pequeno agricultor português não consegue responder hoje: quanto ganho realmente em cada cultura? Levei-o da identificação do problema até à arquitetura aprovada e aos protótipos. A funcionalidade agrícola está por implementar — a plataforma que a suporta, essa, já está em produção.",
+      "Vertical agrícola do VerdeFácil, a concurso no Prémio Empreendedorismo e Inovação do Crédito Agrícola, categoria Desenvolvimento Local. Responde a uma pergunta que o pequeno agricultor português não consegue responder hoje: quanto ganho realmente em cada cultura? Levei-o da identificação do problema à arquitetura aprovada e aos protótipos. A funcionalidade agrícola está por implementar — a plataforma que a suporta, essa, já está em produção.",
     highlights: [
+      "A concurso na 13.ª edição do Prémio Empreendedorismo e Inovação do Crédito Agrícola, categoria Desenvolvimento Local",
       "Problema validado em fontes oficiais: mais de 27,8% do rendimento agrícola vem de subsídios (INE), pagos sobretudo entre novembro e junho, e tributados como rendimento (CIRS art. 31.º)",
       "Mercado estudado e quadrante vazio identificado: os softwares agrícolas gerem produção, a contabilidade gere documentos — falta a clareza financeira por cultura ligada à fiscalidade",
       "O utilizador decide a interface: mais de 60 anos e baixa literacia digital levam a registo por voz e missões em vez de menus, e a resultados sempre apresentados como estimativa",
