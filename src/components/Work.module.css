@@ -220,6 +220,15 @@
   color: var(--muted);
 }
 
+/* Dois destinos por projeto: o site ao vivo e o repositório.
+   Quebram para linhas separadas em ecrãs estreitos. */
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.75rem;
+}
+
 .link {
   justify-self: start;
   display: inline-flex;

@@ -20,6 +20,8 @@ export type Project = {
   highlights?: string[];
   stack?: string[];
   link?: { href: string; label: string };
+  /** Repositório público no GitHub — mostra as pastas e a arquitetura do projeto. */
+  repo?: { href: string; label: string };
   /** URL embebido num iframe: a pré-visualização acompanha o site publicado. */
   live?: string;
   /** Projeto principal — ocupa a largura toda no topo da secção. */
@@ -69,29 +71,8 @@ export const projects: Project[] = [
     },
   },
   {
-    slug: "nexus-industrial",
-    index: "02",
-    title: "NEXUS Industrial 3D",
-    category: "Modelação e Visualização 3D · Unidade Fabril",
-    description:
-      "Representação tridimensional de uma nova unidade fabril para a Atlantic Tech Industries: modelação, materiais, iluminação e renderização em Blender. O estudo percorre as oito zonas funcionais, da produção e robótica ao armazém, logística e administração.",
-    highlights: [
-      "Implantação de 60 × 40 m e 12 m de altura, com 2 400 m² de área coberta",
-      "Oito zonas funcionais modeladas: exterior, produção, robótica, qualidade e embalagem, armazém, logística, segurança e administração",
-      "21 renderizações finais, com planta geral e anexo de verificação dimensional",
-      "Materiais e paleta tirados do próprio modelo — sinalética, betão e carcaça de máquina",
-    ],
-    stack: ["Blender", "Modelação 3D", "Render", "Visualização industrial"],
-    link: { href: "/projetos/nexus-industrial/", label: "Ver o estudo completo" },
-    coverRatio: "laptop",
-    cover: {
-      src: "/media/web/nexus-capa.jpg",
-      alt: "Vista aérea da unidade fabril modelada em 3D para a Atlantic Tech Industries",
-    },
-  },
-  {
     slug: "lode",
-    index: "03",
+    index: "02",
     title: "LODÊ",
     category: "Website · Cabeleireiro de Autor",
     description:
@@ -106,7 +87,7 @@ export const projects: Project[] = [
   },
   {
     slug: "pulse",
-    index: "04",
+    index: "03",
     title: "PULSE",
     category: "UX/UI Design · App de Ginásio",
     description:
@@ -142,16 +123,70 @@ export const projects: Project[] = [
   },
   {
     slug: "verde-facil",
-    index: "05",
-    title: "Verde Fácil",
-    category: "Aplicação Web · Branding & Anúncios",
+    index: "04",
+    title: "VerdeFácil",
+    category: "SaaS Fiscal · Full Stack, IA e Automação",
+    year: "2026",
     description:
-      "Plataforma para emissão de recibos verdes e faturação: calculadora de IRS, dashboard fiscal, portal do cliente e módulos TVDE/Frota. Trabalhei também a identidade da marca e as campanhas para redes sociais.",
-    stack: ["Next.js 15", "React", "SaaS Fiscal"],
+      "Plataforma de faturação e obrigações fiscais para trabalhadores independentes e pequenas empresas em Portugal, construída de raiz: o levantamento do problema, o modelo de dados, a arquitetura, o código, os testes e a infraestrutura. São cerca de 74 000 linhas e 345 commits ao longo de quatro meses e meio. Emissão de faturas com conformidade fiscal portuguesa, delegação de acesso a contabilistas, assistente fiscal sobre modelos de linguagem e automações de cobrança, prazos e exportação SAF-T.",
+    highlights: [
+      "Multi-tenant com isolamento garantido na própria base de dados: 139 políticas de Row Level Security sobre 54 tabelas, com FORCE RLS — validado em produção com duas organizações a tentar aceder aos dados uma da outra",
+      "API pública versionada com contrato em OpenAPI, autenticação por chave e webhooks de saída cujo URL de destino é validado para impedir alcance à rede interna",
+      "Assistente fiscal com cadeia de degradação em cinco níveis (Gemini → Groq → OpenRouter → Claude → resposta estática); OCR de recibos e faturação por voz com transcrição e extração estruturada",
+      "Oito tarefas agendadas e cinco workers sobre filas Redis para PDF, SAF-T, comunicação com a Autoridade Tributária e email",
+      "199 testes automatizados, com um grupo dedicado a invariantes fiscais: numeração sem buracos, cadeia de assinatura pela ordem de emissão, assinatura RSA coerente com o SAF-T",
+      "No upload do OCR, sete validações — incluindo os magic bytes — antes de qualquer byte sair para a API externa; sem isso o endpoint seria um proxy aberto",
+    ],
+    stack: [
+      "Next.js 15",
+      "React 19",
+      "TypeScript",
+      "PostgreSQL",
+      "Prisma",
+      "Supabase",
+      "Redis",
+      "BullMQ",
+      "Stripe",
+      "Zod",
+      "Vitest",
+      "Playwright",
+      "GitHub Actions",
+    ],
+    repo: {
+      href: "https://github.com/sarynnec-spec/verdefacil-showcase",
+      label: "Arquitetura e estrutura no GitHub",
+    },
     coverRatio: "page",
     cover: {
       src: "/media/web/full-verdefacil.jpg",
-      alt: "Website da aplicação Verde Fácil",
+      alt: "Website da aplicação VerdeFácil",
+    },
+  },
+  {
+    slug: "verde-facil-agro",
+    index: "05",
+    title: "VerdeFácil Agro",
+    category: "Produto & Arquitetura · Vertical agrícola",
+    year: "2026",
+    description:
+      "Vertical agrícola do VerdeFácil, que responde a uma pergunta que o pequeno agricultor português não consegue responder hoje: quanto ganho realmente em cada cultura? Levei-o da identificação do problema até à arquitetura aprovada e aos protótipos. A funcionalidade agrícola está por implementar — a plataforma que a suporta, essa, já está em produção.",
+    highlights: [
+      "Problema validado em fontes oficiais: mais de 27,8% do rendimento agrícola vem de subsídios (INE), pagos sobretudo entre novembro e junho, e tributados como rendimento (CIRS art. 31.º)",
+      "Mercado estudado e quadrante vazio identificado: os softwares agrícolas gerem produção, a contabilidade gere documentos — falta a clareza financeira por cultura ligada à fiscalidade",
+      "O utilizador decide a interface: mais de 60 anos e baixa literacia digital levam a registo por voz e missões em vez de menus, e a resultados sempre apresentados como estimativa",
+      "Decisão de arquitetura tomada antes da primeira linha de código: o Agro é um segundo vertical do mesmo ecossistema, não um segundo produto — evita duplicar o motor fiscal, que é a parte mais cara de manter",
+      "Critério escrito para recusar funcionalidades: «isto aproxima ou afasta um agricultor de ver quanto ganhou por cultura?»",
+    ],
+    stack: ["Arquitetura", "ADR", "Investigação de mercado", "Modelação de dados", "Prototipagem"],
+    repo: {
+      href: "https://github.com/sarynnec-spec/verdefacil-agro-showcase",
+      label: "Conceito e arquitetura no GitHub",
+    },
+    coverRatio: "page",
+    coverAspect: "16 / 9",
+    cover: {
+      src: "/media/web/verdefacil-agro.jpg",
+      alt: "VerdeFácil Agro — vertical agrícola da plataforma VerdeFácil",
     },
   },
   {
@@ -232,5 +267,26 @@ export const projects: Project[] = [
         caption: "Post · Pacotes 20€ e 35€",
       },
     ],
+  },
+  {
+    slug: "nexus-industrial",
+    index: "09",
+    title: "NEXUS Industrial 3D",
+    category: "Modelação e Visualização 3D · Unidade Fabril",
+    description:
+      "Representação tridimensional de uma nova unidade fabril para a Atlantic Tech Industries: modelação, materiais, iluminação e renderização em Blender. O estudo percorre as oito zonas funcionais, da produção e robótica ao armazém, logística e administração.",
+    highlights: [
+      "Implantação de 60 × 40 m e 12 m de altura, com 2 400 m² de área coberta",
+      "Oito zonas funcionais modeladas: exterior, produção, robótica, qualidade e embalagem, armazém, logística, segurança e administração",
+      "21 renderizações finais, com planta geral e anexo de verificação dimensional",
+      "Materiais e paleta tirados do próprio modelo — sinalética, betão e carcaça de máquina",
+    ],
+    stack: ["Blender", "Modelação 3D", "Render", "Visualização industrial"],
+    link: { href: "/projetos/nexus-industrial/", label: "Ver o estudo completo" },
+    coverRatio: "laptop",
+    cover: {
+      src: "/media/web/nexus-capa.jpg",
+      alt: "Vista aérea da unidade fabril modelada em 3D para a Atlantic Tech Industries",
+    },
   },
 ];

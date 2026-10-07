@@ -212,17 +212,33 @@ export default function ProjectRow({ project, onOpen }: ProjectRowProps) {
             </Reveal>
           )}
 
-          {project.link && (
+          {(project.link || project.repo) && (
             <Reveal delay={0.18}>
-              <a
-                className={styles.link}
-                href={project.link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {project.link.label}
-                <span aria-hidden="true">↗</span>
-              </a>
+              <div className={styles.links}>
+                {project.link && (
+                  <a
+                    className={styles.link}
+                    href={project.link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {project.link.label}
+                    <span aria-hidden="true">↗</span>
+                  </a>
+                )}
+                {project.repo && (
+                  <a
+                    className={styles.link}
+                    href={project.repo.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <span aria-hidden="true">🐙</span>
+                    {project.repo.label}
+                    <span aria-hidden="true">↗</span>
+                  </a>
+                )}
+              </div>
             </Reveal>
           )}
         </div>
