@@ -21,7 +21,20 @@ export default function Services() {
             </Reveal>
           </header>
 
-          <Reveal className={styles.roleta} delay={0.16}>
+          <Reveal className={styles.canto} delay={0.16}>
+            {/*
+              O mesmo ficheiro que a secção Sobre já usa, de propósito: a
+              secção Sobre vem antes desta na página, por isso a imagem chega
+              aqui da cache e não custa um único byte a mais.
+            */}
+            <figure className={styles.retrato}>
+              <img
+                src="/media/me/sarynne.png"
+                alt="Sarynne Ferreira, de perfil"
+                width={1024}
+                height={1536}
+              />
+            </figure>
             <Roleta />
           </Reveal>
         </div>
