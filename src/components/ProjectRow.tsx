@@ -214,8 +214,31 @@ export default function ProjectRow({ project, onOpen }: ProjectRowProps) {
                 aria-label={project.cover.alt}
               />
               {temAudio && (
-                <button type="button" className={styles.somFilme} onClick={alternarSom}>
-                  {comSom ? "Desligar som" : "Ouvir com som"}
+                /*
+                 * Só o ícone, e não «Ouvir com som» por extenso: no telemóvel
+                 * o botão com texto tapava a informação do próprio vídeo.
+                 * O que se perde em clareza volta pelo `aria-label` e pelo
+                 * `title`, que dizem a mesma frase a quem precisa dela.
+                 */
+                <button
+                  type="button"
+                  className={styles.somFilme}
+                  onClick={alternarSom}
+                  aria-label={comSom ? "Desligar o som do vídeo" : "Ouvir o vídeo com som"}
+                  title={comSom ? "Desligar som" : "Ouvir com som"}
+                  aria-pressed={comSom}
+                >
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M4 9.5h3.2L12 5.4v13.2L7.2 14.5H4z" />
+                    {comSom ? (
+                      <>
+                        <path d="M15.4 9.1a4 4 0 0 1 0 5.8" />
+                        <path d="M18 6.6a7.5 7.5 0 0 1 0 10.8" />
+                      </>
+                    ) : (
+                      <path d="M15.8 9.6l4.4 4.8M20.2 9.6l-4.4 4.8" />
+                    )}
+                  </svg>
                 </button>
               )}
             </figure>

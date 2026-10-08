@@ -16,12 +16,22 @@ const FRASE = "Onde o design encontra a tecnologia.";
 /** Segundos, antes do fim da volta, em que a frase começa a escrever-se. */
 const ANTECIPACAO = 4;
 
+/**
+ * Até que segundo da volta a porta fica aberta.
+ *
+ * Medido no vídeo: as personagens entram pela margem direita nos primeiros
+ * segundos e já vão todas lá dentro por volta dos cinco. A porta abre com
+ * elas e fecha-se quando a última passa.
+ */
+const PORTA_ABERTA_ATE = 5.2;
+
 /** Intervalo entre letras, em segundos. */
 const PASSO = 0.042;
 
 export default function AnimacaoCanto() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [visivel, setVisivel] = useState(false);
+  const [aberta, setAberta] = useState(false);
 
   useEffect(() => {
     const v = videoRef.current;
@@ -36,6 +46,7 @@ export default function AnimacaoCanto() {
       const fim = v.duration;
       if (!Number.isFinite(fim)) return;
       setVisivel(v.currentTime >= fim - ANTECIPACAO);
+      setAberta(v.currentTime < PORTA_ABERTA_ATE);
     };
 
     v.addEventListener("timeupdate", olhar);
@@ -73,22 +84,26 @@ export default function AnimacaoCanto() {
         anunciava trinta e cinco letras avulsas.
       */}
       {/*
-        A portinha.
+        A porta.
 
-        Pedido dela: as personagens entram pela esquerda e, como o fundo é
-        todo branco, pareciam cortadas pela margem em vez de estarem a
-        chegar. Com a porta ali, a mesma imagem passa a ler-se como alguém a
-        entrar — e não é um remendo, é o que o olho precisava para perceber
-        o que já estava a acontecer.
+        Sem ela, as personagens entram pela margem direita e, com o fundo
+        todo branco, leem-se como cortadas em vez de a chegar. Com a porta
+        ali, a mesma imagem passa a ler-se como alguém a entrar.
 
-        Desenhada no mesmo traço da animação: linha escura fina, sem
-        preenchimento, cantos vivos.
+        A folha roda mesmo em 3D (`rotateY` sobre a dobradiça, com
+        `perspective` no aro), e não é um desenho a fingir a abertura: em
+        perspetiva verdadeira a aresta de fora encurta sozinha e os ângulos
+        batem certo em qualquer tamanho. Abre quando elas entram e fecha
+        depois de passarem — ver `aberta`, acima.
       */}
-      <svg className={styles.porta} viewBox="0 0 40 92" aria-hidden="true" focusable="false">
-        <path d="M1 91 V5 Q1 1 5 1 H34 Q38 1 38 5 V91" />
-        <path d="M9 91 V13 Q9 10 12 10 H34" />
-        <circle cx="14" cy="54" r="1.8" />
-      </svg>
+      <span className={styles.porta} data-aberta={aberta || undefined} aria-hidden="true">
+        <span className={styles.vao} />
+        <span className={styles.folha}>
+          <span className={styles.puxador} />
+        </span>
+        <span className={styles.aro} />
+        <span className={styles.soleira} />
+      </span>
 
       <p className={styles.frase} data-visivel={visivel || undefined} aria-label={FRASE}>
         {[...FRASE].map((letra, i) => (

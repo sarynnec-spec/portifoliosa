@@ -72,9 +72,13 @@ export const education: Education[] = [
 /**
  * Competências transversais e de design — lista do CV.
  *
- * As técnicas vivem em `competencias.ts`, agrupadas por área e com as
- * ferramentas respetivas. Separadas de propósito: aqui ficam as que vêm da
- * experiência comercial e criativa, lá as que vêm dos projetos de software.
+ * ⚠️ **Já não é mostrada no site** (2026-10-08). Ela mandou tirar a lista do
+ * fim do Percurso por repetir a secção Competências, e as dez passaram para
+ * `competencias.ts`, nas áreas «Design e marca» e «Marketing e relação
+ * comercial» — ver lá a nota.
+ *
+ * Fica aqui na mesma por ser a lista do CV: é a fonte a conferir quando o
+ * currículo mudar, e não código morto que se apaga sem perda.
  */
 export const skills: string[] = [
   "Design gráfico e identidade visual",

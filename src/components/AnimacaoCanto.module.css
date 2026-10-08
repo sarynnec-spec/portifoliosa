@@ -39,30 +39,108 @@
  * Pu-la primeiro à esquerda, por causa de uma captura dela em que apareciam
  * cortadas desse lado — e estava errado. Medido no vídeo publicado, no
  * reinício da volta: as personagens entram pela margem direita e caminham
- * para dentro. À esquerda a porta ficava a servir de nada.
+ * para dentro.
  *
  * Assenta no chão por onde elas andam, e é pouco mais alta do que elas, para
- * parecer uma porta e não um portão. O espelho é para a dobradiça ficar do
- * lado de fora.
+ * parecer uma porta e não um portão.
+ *
+ * O `perspective` é o que torna isto 3D a sério: a folha roda em `rotateY`
+ * sobre a dobradiça, e é a perspetiva que lhe encurta a aresta de fora
+ * sozinha. Um desenho a fingir a abertura tinha de ter os ângulos acertados
+ * à mão, e só estaria certo num tamanho.
  */
 .porta {
+  --tinta: #33312c;
   position: absolute;
   right: 0;
   bottom: 12%;
   height: 26%;
-  width: auto;
-  transform: scaleX(-1);
-  fill: none;
-  stroke: #33312c;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+  aspect-ratio: 42 / 92;
+  perspective: 190px;
+  perspective-origin: 20% 50%;
   pointer-events: none;
 }
 
-.porta circle {
-  fill: #33312c;
-  stroke: none;
+.porta > span {
+  position: absolute;
+  inset: 0;
+}
+
+/*
+ * O vão: o que se vê para lá da porta. Um degradê e não uma cor chapada —
+ * chapado parecia um retângulo colado, e com a sombra a adensar junto à
+ * ombreira lê-se como profundidade.
+ */
+.vao {
+  background: linear-gradient(100deg, rgba(51, 49, 44, 0.42) 0%, rgba(51, 49, 44, 0.1) 55%, rgba(51, 49, 44, 0) 100%);
+  border-radius: 6px 6px 0 0;
+}
+
+/*
+ * A folha. A dobradiça é a aresta ESQUERDA, a de dentro: a porta abre para
+ * dentro da cena, que é para onde elas vão.
+ */
+/*
+ * Encolhida 2 px para dentro do aro — fechada, a folha tem de caber DENTRO
+ * da moldura. Ao ocupar a caixa toda, os dois traços de 2 px empilhavam-se
+ * no topo e sobrava uma saliência de cada lado, que lia como defeito.
+ */
+.folha {
+  inset: 2px 2px 0;
+  border: 2px solid var(--tinta);
+  border-radius: 4px 4px 0 0;
+  background: #fbfaf7;
+  transform-origin: left center;
+  transform: rotateY(0deg);
+  transition: transform 1.1s cubic-bezier(0.34, 1.12, 0.4, 1);
+  backface-visibility: hidden;
+}
+
+/* Almofada da folha — o friso interior que uma porta lisa não tem. */
+.folha::after {
+  content: "";
+  position: absolute;
+  inset: 14% 16%;
+  border: 1.5px solid var(--tinta);
+  border-radius: 3px;
+  opacity: 0.45;
+}
+
+.porta[data-aberta] .folha {
+  transform: rotateY(-72deg);
+}
+
+.puxador {
+  position: absolute;
+  right: 11%;
+  top: 52%;
+  width: 11%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--tinta);
+}
+
+/* O aro fica por cima da folha e não roda — é ele que a emoldura. */
+.aro {
+  border: 2px solid var(--tinta);
+  border-bottom: 0;
+  border-radius: 7px 7px 0 0;
+}
+
+/* Soleira: a linha do chão, que assenta a porta em vez de a deixar a pairar. */
+.soleira {
+  top: auto;
+  bottom: 0;
+  height: 0;
+  border-bottom: 2px solid var(--tinta);
+}
+
+/* Sem movimento, a porta fica aberta e quieta — continua a explicar a cena. */
+@media (prefers-reduced-motion: reduce) {
+  .folha {
+    transition: none;
+    transform: rotateY(-72deg);
+  }
 }
 
 /*

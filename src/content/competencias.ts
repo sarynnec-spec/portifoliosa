@@ -127,6 +127,50 @@ export const areas: AreaCompetencia[] = [
       "Processamento de imagem e de dados",
     ],
   },
+  /*
+   * As duas áreas seguintes vieram da lista que estava no fim do Percurso,
+   * que ela mandou retirar por «já estar em cima». Não estava: as quatro
+   * áreas acima são todas técnicas, e apagar a lista sem mais teria deitado
+   * fora a frente de design e a comercial inteiras — e o portfólio serve as
+   * duas frentes, acrescenta-se, não se troca.
+   *
+   * Sem ícones de marca porque o simple-icons não tem os destas ferramentas;
+   * ficam como texto, como o Playwright já ficava.
+   */
+  {
+    titulo: "Design e marca",
+    descricao:
+      "Identidade visual e interfaces, do logótipo ao protótipo navegável — e as peças em movimento que daí saem.",
+    ferramentas: [{ nome: "Figma", icone: "figma", cor: "#F24E1E" }],
+    praticas: [
+      "Design gráfico e identidade visual",
+      "Logótipos, flyers e cartazes",
+      "UX/UI Design — do wireframe ao protótipo",
+      "Design system e consistência de marca",
+      "Edição de imagem e vídeo",
+      "Motion graphics",
+    ],
+  },
+  {
+    titulo: "Marketing e relação comercial",
+    descricao:
+      "Presença nas redes, campanhas pagas e o lado de quem já esteve do outro lado do balcão.",
+    ferramentas: [
+      { nome: "Meta Ads" },
+      { nome: "Google Ads" },
+      { nome: "TikTok Ads" },
+      { nome: "YouTube Ads" },
+      { nome: "Microsoft Excel" },
+    ],
+    praticas: [
+      "Criação de conteúdo e posts para redes sociais",
+      "Gestão de redes sociais",
+      "Campanhas de tráfego pago",
+      "Atendimento e relacionamento com o cliente",
+      "Gestão e coordenação de equipas",
+      "Organização e trabalho em equipa",
+    ],
+  },
   {
     titulo: "Desenvolvimento assistido por IA",
     descricao:

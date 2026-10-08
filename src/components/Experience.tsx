@@ -1,4 +1,4 @@
-import { education, roles, skills } from "@/content/experience";
+import { education, roles } from "@/content/experience";
 import { profile } from "@/content/profile";
 import Reveal from "./Reveal";
 import styles from "./Experience.module.css";
@@ -67,20 +67,17 @@ export default function Experience() {
             </ol>
           </div>
 
-          <div className={styles.block}>
-            <Reveal as="h3" className={styles.blockTitle}>
-              Competências
-            </Reveal>
-            <Reveal delay={0.06}>
-              <ul className={styles.skills}>
-                {skills.map((skill) => (
-                  <li className={styles.skill} key={skill}>
-                    {skill}
-                  </li>
-                ))}
-              </ul>
-            </Reveal>
-          </div>
+          {/*
+            A lista «Competências» que estava aqui saiu a pedido dela, por
+            repetir o que a secção Competências já diz.
+
+            ⚠️ Antes de a apagar, cada uma das dez foi conferida contra
+            `competencias.ts`: NENHUMA lá estava — as áreas eram todas
+            técnicas. Daí terem nascido lá as áreas «Design e marca» e
+            «Marketing e relação comercial». Apagá-la sem isso teria deitado
+            fora a frente de design e a comercial inteiras, e o portfólio
+            serve as duas.
+          */}
         </div>
       </div>
     </section>
