@@ -51,6 +51,13 @@ export type Education = {
   status?: string;
 };
 
+/**
+ * ⚠️ **Já não é mostrada no site** (2026-10-08). Ela mandou tirar o bloco
+ * «Formação académica» do Percurso — *"já tem no currículo"*, e tem: o PDF
+ * descarrega-se no topo dessa mesma secção, em PT e em EN.
+ *
+ * Fica aqui por ser a fonte a conferir quando o currículo mudar.
+ */
 export const education: Education[] = [
   {
     period: "desde out. 2025",

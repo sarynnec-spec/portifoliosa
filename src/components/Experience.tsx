@@ -1,4 +1,4 @@
-import { education, roles } from "@/content/experience";
+import { roles } from "@/content/experience";
 import { profile } from "@/content/profile";
 import Reveal from "./Reveal";
 import styles from "./Experience.module.css";
@@ -46,39 +46,22 @@ export default function Experience() {
           ))}
         </ol>
 
-        <div className={styles.split}>
-          <div className={styles.block}>
-            <Reveal as="h3" className={styles.blockTitle}>
-              Formação académica
-            </Reveal>
-            <ol className={styles.education}>
-              {education.map((item, i) => (
-                <Reveal as="li" className={styles.educationItem} key={item.course} delay={i * 0.05}>
-                  <span className={styles.period}>{item.period}</span>
-                  <div>
-                    <p className={styles.educationCourse}>
-                      {item.course}
-                      {item.status && <span className={styles.badge}>{item.status}</span>}
-                    </p>
-                    <p className={styles.company}>{item.school}</p>
-                  </div>
-                </Reveal>
-              ))}
-            </ol>
-          </div>
+        {/*
+          Aqui estavam dois blocos, ambos retirados a pedido dela:
 
-          {/*
-            A lista «Competências» que estava aqui saiu a pedido dela, por
-            repetir o que a secção Competências já diz.
+          - «Competências», por repetir a secção Competências. ⚠️ Antes de a
+            apagar, as dez foram conferidas contra `competencias.ts`: NENHUMA
+            lá estava — as áreas eram todas técnicas. Daí terem nascido lá as
+            áreas «Design e marca» e «Marketing e relação comercial». Apagar
+            sem isso teria deitado fora a frente de design e a comercial.
 
-            ⚠️ Antes de a apagar, cada uma das dez foi conferida contra
-            `competencias.ts`: NENHUMA lá estava — as áreas eram todas
-            técnicas. Daí terem nascido lá as áreas «Design e marca» e
-            «Marketing e relação comercial». Apagá-la sem isso teria deitado
-            fora a frente de design e a comercial inteiras, e o portfólio
-            serve as duas.
-          */}
-        </div>
+          - «Formação académica», porque *"já tem no currículo"* — e tem: o
+            currículo descarrega-se no topo desta mesma secção, em PT e EN.
+
+          Os dados de ambos continuam em `experience.ts`, sem serem
+          mostrados: são a lista do CV, e é por aí que se confere quando o
+          currículo mudar.
+        */}
       </div>
     </section>
   );

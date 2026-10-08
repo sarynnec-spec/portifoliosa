@@ -61,17 +61,38 @@ export const about = {
   ],
 } as const;
 
-/** Disciplinas para a faixa em movimento — apenas competências que constam do CV. */
+/**
+ * Disciplinas para a faixa em movimento.
+ *
+ * A programação entrou a 2026-10-08, a pedido dela: a faixa era só design e
+ * marketing, e o portfólio abre a dizer «Full Stack» — quem lesse a faixa
+ * ficava com metade da história.
+ *
+ * Intercaladas de propósito, e não as de código todas seguidas: a faixa
+ * passa devagar e, agrupadas, quem a apanhasse a meio via só uma das
+ * frentes — que é o defeito que isto vem corrigir.
+ *
+ * Cada uma consta do CV ou de `competencias.ts`; nada aqui é aspiracional.
+ */
 export const disciplines = [
   "Design Gráfico",
+  "Desenvolvimento Full Stack",
   "Motion Design",
+  "React & Next.js",
   "Web Design",
+  "TypeScript",
   "UX/UI Design",
+  "Bases de Dados",
   "Identidade Visual",
+  "APIs REST",
   "Tráfego Pago",
+  "IA Aplicada",
   "Edição de Vídeo",
+  "Automação",
   "Social Media",
+  "Testes Automatizados",
   "Edição de Imagem",
+  "Node.js",
   "Criação de Conteúdo",
 ];
 

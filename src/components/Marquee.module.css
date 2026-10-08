@@ -1,9 +1,12 @@
 /*
- * Faixa no laranja da casa, a pedido dela.
+ * Faixa no laranja da casa, com as letras na tinta escura — as duas coisas
+ * pedidas por ela.
  *
- * O texto é branco e não a tinta escura: medido sobre `--accent` (#c2481f),
- * o branco dá 5,2:1 e o `--ink` (#14130f) só 3,6:1 — abaixo do mínimo de
- * 4,5:1 para texto normal. Aqui a escolha óbvia era a errada.
+ * ⚠️ O preto sobre este laranja dá **3,6:1**, abaixo dos 4,5:1 que a norma
+ * pede para texto normal. Passa à mesma, e por um motivo concreto: este
+ * texto é grande — 1,9rem no máximo, bem acima dos 24 px a partir dos quais
+ * o mínimo desce para 3:1. Se um dia alguém encolher o `font-size` do
+ * `.item` abaixo disso, esta cor deixa de ser legítima.
  *
  * A borda sai: sobre o laranja, uma linha clara dava um friso a mais.
  */
@@ -12,7 +15,7 @@
   overflow: hidden;
   padding-block: clamp(0.9rem, 2vw, 1.35rem);
   background: var(--accent);
-  color: #fff;
+  color: var(--ink);
   user-select: none;
 }
 
@@ -47,7 +50,7 @@
 .dot {
   width: 0.3rem;
   height: 0.3rem;
-  background: rgba(255, 255, 255, 0.72);
+  background: rgba(20, 19, 15, 0.55);
   transform: rotate(45deg);
   flex-shrink: 0;
 }
