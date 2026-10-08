@@ -11,17 +11,26 @@
 }
 
 /*
- * `multiply` em vez de recorte: o fundo do ficheiro é creme (#f7f7f2) e
- * sobre o branco da página desenhava um rectângulo bem visível à volta da
- * animação. Multiplicado, o quase-branco desaparece contra o branco e só
- * fica o traço escuro e as cores — sem máscara, sem recodificar o vídeo.
+ * O fundo do ficheiro não é branco: medido no vídeo renderizado, é
+ * RGB(252, 255, 252) contra os 255,255,255 da página. São três níveis, mas
+ * chegam para desenhar o rectângulo do vídeo à volta da animação.
+ *
+ * `brightness(1.012)` leva 252 a 255 — o fundo passa a ser exatamente o da
+ * página e a emenda desaparece. O traço escuro não sofre (0 × 1,012 = 0) e
+ * os meios-tons sobem 1,2%, que ninguém vê.
+ *
+ * ⚠️ A primeira tentativa foi `mix-blend-mode: multiply` e estava errada por
+ * duas razões, ambas medidas: multiply contra branco devolve a mesma cor
+ * (0,988 × 1 = 0,988), logo nunca tiraria o creme; e o `.reveal` à volta tem
+ * `will-change: opacity, transform`, que cria um contexto de empilhamento
+ * próprio — dentro dele a mistura não tem sequer a página contra que agir.
  */
 .filme {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: contain;
-  mix-blend-mode: multiply;
+  filter: brightness(1.012);
 }
 
 /*
