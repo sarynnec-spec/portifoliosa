@@ -119,14 +119,21 @@ export function tocarGiro({ passagens, travagens }: Giro): () => void {
    */
   const inicio = performance.now();
 
+  let agendado = false;
+
   const agendar = () => {
-    if (ctx.state !== "running") return;
+    if (agendado || ctx.state !== "running") return;
+    agendado = true;
 
+    /*
+     * Não há travão de tempo aqui, e isso é a correção de um defeito real:
+     * havia um `if (decorrido > 500) return`, e no telemóvel o motor demora
+     * mais do que isso a acordar no primeiro toque — o giro saía sempre mudo.
+     * O travão era redundante: o filtro abaixo já deita fora tudo o que já
+     * passou, por isso um motor que acorde tarde toca só o que falta, em
+     * sítio, e um que acorde depois do giro não toca nada.
+     */
     const decorrido = performance.now() - inicio;
-    /* Meio segundo à espera do motor e já ninguém liga os estalidos à
-       imagem — mais vale o giro sair mudo do que sair fora de sítio. */
-    if (decorrido > 500) return;
-
     const t0 = ctx.currentTime;
 
     passagens.forEach((ms, i) => {
@@ -142,10 +149,26 @@ export function tocarGiro({ passagens, travagens }: Giro): () => void {
     });
   };
 
-  /* `resume()` dentro do gesto é o que o iOS exige; se o motor ainda não
-     anda, o agendamento cairia no passado e sumia em silêncio. */
-  if (ctx.state === "running") agendar();
-  else void ctx.resume().then(agendar).catch(() => undefined);
+  /*
+   * `resume()` dentro do gesto é o que o iOS exige — mas a promessa dele não
+   * é de fiar em todo o lado: há browsers de telemóvel onde nunca resolve se
+   * a saída de áudio demorar a abrir. Por isso, além da promessa, fica uma
+   * sonda curta a espreitar o estado; o que chegar primeiro ganha, e
+   * `agendado` impede que toque duas vezes. Mesmo padrão do `introSom`, que
+   * já tinha pago esta lição.
+   */
+  agendar();
+  if (!agendado) {
+    void ctx.resume().then(agendar).catch(() => undefined);
+
+    let voltas = 0;
+    const sonda = window.setInterval(() => {
+      agendar();
+      /* Dois segundos e o motor não arrancou: desiste. A essa altura o giro
+         já acabou e os estalidos não tinham onde cair. */
+      if (agendado || (voltas += 1) > 50) window.clearInterval(sonda);
+    }, 40);
+  }
 
   return () => {
     const agora = ctx.currentTime;
@@ -159,9 +182,80 @@ export function tocarGiro({ passagens, travagens }: Giro): () => void {
   };
 }
 
-/** Acorda o motor dentro do gesto, antes de haver som para tocar. */
+/**
+ * Um WAV de silêncio, fabricado aqui — serve o truque do iPhone, abaixo.
+ *
+ * Não é um ficheiro para não haver um pedido ao servidor por causa de meio
+ * segundo de nada.
+ */
+function wavDeSilencio() {
+  const taxa = 8000;
+  const amostras = taxa / 2;
+  const bytes = new ArrayBuffer(44 + amostras * 2);
+  const v = new DataView(bytes);
+  const texto = (p: number, s: string) => {
+    for (let i = 0; i < s.length; i += 1) v.setUint8(p + i, s.charCodeAt(i));
+  };
+  texto(0, "RIFF");
+  v.setUint32(4, 36 + amostras * 2, true);
+  texto(8, "WAVE");
+  texto(12, "fmt ");
+  v.setUint32(16, 16, true);
+  v.setUint16(20, 1, true);
+  v.setUint16(22, 1, true);
+  v.setUint32(24, taxa, true);
+  v.setUint32(28, taxa * 2, true);
+  v.setUint16(32, 2, true);
+  v.setUint16(34, 16, true);
+  texto(36, "data");
+  v.setUint32(40, amostras * 2, true);
+  /* As amostras ficam a zero: é isso que o torna silêncio. */
+  return URL.createObjectURL(new Blob([bytes], { type: "audio/wav" }));
+}
+
+let sessaoAberta = false;
+
+/**
+ * Acorda o motor dentro do gesto, antes de haver som para tocar.
+ *
+ * Faz três coisas, e nenhuma é opcional no telemóvel:
+ *
+ * 1. `resume()`, que é o que desbloqueia o motor;
+ * 2. toca já um nó mudo, **dentro** do toque. No iPhone não chega pedir o
+ *    `resume`: a saída de áudio só abre depois de alguma coisa ter tocado a
+ *    sério, e tem de ser dentro do gesto, sem esperar por promessa nenhuma;
+ * 3. toca meio segundo de silêncio num `<audio>` normal. Isto parece de
+ *    propósito nenhum e não é: no iPhone o WebAudio obedece ao **interruptor
+ *    de silêncio** lateral, e um `<audio>` a tocar passa o telefone para a
+ *    sessão de reprodução, que o ignora. Sem isto, quem tenha o telefone no
+ *    silencioso carrega em Girar e não ouve nada — e nada no ecrã explica
+ *    porquê.
+ */
 export function prepararSom() {
   const ctx = motorDeAudio();
-  if (ctx && ctx.state !== "running") void ctx.resume().catch(() => undefined);
-  return !!ctx;
+  if (!ctx) return false;
+
+  if (ctx.state !== "running") void ctx.resume().catch(() => undefined);
+
+  try {
+    const mudo = ctx.createBufferSource();
+    mudo.buffer = ctx.createBuffer(1, 1, ctx.sampleRate);
+    mudo.connect(ctx.destination);
+    mudo.start(0);
+  } catch {
+    /* Saída indisponível — o resto segue e não toca, sem rebentar. */
+  }
+
+  if (!sessaoAberta) {
+    sessaoAberta = true;
+    try {
+      const som = new Audio(wavDeSilencio());
+      som.setAttribute("playsinline", "");
+      void som.play().catch(() => undefined);
+    } catch {
+      /* Sem `<audio>` disponível, perde-se só o caso do interruptor. */
+    }
+  }
+
+  return true;
 }

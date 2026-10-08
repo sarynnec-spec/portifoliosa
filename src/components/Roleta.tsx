@@ -381,7 +381,14 @@ export default function Roleta({ className = "" }: { className?: string }) {
       </div>
 
       <div className={styles.controlos}>
-        <button type="button" className={styles.girar} onClick={aoGirar} disabled={aGirar}>
+        {/*
+          Sem `disabled` durante o giro, de propósito. Estando desativado
+          enquanto roda, e rodando ela sozinha a cada poucos segundos, uma
+          boa parte dos toques caía no vazio — e no telemóvel isso lê-se como
+          botão avariado, não como botão ocupado. Tocar a meio corta o giro
+          em curso e começa outro, que é o que se espera de um botão destes.
+        */}
+        <button type="button" className={styles.girar} onClick={aoGirar}>
           Girar
         </button>
         <button
