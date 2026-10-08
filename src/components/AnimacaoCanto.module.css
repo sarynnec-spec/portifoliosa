@@ -49,6 +49,26 @@
  * sozinha. Um desenho a fingir a abertura tinha de ter os ângulos acertados
  * à mão, e só estaria certo num tamanho.
  */
+/*
+ * A porta fica à DIREITA, que é por onde elas entram, e é vista **de lado**.
+ *
+ * Duas coisas estavam erradas na versão anterior, ambas apanhadas por ela:
+ *
+ * 1. Estava de frente. Uma porta de frente, encostada à margem, não tem para
+ *    onde dar: a parede dela teria de estar virada para o espectador, e elas
+ *    andam da direita para a esquerda. De lado, a parede corre para dentro
+ *    do quadro e a abertura fica virada para o caminho delas.
+ *
+ * 2. Elas passavam POR TRÁS da folha. Isto não era estilo, era geometria: a
+ *    porta é desenhada por cima do vídeo e não há como as pôr à frente dela.
+ *    A dobradiça estava do lado de dentro, por isso a folha aberta varria
+ *    exatamente o chão por onde elas caminham.
+ *
+ *    Agora a dobradiça é a aresta de FORA, a da margem. A folha estende-se
+ *    dali para dentro quando está fechada, e ao abrir vira-se para o
+ *    espectador até ficar quase de perfil — encolhe para junto da margem e
+ *    deixa a passagem livre. Elas saem pelo vão, não por trás da madeira.
+ */
 .porta {
   --tinta: #33312c;
   position: absolute;
@@ -56,8 +76,8 @@
   bottom: 12%;
   height: 26%;
   aspect-ratio: 42 / 92;
-  perspective: 190px;
-  perspective-origin: 20% 50%;
+  perspective: 150px;
+  perspective-origin: 85% 50%;
   pointer-events: none;
 }
 
@@ -71,9 +91,21 @@
  * chapado parecia um retângulo colado, e com a sombra a adensar junto à
  * ombreira lê-se como profundidade.
  */
+/*
+ * O vão, visto de lado: a sombra adensa junto à ombreira da direita, que é
+ * a que está mais perto, e dissipa-se para dentro. É isto que dá a
+ * profundidade do corredor por onde elas vêm.
+ */
 .vao {
-  background: linear-gradient(100deg, rgba(51, 49, 44, 0.42) 0%, rgba(51, 49, 44, 0.1) 55%, rgba(51, 49, 44, 0) 100%);
-  border-radius: 6px 6px 0 0;
+  background: linear-gradient(
+    260deg,
+    rgba(51, 49, 44, 0.46) 0%,
+    rgba(51, 49, 44, 0.14) 48%,
+    rgba(51, 49, 44, 0) 100%
+  );
+  border-radius: 5px 5px 0 0;
+  transform-origin: right center;
+  transform: rotateY(-24deg);
 }
 
 /*
@@ -85,14 +117,20 @@
  * da moldura. Ao ocupar a caixa toda, os dois traços de 2 px empilhavam-se
  * no topo e sobrava uma saliência de cada lado, que lia como defeito.
  */
+/*
+ * A folha. Dobradiça na aresta de FORA — ver a nota no `.porta`.
+ *
+ * Fechada acompanha o plano da parede (os mesmos −24°); aberta vai a −86°,
+ * quase de perfil, e deixa de ocupar largura nenhuma sobre o caminho delas.
+ */
 .folha {
   inset: 2px 2px 0;
   border: 2px solid var(--tinta);
   border-radius: 4px 4px 0 0;
   background: #fbfaf7;
-  transform-origin: left center;
-  transform: rotateY(0deg);
-  transition: transform 1.1s cubic-bezier(0.34, 1.12, 0.4, 1);
+  transform-origin: right center;
+  transform: rotateY(-24deg);
+  transition: transform 1.2s cubic-bezier(0.32, 1.06, 0.36, 1);
   backface-visibility: hidden;
 }
 
@@ -107,12 +145,13 @@
 }
 
 .porta[data-aberta] .folha {
-  transform: rotateY(-72deg);
+  transform: rotateY(-76deg);
 }
 
+/* O puxador fica na aresta livre, a de dentro — longe da dobradiça. */
 .puxador {
   position: absolute;
-  right: 11%;
+  left: 11%;
   top: 52%;
   width: 11%;
   aspect-ratio: 1;
@@ -120,11 +159,13 @@
   background: var(--tinta);
 }
 
-/* O aro fica por cima da folha e não roda — é ele que a emoldura. */
+/* O aro é a ombreira, e acompanha o plano da parede. Não roda com a folha. */
 .aro {
   border: 2px solid var(--tinta);
   border-bottom: 0;
-  border-radius: 7px 7px 0 0;
+  border-radius: 6px 6px 0 0;
+  transform-origin: right center;
+  transform: rotateY(-24deg);
 }
 
 /* Soleira: a linha do chão, que assenta a porta em vez de a deixar a pairar. */
@@ -133,13 +174,15 @@
   bottom: 0;
   height: 0;
   border-bottom: 2px solid var(--tinta);
+  transform-origin: right center;
+  transform: rotateY(-24deg);
 }
 
 /* Sem movimento, a porta fica aberta e quieta — continua a explicar a cena. */
 @media (prefers-reduced-motion: reduce) {
   .folha {
     transition: none;
-    transform: rotateY(-72deg);
+    transform: rotateY(-76deg);
   }
 }
 

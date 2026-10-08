@@ -1,9 +1,18 @@
+/*
+ * Faixa no laranja da casa, a pedido dela.
+ *
+ * O texto é branco e não a tinta escura: medido sobre `--accent` (#c2481f),
+ * o branco dá 5,2:1 e o `--ink` (#14130f) só 3,6:1 — abaixo do mínimo de
+ * 4,5:1 para texto normal. Aqui a escolha óbvia era a errada.
+ *
+ * A borda sai: sobre o laranja, uma linha clara dava um friso a mais.
+ */
 .marquee {
   --speed: 42s;
   overflow: hidden;
-  border-block: 1px solid var(--line);
   padding-block: clamp(0.9rem, 2vw, 1.35rem);
-  background: var(--paper-2);
+  background: var(--accent);
+  color: #fff;
   user-select: none;
 }
 
@@ -34,10 +43,11 @@
   white-space: nowrap;
 }
 
+/* O losango era do acento — sobre o próprio acento desaparecia. */
 .dot {
   width: 0.3rem;
   height: 0.3rem;
-  background: var(--accent);
+  background: rgba(255, 255, 255, 0.72);
   transform: rotate(45deg);
   flex-shrink: 0;
 }
