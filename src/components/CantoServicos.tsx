@@ -100,12 +100,14 @@ export default function CantoServicos() {
         cache e não custa um único byte a mais.
       */}
       <figure className={styles.retrato} ref={figuraRef}>
-        <img
-          src="/media/me/sarynne.png"
-          alt="Sarynne Ferreira, de perfil"
-          width={1024}
-          height={1536}
-        />
+        <span className={styles.recorte}>
+          <img
+            src="/media/me/sarynne.png"
+            alt="Sarynne Ferreira, de perfil"
+            width={1024}
+            height={1536}
+          />
+        </span>
 
         {largura > 0 && (
           <svg
@@ -114,14 +116,20 @@ export default function CantoServicos() {
             aria-hidden="true"
             focusable="false"
           >
+            {/*
+              Desenhado na linha do contorno, não para dentro dela: o traço
+              tem 2 de espessura, por isso o rectângulo fica a meio ponto da
+              aresta e o traço assenta a cavalo dela, 1 para cada lado.
+              O raio é o mesmo do `.recorte`, senão os cantos desencontravam.
+            */}
             <rect
               ref={fioRef}
               className={styles.traco}
-              x="1.5"
-              y="1.5"
-              width={Math.max(0, largura - 3)}
-              height={Math.max(0, altura - 3)}
-              rx="3"
+              x="0.5"
+              y="0.5"
+              width={Math.max(0, largura - 1)}
+              height={Math.max(0, altura - 1)}
+              rx="4"
               /*
                * `pathLength` a 1 põe o perímetro todo a valer 1, independente
                * do tamanho da foto: o traço é sempre a mesma fração da volta,
