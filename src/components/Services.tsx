@@ -1,6 +1,6 @@
 import { services } from "@/content/services";
+import CantoServicos from "./CantoServicos";
 import Reveal from "./Reveal";
-import Roleta from "./Roleta";
 import styles from "./Services.module.css";
 
 export default function Services() {
@@ -22,20 +22,7 @@ export default function Services() {
           </header>
 
           <Reveal className={styles.canto} delay={0.16}>
-            {/*
-              O mesmo ficheiro que a secção Sobre já usa, de propósito: a
-              secção Sobre vem antes desta na página, por isso a imagem chega
-              aqui da cache e não custa um único byte a mais.
-            */}
-            <figure className={styles.retrato}>
-              <img
-                src="/media/me/sarynne.png"
-                alt="Sarynne Ferreira, de perfil"
-                width={1024}
-                height={1536}
-              />
-            </figure>
-            <Roleta />
+            <CantoServicos />
           </Reveal>
         </div>
 

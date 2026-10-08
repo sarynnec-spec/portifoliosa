@@ -140,7 +140,7 @@ export function tocarGiro({ passagens, travagens }: Giro): () => void {
 
   const saida = ctx.createGain();
   saida.gain.value = VOLUME;
-  limite.connect(saida).connect(ctx.destination);
+  limite.connect(saida).connect(saidaDoMotor(ctx));
 
   /*
    * A imagem arranca no clique; o motor de áudio pode ainda levar uns
@@ -219,68 +219,79 @@ export function tocarGiro({ passagens, travagens }: Giro): () => void {
   };
 }
 
-/**
- * Um WAV de silêncio, fabricado aqui — serve o truque do iPhone, abaixo.
- *
- * Não é um ficheiro para não haver um pedido ao servidor por causa de meio
- * segundo de nada, e sai como `data:` e não como `blob:` porque o Safari do
- * iPhone recusa `blob:` num `<audio>` em várias versões — e era justamente
- * no iPhone que isto tinha de funcionar.
- */
-function wavDeSilencio() {
-  const taxa = 8000;
-  const amostras = taxa / 2;
-  const bytes = new ArrayBuffer(44 + amostras * 2);
-  const v = new DataView(bytes);
-  const texto = (p: number, s: string) => {
-    for (let i = 0; i < s.length; i += 1) v.setUint8(p + i, s.charCodeAt(i));
-  };
-  texto(0, "RIFF");
-  v.setUint32(4, 36 + amostras * 2, true);
-  texto(8, "WAVE");
-  texto(12, "fmt ");
-  v.setUint32(16, 16, true);
-  v.setUint16(20, 1, true);
-  v.setUint16(22, 1, true);
-  v.setUint32(24, taxa, true);
-  v.setUint32(28, taxa * 2, true);
-  v.setUint16(32, 2, true);
-  v.setUint16(34, 16, true);
-  texto(36, "data");
-  v.setUint32(40, amostras * 2, true);
-  /* As amostras ficam a zero: é isso que o torna silêncio. */
-  const octetos = new Uint8Array(bytes);
-  let bruto = "";
-  for (let i = 0; i < octetos.length; i += 1) bruto += String.fromCharCode(octetos[i]);
-  return `data:audio/wav;base64,${btoa(bruto)}`;
+function ehIPhone() {
+  if (typeof navigator === "undefined") return false;
+  const ua = navigator.userAgent;
+  /* O iPad moderno diz-se Mac; o que o denuncia é ter toque. */
+  return /iPad|iPhone|iPod/.test(ua) || (/Mac/.test(ua) && navigator.maxTouchPoints > 1);
 }
 
+let destinoFinal: AudioNode | null = null;
+/* O elemento fica guardado: solto, o recolector de lixo leva-o e leva a
+   reprodução com ele. */
+let altifalante: HTMLAudioElement | null = null;
+
 /**
- * O `<audio>` fica guardado aqui e não numa variável local da função.
+ * Para onde o som sai — e no iPhone isso **não** pode ser `ctx.destination`.
  *
- * Duas razões: solto, o recolector de lixo pode levá-lo mal a função acabe —
- * e com ele vai-se a sessão de reprodução que ele abriu; e em ciclo, mantém
- * a sessão aberta enquanto a página viver, que é o que faz o interruptor de
- * silêncio continuar a ser ignorado nos giros seguintes, e não só no
- * primeiro.
+ * No iPhone o WebAudio obedece ao interruptor de silêncio lateral: com o
+ * telefone no silencioso, tudo o que saia por `ctx.destination` é mudo, e
+ * nenhum truque de desbloqueio muda isso. O que o ignora é a reprodução de
+ * média. Por isso aqui o som é desviado para um `MediaStreamDestination` e
+ * esse fluxo vai tocar num `<audio>` — é áudio a sério, não um ficheiro de
+ * silêncio a fingir, e é o próprio som da roleta que passa por lá.
+ *
+ * Isto substitui a tentativa anterior, que era tocar meio segundo de
+ * silêncio num `<audio>` à parte para trocar a sessão. Ela não resolveu no
+ * telefone dela, e tinha ainda o problema de o iPhone ser esquisito com
+ * `data:` e `blob:` em elementos de média — agora não há URL nenhum.
+ *
+ * Fora do iPhone fica tudo como estava: um `<audio>` pelo meio só
+ * acrescentaria latência e um sítio a mais para falhar.
  */
-let sessao: HTMLAudioElement | null = null;
+function saidaDoMotor(ctx: AudioContext): AudioNode {
+  if (destinoFinal) return destinoFinal;
+
+  if (!ehIPhone() || typeof ctx.createMediaStreamDestination !== "function") {
+    destinoFinal = ctx.destination;
+    return destinoFinal;
+  }
+
+  try {
+    const destino = ctx.createMediaStreamDestination();
+    const el = new Audio();
+    el.srcObject = destino.stream;
+    /* Por atributo e não por propriedade: `playsInline` só está tipado em
+       `HTMLVideoElement`, e é no `<audio>` que o iPhone precisa dele. */
+    el.setAttribute("playsinline", "");
+    void el.play().catch(() => {
+      /*
+       * Não arrancou. Voltar à saída normal é melhor do que ficar mudo de
+       * vez: com o interruptor desligado ouve-se na mesma, e com ele ligado
+       * ficamos onde já estávamos.
+       */
+      destinoFinal = ctx.destination;
+    });
+    altifalante = el;
+    destinoFinal = destino;
+    return destinoFinal;
+  } catch {
+    destinoFinal = ctx.destination;
+    return destinoFinal;
+  }
+}
 
 /**
  * Acorda o motor dentro do gesto, antes de haver som para tocar.
  *
- * Faz três coisas, e nenhuma é opcional no telemóvel:
+ * Três coisas, e nenhuma é opcional no telemóvel:
  *
  * 1. `resume()`, que é o que desbloqueia o motor;
- * 2. toca já um nó mudo, **dentro** do toque. No iPhone não chega pedir o
+ * 2. a saída de média montada **já**, dentro do toque — ver `saidaDoMotor`.
+ *    O `play()` do `<audio>` tem de partir de um gesto, como qualquer outro;
+ * 3. um nó mudo a tocar, também dentro do toque. No iPhone não chega pedir o
  *    `resume`: a saída de áudio só abre depois de alguma coisa ter tocado a
- *    sério, e tem de ser dentro do gesto, sem esperar por promessa nenhuma;
- * 3. toca meio segundo de silêncio num `<audio>` normal. Isto parece de
- *    propósito nenhum e não é: no iPhone o WebAudio obedece ao **interruptor
- *    de silêncio** lateral, e um `<audio>` a tocar passa o telefone para a
- *    sessão de reprodução, que o ignora. Sem isto, quem tenha o telefone no
- *    silencioso carrega em Girar e não ouve nada — e nada no ecrã explica
- *    porquê.
+ *    sério, e tem de ser sem esperar por promessa nenhuma.
  */
 export function prepararSom() {
   const ctx = motorDeAudio();
@@ -288,25 +299,21 @@ export function prepararSom() {
 
   if (ctx.state !== "running") void ctx.resume().catch(() => undefined);
 
+  const destino = saidaDoMotor(ctx);
+
   try {
     const mudo = ctx.createBufferSource();
     mudo.buffer = ctx.createBuffer(1, 1, ctx.sampleRate);
-    mudo.connect(ctx.destination);
+    mudo.connect(destino);
     mudo.start(0);
   } catch {
     /* Saída indisponível — o resto segue e não toca, sem rebentar. */
   }
 
-  if (!sessao) {
-    try {
-      sessao = new Audio(wavDeSilencio());
-      sessao.loop = true;
-      sessao.setAttribute("playsinline", "");
-      void sessao.play().catch(() => undefined);
-    } catch {
-      /* Sem `<audio>` disponível, perde-se só o caso do interruptor. */
-    }
-  }
+  /* Se o elemento ficou em pausa (mudança de separador, por exemplo), um
+     toque novo volta a pô-lo a andar — senão os giros seguintes saíam mudos
+     sem razão visível. */
+  if (altifalante && altifalante.paused) void altifalante.play().catch(() => undefined);
 
   return true;
 }

@@ -1,0 +1,49 @@
+/*
+ * A altura não está escrita em lado nenhum: o `stretch` do flex do `.canto`
+ * (em Services.module.css) dá-lhe a do grupo da roleta, e só a largura é
+ * fixa. Escrever uma altura aqui obrigava a acertá-la à mão sempre que a
+ * etiqueta ou os botões mudassem de corpo.
+ */
+.retrato {
+  position: relative;
+  flex: none;
+  width: clamp(4.5rem, 9vw, 8.5rem);
+  margin: 0;
+  overflow: hidden;
+  border-radius: 4px;
+  border: 1px solid var(--line);
+}
+
+.retrato img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Puxado para cima: ao recortar, o que se perde tem de ser o ombro. */
+  object-position: 50% 28%;
+}
+
+.fio {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.traco {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+/*
+ * Sem movimento, o fio fica — mas quieto. Tirá-lo deixaria a foto diferente
+ * de como a veem os outros; o que incomoda é a volta, não o traço.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .traco {
+    stroke-dashoffset: 0;
+  }
+}

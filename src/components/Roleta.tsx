@@ -132,7 +132,23 @@ function tempoPara(progresso: number) {
   return bezier((baixo + cima) / 2, x1, x2);
 }
 
-export default function Roleta({ className = "" }: { className?: string }) {
+/**
+ * O que a roleta conta a quem quiser andar ao mesmo tempo que ela.
+ *
+ * Vão a duração e a curva, e não só um aviso de "comecei": quem recebe isto
+ * anima com os mesmos números, por isso não há como os dois saírem
+ * dessincronizados — se um dia a roleta mudar de ritmo, o resto muda com ela
+ * sem ninguém se lembrar de ir lá acertar.
+ */
+export type Giro = { duracao: number; suavizacao: string };
+
+export default function Roleta({
+  className = "",
+  aoGirar: aoGirarFora,
+}: {
+  className?: string;
+  aoGirar?: (giro: Giro) => void;
+}) {
   const [tiras, setTiras] = useState<string[][]>(() => tiraParada(letras(PALAVRAS[0])));
   const [indice, setIndice] = useState(0);
   const [pedido, setPedido] = useState(0);
@@ -152,6 +168,11 @@ export default function Roleta({ className = "" }: { className?: string }) {
   const desbloqueadoRef = useRef(false);
   const cortarSomRef = useRef<(() => void) | null>(null);
   const relogioRef = useRef<number | null>(null);
+
+  /* Guardado em ref para o `girar` não ter de se refazer a cada render só
+     porque quem nos usa passou uma função nova. */
+  const aoGirarRef = useRef(aoGirarFora);
+  aoGirarRef.current = aoGirarFora;
 
   const girar = useCallback((comSom: boolean) => {
     const proximo = (indiceRef.current + 1) % PALAVRAS.length;
@@ -178,6 +199,10 @@ export default function Roleta({ className = "" }: { className?: string }) {
     setIndice(proximo);
     setAGirar(true);
     setPedido((n) => n + 1);
+
+    /* A duração é a da ÚLTIMA coluna a travar: quem anda com a roleta tem de
+       parar quando ela acaba de parar, não quando a primeira assenta. */
+    aoGirarRef.current?.({ duracao: TOTAL_GIRO, suavizacao: CSS_SUAVIZACAO });
   }, []);
 
   useEffect(() => {
