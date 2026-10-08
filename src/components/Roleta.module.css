@@ -9,7 +9,7 @@
    * mostra ar e mais nada. Foi exatamente o que aconteceu à primeira: letras
    * a 0,6 e janela a 1,42 davam nove retângulos lisos.
    */
-  --cel: clamp(1.85rem, 2.9vw, 2.65rem);
+  --cel: clamp(2rem, 3.4vw, 3.1rem);
   --cel-larg: calc(var(--cel) * 0.86);
   --janela: calc(var(--cel) * 1.68);
   --caixa: #0b0a08;

@@ -9,7 +9,7 @@ export default function Services() {
       <div className="container">
         <div className={styles.topo}>
           <header className={styles.head}>
-            <Reveal as="p" className="eyebrow">
+            <Reveal as="p" className={`eyebrow ${styles.eyebrowLinha}`}>
               O que faço
             </Reveal>
             <Reveal as="h2" className={`display ${styles.title}`} delay={0.06}>

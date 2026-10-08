@@ -3,34 +3,57 @@
 }
 
 /*
- * Título à esquerda, roleta encostada ao canto direito.
+ * Título à esquerda, roleta encostada ao canto direito, à altura do nome.
  *
- * Alinhados pela base e não pelo topo: o bloco de texto cresce com a largura
- * da janela, e preso ao topo a roleta ficava a pairar a meio do vazio em vez
- * de fechar o canto.
+ * As três linhas do cabeçalho entram na grelha do `.topo` por `display:
+ * contents` — o `<header>` continua lá para quem lê a página com leitor de
+ * ecrã, mas deixa de formar caixa. É isso que permite prender a roleta à
+ * linha do TÍTULO: ancorada ao bloco inteiro, ela descia com o texto de
+ * apoio e deixava de estar rente ao nome.
+ */
+/*
+ * A coluna da roleta é `auto` e a do texto é o que sobra — ao contrário do
+ * óbvio, que seria dar 46rem ao texto e o resto à roleta. Medido: assim, a
+ * 1100 px de janela sobravam 221 px para um painel de 309 e ele entrava
+ * 33 px pela coluna do título adentro. Com `auto` é o painel que reserva o
+ * que precisa e o texto que encolhe.
  */
 .topo {
   display: grid;
-  grid-template-columns: minmax(0, 46rem) minmax(0, 1fr);
-  gap: clamp(2rem, 5vw, 4rem);
-  align-items: end;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: clamp(2rem, 5vw, 4rem);
+  align-items: start;
   margin-bottom: clamp(2.5rem, 6vw, 4.5rem);
 }
 
+.head {
+  display: contents;
+}
+
+.eyebrowLinha {
+  grid-column: 1;
+  grid-row: 1;
+}
+
 .roleta {
+  grid-column: 2;
+  grid-row: 2;
+  align-self: center;
   justify-self: end;
 }
 
-.head {
-  max-width: 46rem;
-}
-
 .title {
+  grid-column: 1;
+  grid-row: 2;
+  max-width: 46rem;
   font-size: var(--step-xl);
   margin-block: 0.75rem 1.25rem;
 }
 
 .lede {
+  grid-column: 1;
+  grid-row: 3;
+  max-width: 46rem;
   color: var(--night-muted);
 }
 
@@ -114,12 +137,14 @@
 @media (max-width: 68rem) {
   .topo {
     grid-template-columns: 1fr;
-    align-items: start;
-    gap: clamp(1.75rem, 5vw, 2.5rem);
   }
 
+  /* Numa coluna só, a roleta vai para baixo do texto todo. */
   .roleta {
+    grid-column: 1;
+    grid-row: 4;
     justify-self: start;
+    margin-top: clamp(1.75rem, 5vw, 2.5rem);
   }
 
   .row {
