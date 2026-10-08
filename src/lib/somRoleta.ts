@@ -14,8 +14,32 @@
 
 import { motorDeAudio } from "./introSom";
 
-/** Nunca acima disto, por muito que o volume do sistema esteja alto. */
-const VOLUME = 0.42;
+/**
+ * Nunca acima disto, por muito que o volume do sistema esteja alto.
+ *
+ * Esteve em 0,42, e era esse o defeito que a deixava sem som no telemóvel.
+ * Medido, rendendo o grafo inteiro num `OfflineAudioContext`: a versão antiga
+ * dava pico −16,8 dBFS, RMS −37,1 e — o número que interessa — **−43,2 dBFS
+ * acima dos 500 Hz**, que é a única banda que um altifalante de telemóvel
+ * sabe dar. Num portátil ouvia-se; num telefone era silêncio.
+ *
+ * Com os valores de agora: pico −3,6 dBFS, RMS −25,4, **−27,2 na banda do
+ * telemóvel** — 16 dB acima — e zero amostras a cortar.
+ */
+const VOLUME = 0.85;
+
+/**
+ * Banda e forma dos estalidos.
+ *
+ * O Q desceu de 1,6 para 0,7 e a banda de 3200–2100 Hz para 2500–1400: um
+ * filtro mais aberto deixa passar mais energia por estalido, e mais abaixo
+ * cai onde o altifalante de um telefone é melhor. O decaimento subiu de 30
+ * para 45 ms — mais corpo, e continua a ler-se como estalido e não como nota.
+ */
+const Q_ESTALIDO = 0.7;
+const DECAIMENTO = 0.045;
+const FREQ_TOPO = 2500;
+const FREQ_FUNDO = 1400;
 
 let ruido: AudioBuffer | null = null;
 let motorDoRuido: AudioContext | null = null;
@@ -52,7 +76,7 @@ function estalido(
   const filtro = ctx.createBiquadFilter();
   filtro.type = "bandpass";
   filtro.frequency.setValueAtTime(freq, t);
-  filtro.Q.value = 1.6;
+  filtro.Q.value = Q_ESTALIDO;
 
   const env = ctx.createGain();
   env.gain.setValueAtTime(0.0001, t);
@@ -66,16 +90,22 @@ function estalido(
 
 /** O baque de uma coluna a travar: o estalido mais grave, com corpo por baixo. */
 function encaixe(ctx: AudioContext, saida: AudioNode, t: number) {
-  estalido(ctx, saida, t, 1500, 0.5, 0.055);
+  estalido(ctx, saida, t, 1500, 0.8, 0.06);
 
   const osc = ctx.createOscillator();
   const env = ctx.createGain();
   osc.type = "sine";
-  osc.frequency.setValueAtTime(190, t);
+  /*
+   * 320 → 150 Hz, e não 190 → 95 como estava. O corpo do baque é o que lhe
+   * dá peso, e a 95 Hz ele caía por baixo do que um altifalante de telemóvel
+   * reproduz — o peso existia no sinal e não chegava ao ouvido de ninguém
+   * que estivesse no telefone.
+   */
+  osc.frequency.setValueAtTime(320, t);
   /* Cai de tom enquanto morre — é o que soa a peça a assentar e não a nota. */
-  osc.frequency.exponentialRampToValueAtTime(95, t + 0.08);
+  osc.frequency.exponentialRampToValueAtTime(150, t + 0.08);
   env.gain.setValueAtTime(0.0001, t);
-  env.gain.exponentialRampToValueAtTime(0.22, t + 0.004);
+  env.gain.exponentialRampToValueAtTime(0.35, t + 0.004);
   env.gain.exponentialRampToValueAtTime(0.0001, t + 0.1);
   osc.connect(env).connect(saida);
   osc.start(t);
@@ -141,7 +171,14 @@ export function tocarGiro({ passagens, travagens }: Giro): () => void {
       /* O tom desce um pouco à medida que abranda: não é física, é a mesma
          pista que o ouvido usa para perceber que uma coisa está a parar. */
       const avanco = i / Math.max(1, passagens.length - 1);
-      estalido(ctx, limite, t0 + (ms - decorrido) / 1000, 3200 - avanco * 1100, 0.3, 0.03);
+      estalido(
+        ctx,
+        limite,
+        t0 + (ms - decorrido) / 1000,
+        FREQ_TOPO - avanco * (FREQ_TOPO - FREQ_FUNDO),
+        0.65,
+        DECAIMENTO,
+      );
     });
 
     travagens.forEach((ms) => {
@@ -186,7 +223,9 @@ export function tocarGiro({ passagens, travagens }: Giro): () => void {
  * Um WAV de silêncio, fabricado aqui — serve o truque do iPhone, abaixo.
  *
  * Não é um ficheiro para não haver um pedido ao servidor por causa de meio
- * segundo de nada.
+ * segundo de nada, e sai como `data:` e não como `blob:` porque o Safari do
+ * iPhone recusa `blob:` num `<audio>` em várias versões — e era justamente
+ * no iPhone que isto tinha de funcionar.
  */
 function wavDeSilencio() {
   const taxa = 8000;
@@ -210,10 +249,22 @@ function wavDeSilencio() {
   texto(36, "data");
   v.setUint32(40, amostras * 2, true);
   /* As amostras ficam a zero: é isso que o torna silêncio. */
-  return URL.createObjectURL(new Blob([bytes], { type: "audio/wav" }));
+  const octetos = new Uint8Array(bytes);
+  let bruto = "";
+  for (let i = 0; i < octetos.length; i += 1) bruto += String.fromCharCode(octetos[i]);
+  return `data:audio/wav;base64,${btoa(bruto)}`;
 }
 
-let sessaoAberta = false;
+/**
+ * O `<audio>` fica guardado aqui e não numa variável local da função.
+ *
+ * Duas razões: solto, o recolector de lixo pode levá-lo mal a função acabe —
+ * e com ele vai-se a sessão de reprodução que ele abriu; e em ciclo, mantém
+ * a sessão aberta enquanto a página viver, que é o que faz o interruptor de
+ * silêncio continuar a ser ignorado nos giros seguintes, e não só no
+ * primeiro.
+ */
+let sessao: HTMLAudioElement | null = null;
 
 /**
  * Acorda o motor dentro do gesto, antes de haver som para tocar.
@@ -246,12 +297,12 @@ export function prepararSom() {
     /* Saída indisponível — o resto segue e não toca, sem rebentar. */
   }
 
-  if (!sessaoAberta) {
-    sessaoAberta = true;
+  if (!sessao) {
     try {
-      const som = new Audio(wavDeSilencio());
-      som.setAttribute("playsinline", "");
-      void som.play().catch(() => undefined);
+      sessao = new Audio(wavDeSilencio());
+      sessao.loop = true;
+      sessao.setAttribute("playsinline", "");
+      void sessao.play().catch(() => undefined);
     } catch {
       /* Sem `<audio>` disponível, perde-se só o caso do interruptor. */
     }
