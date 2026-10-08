@@ -316,6 +316,36 @@
   background: var(--paper-2);
 }
 
+/*
+ * Botão de som do vídeo de demonstração. Pousado no canto do próprio vídeo e
+ * não por baixo da moldura: a ficha escrita vem logo a seguir, e um botão
+ * solto entre as duas lia-se como parte do texto.
+ */
+.somFilme {
+  position: absolute;
+  right: 0.75rem;
+  bottom: 0.75rem;
+  padding: 0.55rem 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid var(--line-strong);
+  cursor: pointer;
+  transition:
+    background-color 0.3s var(--ease-out),
+    border-color 0.3s var(--ease-out),
+    color 0.3s var(--ease-out);
+}
+
+.somFilme:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
 /* Dois destinos por projeto: o site ao vivo e o repositório.
    Quebram para linhas separadas em ecrãs estreitos. */
 .links {
@@ -352,6 +382,7 @@
    -------------------------------------------------------------------------- */
 
 .window {
+  position: relative;
   margin: 0;
   border: 1px solid var(--line);
   background: var(--paper-3);

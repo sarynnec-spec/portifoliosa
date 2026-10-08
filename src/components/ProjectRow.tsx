@@ -28,6 +28,30 @@ export default function ProjectRow({ project, onOpen }: ProjectRowProps) {
   const deviceRotateY = useTransform(scrollYProgress, [0, 0.5, 1], [26, -2, -22]);
   const deviceRotateX = useTransform(scrollYProgress, [0, 0.5, 1], [9, 1, -7]);
 
+  /*
+   * Som do vídeo de demonstração.
+   *
+   * Quem tem som é DECLARADO em `temSom` — a mesma convenção que o
+   * `VideoMockup` já usava: por omissão tem, e escreve-se `false` quando o
+   * ficheiro não leva faixa de áudio.
+   *
+   * ⚠️ Tentei primeiro deduzi-lo do próprio elemento
+   * (`webkitAudioDecodedByteCount`, `audioTracks`, `mozHasAudio`) e **não
+   * funciona no Chrome**: o contador fica a zero enquanto o vídeo está mudo,
+   * e o vídeo arranca sempre mudo. O botão simplesmente nunca aparecia.
+   */
+  const filmeRef = useRef<HTMLVideoElement | null>(null);
+  const [comSom, setComSom] = useState(false);
+  const temAudio = project.temSom !== false;
+
+  const alternarSom = () => {
+    const v = filmeRef.current;
+    if (!v) return;
+    v.muted = !v.muted;
+    setComSom(!v.muted);
+    if (!v.muted) void v.play().catch(() => undefined);
+  };
+
   const images = project.gallery ?? [project.cover];
   /*
    * Carrossel: a peça central já mostra a capa em grande, por isso a moldura
@@ -159,8 +183,12 @@ export default function ProjectRow({ project, onOpen }: ProjectRowProps) {
             /*
              * Vídeo horizontal dentro da moldura de janela. O aparelho do
              * VideoMockup é um telemóvel — só serve 9:16 e 4:5 — e esticá-lo
-             * para paisagem obrigava a cortar. Toca sozinho, em silêncio e em
-             * ciclo, como uma demonstração: não tem faixa de áudio.
+             * para paisagem obrigava a cortar.
+             *
+             * Arranca em silêncio porque os browsers bloqueiam o autoplay com
+             * som; o botão liga-o. Vídeos sem faixa de áudio não mostram botão
+             * nenhum — daí ele depender de `temAudio`, lido do próprio
+             * elemento quando os metadados chegam, e não de uma lista à mão.
              */
             <figure className={styles.window}>
               <figcaption className={styles.chrome}>
@@ -173,6 +201,7 @@ export default function ProjectRow({ project, onOpen }: ProjectRowProps) {
                 <span className={styles.livePill}>demonstração</span>
               </figcaption>
               <video
+                ref={filmeRef}
                 className={styles.filme}
                 src={project.video}
                 poster={project.cover.src}
@@ -184,6 +213,11 @@ export default function ProjectRow({ project, onOpen }: ProjectRowProps) {
                 preload="metadata"
                 aria-label={project.cover.alt}
               />
+              {temAudio && (
+                <button type="button" className={styles.somFilme} onClick={alternarSom}>
+                  {comSom ? "Desligar som" : "Ouvir com som"}
+                </button>
+              )}
             </figure>
           ) : isSite ? (
             /* Sites: moldura de janela e a página a correr de cima até ao fim. */

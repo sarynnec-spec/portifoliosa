@@ -34,35 +34,77 @@
 }
 
 /*
- * Entra onde o texto do original entrava: acima das personagens, a pouco
- * mais de um terço da altura.
+ * A porta assenta no chão por onde as personagens andam — medido no vídeo:
+ * elas caminham com os pés por volta dos 88% da altura da caixa. A altura da
+ * porta é pouco mais do que a delas, para parecer uma porta e não um portão.
+ */
+.porta {
+  position: absolute;
+  left: 0;
+  bottom: 12%;
+  height: 26%;
+  width: auto;
+  fill: none;
+  stroke: #33312c;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+
+.porta circle {
+  fill: #33312c;
+  stroke: none;
+}
+
+/*
+ * Entra onde o texto do original entrava, acima das personagens — descido
+ * para 46% da altura, a pedido dela, para ficar mais ao centro da caixa.
  */
 .frase {
   position: absolute;
   left: 50%;
-  top: 36%;
-  transform: translate(-50%, -0.4rem);
+  top: 46%;
+  transform: translate(-50%, -50%);
   margin: 0;
   width: min(88%, 22rem);
   text-align: center;
   font-family: var(--font-display);
   font-size: clamp(1.1rem, 2.1vw, 1.7rem);
-  line-height: 1.15;
+  line-height: 1.2;
   color: var(--accent);
-  opacity: 0;
-  transition:
-    opacity 0.6s var(--ease-out),
-    transform 0.6s var(--ease-out);
   pointer-events: none;
 }
 
-.frase[data-visivel] {
-  opacity: 1;
-  transform: translate(-50%, 0);
+/*
+ * A escrita acontece letra a letra, e é aqui que vive: cada `<span>` leva o
+ * seu atraso por `style`, e esta transição é a mesma para todos. O curto
+ * deslocamento para cima dá o gesto de pousar a letra — sem ele parecia
+ * texto a piscar, não texto a ser escrito.
+ */
+.frase span {
+  display: inline-block;
+  white-space: pre;
+  opacity: 0;
+  transform: translateY(0.18em);
+  transition:
+    opacity 0.26s ease-out,
+    transform 0.26s ease-out;
 }
 
+.frase[data-visivel] span {
+  opacity: 1;
+  transform: none;
+}
+
+/*
+ * Sem movimento, a frase aparece inteira e de uma vez — o atraso por letra
+ * continua no `style`, por isso é a transição que tem de ser desligada, e
+ * não o efeito.
+ */
 @media (prefers-reduced-motion: reduce) {
-  .frase {
+  .frase span {
     transition: none;
+    transition-delay: 0s !important;
   }
 }

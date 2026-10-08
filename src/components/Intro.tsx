@@ -227,8 +227,14 @@ export default function Intro() {
         ))}
       </p>
 
+      {/*
+        Sem o apelido, por decisão dela: com ele a linha era
+        «Ferreira · Full Stack, IA e Automação · Design Digital» e no iPhone
+        saía pelos dois lados do ecrã fora. O nome já está escrito em grande
+        por cima — o apelido aqui só roubava espaço ao que importa.
+      */}
       <p className={styles.sub} aria-hidden="true">
-        {profile.lastName} · {profile.role}
+        {profile.role}
       </p>
     </div>
   );
