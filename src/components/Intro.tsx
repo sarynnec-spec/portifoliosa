@@ -228,13 +228,19 @@ export default function Intro() {
       </p>
 
       {/*
-        Sem o apelido, por decisão dela: com ele a linha era
-        «Ferreira · Full Stack, IA e Automação · Design Digital» e no iPhone
-        saía pelos dois lados do ecrã fora. O nome já está escrito em grande
-        por cima — o apelido aqui só roubava espaço ao que importa.
+        A forma curta, e sem o apelido.
+
+        Com o apelido a linha era «Ferreira · Full Stack, IA e Automação ·
+        Design Digital» — 54 caracteres — e no iPhone dela saía pelos dois
+        lados do ecrã fora. O nome já está escrito em grande por cima, por
+        isso o apelido aqui só roubava espaço.
+
+        ⚠️ E tem de ser `roleShort`, não `role`: com «Motion Graphics» a
+        entrar no `role`, a linha completa vai a 60 caracteres — pior do que
+        a que transbordava. A `roleShort` tem 32 e diz o mesmo.
       */}
       <p className={styles.sub} aria-hidden="true">
-        {profile.role}
+        {profile.roleShort}
       </p>
     </div>
   );

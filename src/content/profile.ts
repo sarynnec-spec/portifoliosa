@@ -12,9 +12,13 @@ export const profile = {
    * As duas frentes têm de aparecer: ela candidata-se a vagas de
    * desenvolvimento E de design, e o `role` vai para o <title> da página — com
    * só uma delas, metade dos recrutadores fecha o separador.
+   *
+   * «Motion Graphics» entrou a 2026-10-08 a pedido dela, e é uma terceira
+   * frente: há uma secção inteira de motion no site e ela candidata-se também
+   * a isso. Acrescenta-se, não se troca — ver a regra das duas frentes.
    */
-  role: "Full Stack, IA e Automação · Design Digital",
-  roleShort: "Full Stack · IA · Design Digital",
+  role: "Full Stack, IA e Automação · Design Digital · Motion Graphics",
+  roleShort: "Full Stack · IA · Design · Motion",
   status: "Técnica de Multimédia · IEFP",
   location: "Aveiro, Portugal",
   timeZone: "Europe/Lisbon",
