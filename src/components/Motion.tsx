@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { reels, type Reel } from "@/content/reels";
+import AnimacaoCanto from "./AnimacaoCanto";
 import Reveal from "./Reveal";
 import VideoMockup from "./VideoMockup";
 import styles from "./Motion.module.css";
@@ -157,19 +158,25 @@ export default function Motion() {
   return (
     <section className={`section ${styles.section}`} id="motion">
       <div className="container">
-        <header className={styles.head}>
-          <Reveal as="p" className="eyebrow">
-            Vídeos
+        <div className={styles.topo}>
+          <header className={styles.head}>
+            <Reveal as="p" className={`eyebrow ${styles.eyebrowLinha}`}>
+              Vídeos
+            </Reveal>
+            <Reveal as="h2" className={`display ${styles.title}`} delay={0.06}>
+              Vídeo vertical, feito em <em>motion graphics</em>
+            </Reveal>
+            <Reveal as="p" className={`lede ${styles.lede}`} delay={0.1}>
+              Peças de marca, reels e anúncios: tempo, ritmo e sincronização com o som tratados
+              como parte do desenho, não como acabamento. Passe pelas setas para ver as{" "}
+              {total} peças.
+            </Reveal>
+          </header>
+
+          <Reveal className={styles.canto} delay={0.16}>
+            <AnimacaoCanto />
           </Reveal>
-          <Reveal as="h2" className={`display ${styles.title}`} delay={0.06}>
-            Vídeo vertical, feito em <em>motion graphics</em>
-          </Reveal>
-          <Reveal as="p" className={`lede ${styles.lede}`} delay={0.1}>
-            Peças de marca, reels e anúncios: tempo, ritmo e sincronização com o som tratados
-            como parte do desenho, não como acabamento. Passe pelas setas para ver as{" "}
-            {total} peças.
-          </Reveal>
-        </header>
+        </div>
 
         <div
           className={styles.palco}
