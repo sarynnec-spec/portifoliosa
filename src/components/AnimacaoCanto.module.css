@@ -34,16 +34,24 @@
 }
 
 /*
- * A porta assenta no chão por onde as personagens andam — medido no vídeo:
- * elas caminham com os pés por volta dos 88% da altura da caixa. A altura da
- * porta é pouco mais do que a delas, para parecer uma porta e não um portão.
+ * A porta fica à DIREITA, que é por onde elas entram.
+ *
+ * Pu-la primeiro à esquerda, por causa de uma captura dela em que apareciam
+ * cortadas desse lado — e estava errado. Medido no vídeo publicado, no
+ * reinício da volta: as personagens entram pela margem direita e caminham
+ * para dentro. À esquerda a porta ficava a servir de nada.
+ *
+ * Assenta no chão por onde elas andam, e é pouco mais alta do que elas, para
+ * parecer uma porta e não um portão. O espelho é para a dobradiça ficar do
+ * lado de fora.
  */
 .porta {
   position: absolute;
-  left: 0;
+  right: 0;
   bottom: 12%;
   height: 26%;
   width: auto;
+  transform: scaleX(-1);
   fill: none;
   stroke: #33312c;
   stroke-width: 2;
