@@ -16,9 +16,14 @@ export const profile = {
    * «Motion Graphics» entrou a 2026-10-08 a pedido dela, e é uma terceira
    * frente: há uma secção inteira de motion no site e ela candidata-se também
    * a isso. Acrescenta-se, não se troca — ver a regra das duas frentes.
+   *
+   * «3D» entrou a 2026-10-10, pela mesma razão e com a mesma prova: o projeto
+   * NEXUS Industrial é modelação em Blender e tem página própria no site.
+   * Candidaturas de design multimédia pedem-no por nome — sem a palavra aqui,
+   * quem procura 3D não encontra. O Full Stack continua à frente.
    */
-  role: "Full Stack, IA e Automação · Design Digital · Motion Graphics",
-  roleShort: "Full Stack · IA · Design · Motion",
+  role: "Full Stack, IA e Automação · Design Digital · Motion Graphics · 3D",
+  roleShort: "Full Stack · IA · Design · Motion · 3D",
   status: "Técnica de Multimédia · IEFP",
   location: "Aveiro, Portugal",
   timeZone: "Europe/Lisbon",
@@ -40,7 +45,7 @@ export const profile = {
 
 /** Perfil profissional — resumo do CV. */
 export const summary =
-  "Construo aplicações web de ponta a ponta — interface, lógica de negócio, base de dados e APIs — e trabalho igualmente em design gráfico, motion design e UX/UI. Técnica de Multimédia pelo IEFP (nível 4), formação que junta programação e design, com uma base comercial de anos em atendimento, gestão de loja e consultoria. O VerdeFácil, plataforma SaaS de faturação fiscal que desenvolvi de raiz, junta as duas coisas: perceber o problema de quem o vai usar e construir o produto que o resolve.";
+  "Construo aplicações web de ponta a ponta — interface, lógica de negócio, base de dados e APIs — e trabalho igualmente em design gráfico, motion graphics, modelação 3D e UX/UI. Técnica de Multimédia pelo IEFP (nível 4), formação que junta programação e design, com uma base comercial de anos em atendimento, gestão de loja e consultoria. O VerdeFácil, plataforma SaaS de faturação fiscal que desenvolvi de raiz, junta as duas coisas: perceber o problema de quem o vai usar e construir o produto que o resolve.";
 
 /** Frase-manifesto revelada palavra a palavra no scroll. Construída a partir do perfil do CV. */
 export const manifesto =
@@ -51,6 +56,7 @@ export const about = {
   paragraphs: [
     "Depois de anos em atendimento ao público, gestão de loja e consultoria comercial e financeira, a formação de Técnica de Multimédia no IEFP deu-me as bases de design e interface. Daí fui à procura do que faltava: construir o produto inteiro, e não apenas o que se vê.",
     "Hoje trabalho de ponta a ponta — modelo de dados, lógica de negócio, APIs e testes. O VerdeFácil nasceu assim, de raiz: uma plataforma de faturação fiscal onde cada decisão técnica foi minha, e onde aprendi que a parte difícil não é escrever código, é provar que está certo.",
+    "A par do software mantenho a frente criativa, que é a mesma formação a trabalhar: peças de motion graphics construídas em código, identidade visual, interfaces no Figma e modelação 3D em Blender — o estudo da unidade fabril NEXUS saiu daí.",
     "Trago organização, foco em resultados e um olhar de quem entende o cliente — porque já estive dos dois lados do balcão. Procuro uma equipa onde possa aplicar o que construí e continuar a crescer.",
   ],
   facts: [
@@ -94,6 +100,14 @@ export const disciplines = [
   "Edição de Imagem",
   "Node.js",
   "Criação de Conteúdo",
+  /*
+   * Este par entrou a 2026-10-10 e vai nesta ordem de propósito: a faixa dá a
+   * volta, por isso o último item fica ao lado do primeiro («Design Gráfico»).
+   * Com «Modelação 3D» no fim ficavam dois de design encostados na emenda;
+   * com o «Three.js» a fechar, a alternância aguenta-se até na volta.
+   */
+  "Modelação 3D",
+  "Three.js",
 ];
 
 /**

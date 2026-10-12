@@ -70,10 +70,10 @@ export const services: Service[] = [
   },
   {
     index: "09",
-    title: "Edição de Vídeo",
+    title: "Motion Graphics & Vídeo",
     description:
-      "Reels, shorts e vídeos promocionais editados para prender a atenção nos primeiros segundos.",
-    tools: ["Reels", "Shorts", "Vídeo promocional"],
+      "Peças de marca, anúncios e reels construídos em código, fotograma a fotograma — com o som alinhado ao movimento. E reels, shorts e vídeos promocionais editados para prender a atenção nos primeiros segundos.",
+    tools: ["Remotion", "Reels", "Shorts", "Vídeo promocional"],
   },
   {
     index: "10",

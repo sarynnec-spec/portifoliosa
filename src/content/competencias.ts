@@ -138,17 +138,24 @@ export const areas: AreaCompetencia[] = [
    * ficam como texto, como o Playwright já ficava.
    */
   {
-    titulo: "Design e marca",
+    titulo: "Design, marca e 3D",
     descricao:
-      "Identidade visual e interfaces, do logótipo ao protótipo navegável — e as peças em movimento que daí saem.",
-    ferramentas: [{ nome: "Figma", icone: "figma", cor: "#F24E1E" }],
+      "Identidade visual e interfaces, do logótipo ao protótipo navegável — as peças em movimento que daí saem, e o 3D quando o que há para mostrar não existe para fotografar.",
+    /*
+     * O Blender fica como texto, sem ícone: o simple-icons tem a marca, mas
+     * `public/ferramentas/tec/` não — e o ícone entra por `mask`, pelo que um
+     * ficheiro em falta não falha, desenha nada. Mesmo caso do Playwright e
+     * dos Ads.
+     */
+    ferramentas: [{ nome: "Figma", icone: "figma", cor: "#F24E1E" }, { nome: "Blender" }],
     praticas: [
       "Design gráfico e identidade visual",
       "Logótipos, flyers e cartazes",
       "UX/UI Design — do wireframe ao protótipo",
       "Design system e consistência de marca",
       "Edição de imagem e vídeo",
-      "Motion graphics",
+      "Motion graphics construído em código",
+      "Modelação e visualização 3D em Blender",
     ],
   },
   {
