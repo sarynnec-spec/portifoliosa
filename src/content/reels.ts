@@ -40,8 +40,28 @@ export type Reel = {
 
 export const reels: Reel[] = [
   {
-    slug: "midea-motion",
+    slug: "museu-arte-nova",
     index: "M1",
+    title: "Museu Arte Nova",
+    category: "Motion Graphics · Peça de autor",
+    ficha: "40 s · 1080×1920 · 30 fps",
+    description:
+      "A Casa Major Pessoa, em Aveiro, contada em quarenta segundos — da fotografia à forma. Abre no nome do museu, lê a fachada em tiras verticais numeradas, nomeia os materiais que a Arte Nova usou e fecha com a casa a ganhar volume: a fotografia dá lugar a uma maqueta ilustrada que roda sobre a base e mostra o lado que a fotografia não via.",
+    highlights: [
+      "Quatro capítulos encadeados pela mesma casa: o nome, a data 1907—1909, os materiais e os detalhes — e só no fim a imagem dá lugar à forma",
+      "Blocos de cor nomeiam o que a Arte Nova usou — «uma casa» em ocre, «pedra ferro» em verde, «vidro azul» em coral — assentes sobre a própria fachada",
+      "A passagem de registo é o gesto central: a fotografia desvanece-se e no mesmo sítio levanta-se a maqueta, com a legenda «Da imagem à forma»",
+      "Fotografia de GFreihalter, do Wikimedia Commons, em CC BY-SA 3.0 — creditada dentro da própria peça",
+    ],
+    stack: ["Motion Graphics", "Direção de arte", "Ilustração", "Edição de Vídeo"],
+    video: "/media/web/museu-arte-nova.mp4",
+    poster: "/media/web/museu-arte-nova-poster.jpg",
+    alt: "Fotograma da peça Museu Arte Nova: a Casa Major Pessoa em maqueta ilustrada verde-azulada, sob o título «A casa que floresceu»",
+    ratio: "9/16",
+  },
+  {
+    slug: "midea-motion",
+    index: "M2",
     title: "Midea",
     category: "Motion Graphics · Peça de marca",
     ficha: "15,7 s · 1080×1350 · 30 fps",
@@ -57,26 +77,6 @@ export const reels: Reel[] = [
     video: "/media/web/midea-motion.mp4",
     poster: "/media/web/midea-motion-poster.jpg",
     alt: "Fotograma da peça Midea: anel de treze ícones de eletrodomésticos sob o logótipo da marca",
-    ratio: "4/5",
-  },
-  {
-    slug: "teka-motion",
-    index: "M2",
-    title: "Teka",
-    category: "Motion Graphics · Peça de marca",
-    ficha: "10 s · 1080×1350 · 30 fps",
-    description:
-      "O logótipo da Teka tem um quadrado antes do nome. A peça agarra-se a ele: o quadrado cai, ressalta, e cada aterragem faz nascer uma letra. Depois cada letra sai do sítio e deixa lá o eletrodoméstico que lhe corresponde — a marca inteira lê-se como uma cozinha.",
-    highlights: [
-      "Três actos encadeados: o quadrado dá as letras, as letras dão os produtos, a marca viaja para o canto",
-      "T torneira, E forno, K placa, A frigorífico — um de cada vez, com as letras vizinhas a afastar-se para dar espaço",
-      "Fecho com o exaustor a crescer e o slogan de 2018 da marca, «Uma receita para a vida»",
-      "Som construído efeito a efeito, um por objeto: água na torneira, porta no forno, selo no frigorífico",
-    ],
-    stack: ["Remotion", "React", "SVG", "Motion Graphics"],
-    video: "/media/web/teka-motion.mp4",
-    poster: "/media/web/teka-motion-poster.jpg",
-    alt: "Fotograma da peça Teka: um forno ocupa o lugar do E na palavra TEKA, sobre vermelho",
     ratio: "4/5",
   },
   {
@@ -156,5 +156,33 @@ export const reels: Reel[] = [
     poster: "/media/web/rafalice-anuncio-poster.jpg",
     alt: "Fotograma do anúncio: três mãos a partilhar salgados sobre listras da marca",
     ratio: "9/16",
+  },
+  /*
+   * A Teka fecha a lista de propósito, e não por ordem de importância.
+   * As vizinhas do carrossel dão a volta (`anterior = (ativo - 1 + total) % total`
+   * no `Motion.tsx`), por isso a ÚLTIMA peça é a que se vê à esquerda da
+   * primeira. Com o Museu a abrir, é só aqui que a Teka aparece em cena logo
+   * à entrada da secção — foi o que ela pediu a 2026-10-12. Mexer nisto muda
+   * o que se vê ao lado do destaque.
+   */
+  {
+    slug: "teka-motion",
+    index: "M7",
+    title: "Teka",
+    category: "Motion Graphics · Peça de marca",
+    ficha: "10 s · 1080×1350 · 30 fps",
+    description:
+      "O logótipo da Teka tem um quadrado antes do nome. A peça agarra-se a ele: o quadrado cai, ressalta, e cada aterragem faz nascer uma letra. Depois cada letra sai do sítio e deixa lá o eletrodoméstico que lhe corresponde — a marca inteira lê-se como uma cozinha.",
+    highlights: [
+      "Três actos encadeados: o quadrado dá as letras, as letras dão os produtos, a marca viaja para o canto",
+      "T torneira, E forno, K placa, A frigorífico — um de cada vez, com as letras vizinhas a afastar-se para dar espaço",
+      "Fecho com o exaustor a crescer e o slogan de 2018 da marca, «Uma receita para a vida»",
+      "Som construído efeito a efeito, um por objeto: água na torneira, porta no forno, selo no frigorífico",
+    ],
+    stack: ["Remotion", "React", "SVG", "Motion Graphics"],
+    video: "/media/web/teka-motion.mp4",
+    poster: "/media/web/teka-motion-poster.jpg",
+    alt: "Fotograma da peça Teka: um forno ocupa o lugar do E na palavra TEKA, sobre vermelho",
+    ratio: "4/5",
   },
 ];
