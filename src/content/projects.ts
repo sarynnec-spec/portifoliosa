@@ -290,45 +290,8 @@ export const projects: Project[] = [
     },
   },
   {
-    slug: "rafalice",
-    larguraTotal: true,
-    index: "09",
-    title: "Salgados Rafalice",
-    category: "Identidade · Social Media & Ads",
-    description:
-      "Identidade visual e peças promocionais para a marca: logotipo com mascote, poster de campanha e arte para redes sociais. Faço também a gestão das páginas e das campanhas de anúncios no Facebook e no Instagram.",
-    stack: ["Identidade visual", "Gestão de páginas", "Facebook Ads", "Instagram Ads"],
-    coverRatio: "square",
-    /* O logótipo sobe para junto do nome — deixa de ser mais uma miniatura. */
-    logo: {
-      /* Recorte do PNG original: o quadrado trazia 16% de margem transparente
-         em baixo, que desalinhava o selo do nome. */
-      src: "/media/brand/rafalice-logo-trim.png",
-      alt: "Logótipo Salgados Rafalice — mascote com chapéu de chefe",
-    },
-    cover: {
-      src: "/media/brand/rafalice-poster.jpg",
-      alt: "Poster promocional Salgados Rafalice",
-    },
-    galleryMode: "carousel",
-    gallery: [
-      {
-        src: "/media/brand/rafalice-artesanais.jpg",
-        alt: "Post “Salgados artesanais, feitos com amor”, com coxinhas e empadas em creme e dourado",
-        caption: "Post · Salgados artesanais",
-      },
-      { src: "/media/brand/rafalice-poster.jpg", alt: "Poster 50 salgados por 20€", caption: "Poster de campanha" },
-      { src: "/media/brand/rafalice-promo.jpg", alt: "Post promocional 50 salgadinhos", caption: "Post · Redes sociais" },
-      {
-        src: "/media/brand/rafalice-combo.jpg",
-        alt: "Post com os dois pacotes: 50 salgados por 20€ e 50 salgados com 20 doces por 35€",
-        caption: "Post · Pacotes 20€ e 35€",
-      },
-    ],
-  },
-  {
     slug: "nexus-industrial",
-    index: "10",
+    index: "09",
     title: "NEXUS Industrial 3D",
     category: "Modelação e Visualização 3D · Unidade Fabril",
     description:

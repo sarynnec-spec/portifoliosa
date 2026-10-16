@@ -5,7 +5,31 @@
  * trabalho; quem procura motion tinha de as ir descobrindo pelo meio.
  *
  * Deixaram de estar umas por baixo das outras: agora passam num carrossel,
- * uma de cada vez. A ordem é escolhida — as peças de marca abrem a secção.
+ * uma de cada vez.
+ *
+ * 🔴 A ORDEM DESTE ARRAY É QUEM ESCOLHE AS VIZINHAS DO DESTAQUE.
+ * No `Motion.tsx`, `anterior = (ativo - 1 + total) % total` e
+ * `seguinte = (ativo + 1) % total`: a peça à ESQUERDA é a anterior e a da
+ * DIREITA é a seguinte, e dão a volta. Não há — nem deve haver — campo para
+ * fixar vizinhas: elas são clicáveis, e uma vizinha inventada levava a seta
+ * a uma peça diferente da que se vê.
+ *
+ * Ordem escolhida por ela a 2026-10-15, e o porquê de cada lugar:
+ *   M1 Reel de apresentação — é o destaque, abre a secção;
+ *   M2 Midea               — é a SEGUINTE, logo é a vizinha da DIREITA;
+ *   M3 Imaginar            — a seguir, pela ordem de passagem que ela pediu;
+ *   M6 Museu Arte Nova     — é a ANTERIOR da Teka, logo é o que se vê à
+ *                            ESQUERDA quando a Teka está em destaque. Ela
+ *                            pediu-o nesse lugar, no lugar do anúncio dos
+ *                            salgados, que desceu para M4;
+ *   M7 Teka                — é a ÚLTIMA, logo é a vizinha da ESQUERDA do M1.
+ *
+ * ⚠️ Isto revoga a ordem de 2026-10-12, em que o Museu abria a secção.
+ * Mexer na ordem muda o que aparece ao lado do destaque — verificar as duas
+ * vizinhas depois de qualquer mudança.
+ *
+ * Os `index` («M1».."M7") são rótulos escritos à mão: renumerar sempre que a
+ * ordem mudar.
  *
  * Números medidos nos próprios ficheiros (duração, formato, fps) — nada aqui
  * é estimado.
@@ -40,23 +64,23 @@ export type Reel = {
 
 export const reels: Reel[] = [
   {
-    slug: "museu-arte-nova",
+    slug: "reel-apresentacao",
     index: "M1",
-    title: "Museu Arte Nova",
-    category: "Motion Graphics · Peça de autor",
-    ficha: "40 s · 1080×1920 · 30 fps",
+    title: "Reel de apresentação",
+    category: "Motion Graphics · Cartão de visita em vídeo",
+    ficha: "17 s · 1080×1920 · 30 fps",
     description:
-      "A Casa Major Pessoa, em Aveiro, contada em quarenta segundos — da fotografia à forma. Abre no nome do museu, lê a fachada em tiras verticais numeradas, nomeia os materiais que a Arte Nova usou e fecha com a casa a ganhar volume: a fotografia dá lugar a uma maqueta ilustrada que roda sobre a base e mostra o lado que a fotografia não via.",
+      "O meu cartão de visita em movimento: os trabalhos entram a voar à volta do nome, a ideia fixa-se numa frase e o fecho é um convite ao contacto. Fundo branco e tipografia a fazer o trabalho todo — sem efeitos a mais a disputar a atenção.",
     highlights: [
-      "Quatro capítulos encadeados pela mesma casa: o nome, a data 1907—1909, os materiais e os detalhes — e só no fim a imagem dá lugar à forma",
-      "Blocos de cor nomeiam o que a Arte Nova usou — «uma casa» em ocre, «pedra ferro» em verde, «vidro azul» em coral — assentes sobre a própria fachada",
-      "A passagem de registo é o gesto central: a fotografia desvanece-se e no mesmo sítio levanta-se a maqueta, com a legenda «Da imagem à forma»",
-      "Fotografia de GFreihalter, do Wikimedia Commons, em CC BY-SA 3.0 — creditada dentro da própria peça",
+      "Miniaturas dos trabalhos reais a orbitar o nome, cada uma com a sua entrada",
+      "Passagem da grelha de trabalhos para o retrato, em círculo de luz",
+      "Frase-manifesto construída palavra a palavra, com a ênfase a cair no fim",
+      "Cartão final com nome, função e chamada ao contacto",
     ],
-    stack: ["Motion Graphics", "Direção de arte", "Ilustração", "Edição de Vídeo"],
-    video: "/media/web/museu-arte-nova.mp4",
-    poster: "/media/web/museu-arte-nova-poster.jpg",
-    alt: "Fotograma da peça Museu Arte Nova: a Casa Major Pessoa em maqueta ilustrada verde-azulada, sob o título «A casa que floresceu»",
+    stack: ["Remotion", "React", "Motion Graphics", "Edição de Vídeo"],
+    video: "/media/web/reel-sarynne.mp4",
+    poster: "/media/web/reel-sarynne-poster.jpg",
+    alt: "Fotograma do reel de apresentação: retrato dentro de um círculo de luz",
     ratio: "9/16",
   },
   {
@@ -99,23 +123,23 @@ export const reels: Reel[] = [
     ratio: "9/16",
   },
   {
-    slug: "reel-apresentacao",
+    slug: "rafalice-anuncio",
     index: "M4",
-    title: "Reel de apresentação",
-    category: "Motion Graphics · Cartão de visita em vídeo",
-    ficha: "17 s · 1080×1920 · 30 fps",
+    title: "Anúncio Salgados Rafalice",
+    category: "Motion Graphics · Anúncio para Meta Ads",
+    ficha: "15 s · 2160×3840 · entregue também em 1080×1920",
     description:
-      "O meu cartão de visita em movimento: os trabalhos entram a voar à volta do nome, a ideia fixa-se numa frase e o fecho é um convite ao contacto. Fundo branco e tipografia a fazer o trabalho todo — sem efeitos a mais a disputar a atenção.",
+      "Anúncio vertical para Instagram e Facebook Ads, construído de raiz em código. Sete secções encadeadas — gancho, revelação do produto, sabores, oferta e chamada à ação — sobre um fundo de listras da marca que escurece por blocos consoante o que precisa de destaque.",
     highlights: [
-      "Miniaturas dos trabalhos reais a orbitar o nome, cada uma com a sua entrada",
-      "Passagem da grelha de trabalhos para o retrato, em círculo de luz",
-      "Frase-manifesto construída palavra a palavra, com a ênfase a cair no fim",
-      "Cartão final com nome, função e chamada ao contacto",
+      "Grelha 2×2 de azulejos que rodam para revelar cada sabor",
+      "Legibilidade pelo contorno do próprio texto, sem escurecer o fundo",
+      "Entrada da música escolhida por análise de energia da faixa: o ponto alto cai sobre os cartões de preço e o pico sobre o logótipo",
+      "Fotograma exportado da mesma composição serve de imagem estática do conjunto de anúncios",
     ],
-    stack: ["Remotion", "React", "Motion Graphics", "Edição de Vídeo"],
-    video: "/media/web/reel-sarynne.mp4",
-    poster: "/media/web/reel-sarynne-poster.jpg",
-    alt: "Fotograma do reel de apresentação: retrato dentro de um círculo de luz",
+    stack: ["Remotion", "React", "Motion Graphics", "Meta Ads"],
+    video: "/media/web/rafalice-anuncio.mp4",
+    poster: "/media/web/rafalice-anuncio-poster.jpg",
+    alt: "Fotograma do anúncio: três mãos a partilhar salgados sobre listras da marca",
     ratio: "9/16",
   },
   {
@@ -138,32 +162,33 @@ export const reels: Reel[] = [
     ratio: "9/16",
   },
   {
-    slug: "rafalice-anuncio",
+    slug: "museu-arte-nova",
     index: "M6",
-    title: "Anúncio Salgados Rafalice",
-    category: "Motion Graphics · Anúncio para Meta Ads",
-    ficha: "15 s · 2160×3840 · entregue também em 1080×1920",
+    title: "Museu Arte Nova",
+    category: "Motion Graphics · Peça de autor",
+    ficha: "40 s · 1080×1920 · 30 fps",
     description:
-      "Anúncio vertical para Instagram e Facebook Ads, construído de raiz em código. Sete secções encadeadas — gancho, revelação do produto, sabores, oferta e chamada à ação — sobre um fundo de listras da marca que escurece por blocos consoante o que precisa de destaque.",
+      "A Casa Major Pessoa, em Aveiro, contada em quarenta segundos — da fotografia à forma. Abre no nome do museu, lê a fachada em tiras verticais numeradas, nomeia os materiais que a Arte Nova usou e fecha com a casa a ganhar volume: a fotografia dá lugar a uma maqueta ilustrada que roda sobre a base e mostra o lado que a fotografia não via.",
     highlights: [
-      "Grelha 2×2 de azulejos que rodam para revelar cada sabor",
-      "Legibilidade pelo contorno do próprio texto, sem escurecer o fundo",
-      "Entrada da música escolhida por análise de energia da faixa: o ponto alto cai sobre os cartões de preço e o pico sobre o logótipo",
-      "Fotograma exportado da mesma composição serve de imagem estática do conjunto de anúncios",
+      "Quatro capítulos encadeados pela mesma casa: o nome, a data 1907—1909, os materiais e os detalhes — e só no fim a imagem dá lugar à forma",
+      "Blocos de cor nomeiam o que a Arte Nova usou — «uma casa» em ocre, «pedra ferro» em verde, «vidro azul» em coral — assentes sobre a própria fachada",
+      "A passagem de registo é o gesto central: a fotografia desvanece-se e no mesmo sítio levanta-se a maqueta, com a legenda «Da imagem à forma»",
+      "Fotografia de GFreihalter, do Wikimedia Commons, em CC BY-SA 3.0 — creditada dentro da própria peça",
     ],
-    stack: ["Remotion", "React", "Motion Graphics", "Meta Ads"],
-    video: "/media/web/rafalice-anuncio.mp4",
-    poster: "/media/web/rafalice-anuncio-poster.jpg",
-    alt: "Fotograma do anúncio: três mãos a partilhar salgados sobre listras da marca",
+    stack: ["Motion Graphics", "Direção de arte", "Ilustração", "Edição de Vídeo"],
+    video: "/media/web/museu-arte-nova.mp4",
+    poster: "/media/web/museu-arte-nova-poster.jpg",
+    alt: "Fotograma da peça Museu Arte Nova: a Casa Major Pessoa em maqueta ilustrada verde-azulada, sob o título «A casa que floresceu»",
     ratio: "9/16",
   },
   /*
    * A Teka fecha a lista de propósito, e não por ordem de importância.
    * As vizinhas do carrossel dão a volta (`anterior = (ativo - 1 + total) % total`
-   * no `Motion.tsx`), por isso a ÚLTIMA peça é a que se vê à esquerda da
-   * primeira. Com o Museu a abrir, é só aqui que a Teka aparece em cena logo
-   * à entrada da secção — foi o que ela pediu a 2026-10-12. Mexer nisto muda
-   * o que se vê ao lado do destaque.
+   * no `Motion.tsx`), por isso a ÚLTIMA peça é a que se vê à ESQUERDA do
+   * destaque. É só aqui que a Teka aparece em cena logo à entrada da secção —
+   * ela pediu-a à esquerda a 2026-10-12 e voltou a pedi-la a 2026-10-15, já
+   * com o Reel de apresentação a abrir. Mexer nisto muda o que se vê ao lado
+   * do destaque.
    */
   {
     slug: "teka-motion",

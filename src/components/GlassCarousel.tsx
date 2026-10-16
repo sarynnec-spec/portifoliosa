@@ -17,6 +17,16 @@ type GlassCarouselProps = {
    * porque a moldura do aparelho já é o enquadramento.
    */
   variante?: "vidro" | "aparelho";
+  /**
+   * Avisa quem está de fora qual é a peça ao centro.
+   *
+   * Opcional de propósito: o carrossel continua a mandar no seu próprio
+   * índice, e quem não passar isto não nota diferença nenhuma — é o caso das
+   * galerias dos projetos, que já estavam verificadas. Serve a secção dos
+   * clientes, onde a lista do que foi entregue tem de acompanhar a peça que
+   * está em foco.
+   */
+  onAtivoChange?: (index: number) => void;
 };
 
 /** Tempo que cada peça fica ao centro antes de a seguinte tomar o lugar. */
@@ -40,6 +50,7 @@ export default function GlassCarousel({
   onOpen,
   label,
   variante = "vidro",
+  onAtivoChange,
 }: GlassCarouselProps) {
   const aparelho = variante === "aparelho";
   const total = images.length;
@@ -64,6 +75,16 @@ export default function GlassCarousel({
     observer.observe(node);
     return () => observer.disconnect();
   }, []);
+
+  /*
+   * O aviso sai de um efeito, e não de dentro do `setAtivo`: a peça muda por
+   * quatro caminhos (relógio, setas, pontos e clique numa vizinha) e, posto
+   * em cada um deles, mais tarde ou mais cedo esquecia-se um. Aqui o aviso é
+   * consequência do estado, não de quem lhe mexeu.
+   */
+  useEffect(() => {
+    onAtivoChange?.(ativo);
+  }, [ativo, onAtivoChange]);
 
   useEffect(() => {
     if (!aCorrer || !emVista || reduced || total < 2) return;

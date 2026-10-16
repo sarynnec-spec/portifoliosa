@@ -9,6 +9,8 @@ import Services from "@/components/Services";
 import LogoMarquee from "@/components/LogoMarquee";
 import Work from "@/components/Work";
 import Motion from "@/components/Motion";
+import Vitrine from "@/components/Vitrine";
+import Clientes from "@/components/Clientes";
 import Competencias from "@/components/Competencias";
 import Experience from "@/components/Experience";
 import Contact from "@/components/Contact";
@@ -28,6 +30,10 @@ export default function Home() {
         <PostsTunnel />
         <Services />
         <Motion />
+        {/* Logo a seguir ao Motion, como ela pediu. A LogoMarquee continua
+            colada ao <Work />, que é de onde ela é. */}
+        <Vitrine />
+        <Clientes />
         <LogoMarquee />
         <Work />
         <Competencias />

@@ -1,0 +1,212 @@
+.section {
+  background: var(--paper);
+}
+
+.head {
+  max-width: 46rem;
+  margin-bottom: 3rem;
+}
+
+.title {
+  margin-top: 0.8rem;
+}
+
+.lede {
+  margin-top: 1.1rem;
+}
+
+/*
+ * A peça à esquerda, a lista à direita — foi o que ela pediu («ao lado»).
+ * O carrossel leva a coluna maior: é ele que tem de se ver.
+ */
+.palco {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+}
+
+.colEsquerda {
+  min-width: 0;
+}
+
+.carrossel {
+  min-width: 0;
+}
+
+/*
+ * O bloco do alcance vive por baixo das imagens — foi onde ela o quis. Fica
+ * em caixa própria, separado por um fio, para não se ler como mais uma
+ * legenda do carrossel.
+ */
+.alcance {
+  margin-top: 1.8rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--line);
+}
+
+.alcanceLista {
+  margin-top: 0.8rem;
+  list-style: none;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.alcanceLista li {
+  position: relative;
+  padding-left: 1.4rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+/* Seta em vez do traço das entregas: ali é o que foi feito, aqui é o que
+   isso produz — e a forma diferente marca essa diferença. */
+.alcanceLista li::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+}
+
+.ficha {
+  min-width: 0;
+  padding-left: clamp(0rem, 2vw, 2rem);
+  border-left: 1px solid var(--line);
+}
+
+/*
+ * O logótipo em cima do nome, não ao lado: os dois são muito diferentes de
+ * forma — a Rafalice é quase quadrada e a Valentina é uma faixa larga — e
+ * lado a lado um deles ficava sempre minúsculo. A altura é que é fixa, para
+ * os dois pesarem o mesmo em cena, e a largura segue cada desenho.
+ */
+.logo {
+  display: block;
+  height: 3.4rem;
+  width: auto;
+  max-width: 100%;
+  margin-bottom: 1rem;
+  object-fit: contain;
+  object-position: left center;
+}
+
+.nome {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3vw, 2.3rem);
+  line-height: 1.1;
+}
+
+/* As redes, em destaque: o acento da casa a cheio, não cinzento de rodapé. */
+.redes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.2rem;
+  list-style: none;
+}
+
+/*
+ * A etiqueta é NEUTRA de propósito. Com o terracota da casa que estava aqui,
+ * o degradé do Instagram e os azuis do Facebook e da Meta ficavam a competir
+ * com a cor do fundo e nenhum se lia como a cor da sua marca. Branco com um
+ * fio cinzento deixa as três cores oficiais fazerem o trabalho.
+ */
+.redes li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 100px;
+  background: var(--paper);
+}
+
+.redeIcone {
+  width: 1.05rem;
+  height: 1.05rem;
+  flex: none;
+}
+
+.contexto {
+  margin-top: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.rotulo {
+  margin-top: 1.8rem;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.entregas {
+  margin-top: 0.9rem;
+  list-style: none;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.entregas li {
+  position: relative;
+  padding-left: 1.4rem;
+  font-size: 0.97rem;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+/* O traço é um pseudo-elemento, não um marcador de lista: assim a cor é a
+   da casa e o alinhamento não depende do `list-style-position`. */
+.entregas li::before {
+  content: "";
+  position: absolute;
+  top: 0.7em;
+  left: 0;
+  width: 0.7rem;
+  height: 1px;
+  background: var(--accent);
+}
+
+.contagem {
+  margin-top: 1.6rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.08em;
+  color: var(--ink-soft);
+}
+
+/*
+ * Abaixo de 60rem a lista passa para baixo do carrossel. Lado a lado nesta
+ * largura, a coluna da peça ficava estreita de mais para o carrossel em
+ * perspetiva — as vizinhas saíam de cena e ficava uma peça só.
+ */
+@media (max-width: 60rem) {
+  .palco {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .ficha {
+    padding-left: 0;
+    padding-top: 1.6rem;
+    border-left: none;
+    border-top: 1px solid var(--line);
+  }
+
+  .head {
+    margin-bottom: 2.4rem;
+  }
+}
