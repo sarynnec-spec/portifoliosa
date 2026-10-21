@@ -26,11 +26,20 @@ function Word({
  * Segundo em que o bailarino está na pose de mão no ar.
  *
  * Medido no ficheiro montado: o giro acaba no fotograma 140 e a pose fica
- * segura até ao 152, que é o que está aqui (152 ÷ 30 fps). Foi escolhido o
- * 152 e não o fim do trecho porque os últimos oito fotogramas já estão a
- * dissolver para a dança seguinte — congelar lá apanhava-o a meio da mistura.
+ * segura até ao 152. Foi escolhido o 152 e não o fim do trecho porque os
+ * últimos oito fotogramas já estão a dissolver para a dança seguinte —
+ * congelar lá apanhava-o a meio da mistura.
+ *
+ * 🔴 7,733 e já não 5,067. Ela mandou trocar a ordem das duas danças, e o
+ * ficheiro foi RODADO no fotograma 164 (o primeiro limpo da segunda dança):
+ * a segunda dança passou para a frente e o moonwalk para trás. Com isso o
+ * fotograma 152 de antes é agora o 232 — 152 + 80, que são os fotogramas
+ * que passaram do fim para o princípio. 232 ÷ 30 = 7,733.
+ *
+ * Rodar em vez de recortar e remontar foi de propósito: as duas dissoluções
+ * e o fecho da volta ficaram exactamente como estavam.
  */
-const POSE = 5.067;
+const POSE = 7.733;
 
 /**
  * Frase-manifesto que "acende" palavra a palavra conforme o scroll avança.
@@ -62,31 +71,12 @@ export default function Manifesto() {
     <section className={`section ${styles.section}`}>
       <div className="container">
         <div className={styles.grelha}>
-          <div className={styles.body} ref={ref}>
-            <p className={styles.text}>
-              {words.map((word, i) => {
-                const start = i / words.length;
-                const end = (i + 1) / words.length;
-                return (
-                  <Word key={`${word}-${i}`} progress={scrollYProgress} range={[start, end]}>
-                    {word}
-                  </Word>
-                );
-              })}
-            </p>
-          </div>
-
           {/*
-            O bailarino ocupa o branco que sobrava à direita da frase. É
-            decoração — daí o `aria-hidden`: a frase é que é o conteúdo.
-
-            Anda sozinho e calado (`autoPlay muted loop playsInline`), e o
-            ficheiro não traz sequer faixa de som, por isso não há nada que
-            um navegador possa desbloquear por engano.
-
-            É um só ficheiro, não dois: o moonwalk e a segunda dança foram
-            montados numa volta única, com as junções dissolvidas, para se
-            lerem como uma coisa só. Ver `POSE`, acima, para a paragem.
+            🔴 O bailarino vem PRIMEIRO no HTML, não por capricho de
+            maquetagem mas porque ela o quis à esquerda, antes do texto. É
+            decoração e leva `aria-hidden`, por isso vir à frente não muda
+            nada para quem ouve a página — a frase continua a ser a primeira
+            coisa que um leitor de ecrã lê de facto.
           */}
           <div
             className={styles.palco}
@@ -105,6 +95,21 @@ export default function Manifesto() {
               preload="metadata"
             />
           </div>
+
+          <div className={styles.body} ref={ref}>
+            <p className={styles.text}>
+              {words.map((word, i) => {
+                const start = i / words.length;
+                const end = (i + 1) / words.length;
+                return (
+                  <Word key={`${word}-${i}`} progress={scrollYProgress} range={[start, end]}>
+                    {word}
+                  </Word>
+                );
+              })}
+            </p>
+          </div>
+
         </div>
       </div>
     </section>

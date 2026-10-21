@@ -67,21 +67,30 @@
   width: 100%;
   height: auto;
   /*
-   * 2752×1086 e não 2752×1536: o ficheiro levou 450px cortados ao TOPO.
-   * Cortar em cima sobe a prancha no quadro (de 63,4%–73,2% para
-   * 48,3%–62,2%, medido) E as cordas continuam a chegar à aresta — cortar
-   * em BAIXO teria feito o contrário, descê-la.
+   * 2752×1236 e não 2752×1536: o ficheiro levou 300px cortados ao TOPO.
+   *
+   * Cortar em cima sobe a prancha no quadro E as cordas continuam a chegar
+   * à aresta — cortar em BAIXO teria feito o contrário, descê-la.
+   *
+   * 🔴 Foram 450px à primeira e ela disse que ficou alto de mais, que
+   * comia corda. A 300 a prancha fica em 54,5%–66,7% (era 48,3%–62,2% aos
+   * 450, e 63,4%–73,2% sem corte nenhum) — descida ~6 pontos, que é o
+   * «10%» que ela pediu, com a corda de volta.
    */
-  aspect-ratio: 2752 / 1086;
+  aspect-ratio: 2752 / 1236;
 }
 
 /*
  * O texto vai escrito na FACE LATERAL da prancha, a pedido dela — como a
  * referência o tem na viga.
  *
- * Medido na imagem JÁ CORTADA: a prancha ocupa y 524..675 (48,3% a 62,2%) e
- * a face da frente, que é a parte que aparece a toda a largura, vai de 52,3%
- * a 62,0% e de x 10% a 90%. São esses os números abaixo.
+ * Medido na imagem JÁ CORTADA (2752×1236): a face da frente da prancha — a
+ * parte que aparece a toda a largura — vai de 58,09% a 66,59% da altura, e
+ * de x 10,0% a 89,9%. O CENTRO dela está a 62,34%.
+ *
+ * 🔴 O texto andava encostado ao bordo de cima da madeira. Agora a caixa
+ * tem 5,2% de altura e o seu topo está a 59,74% — 62,34 menos metade —
+ * por isso o texto cai no meio da face, não em cima dela.
  *
  * 🔴 A tinta é ESCURA e não branca. Medido o contraste contra a madeira
  * (média RGB 196,144,105): branco dá 2,79:1 e falha; a tinta da casa dá
@@ -90,7 +99,7 @@
  */
 .viga {
   position: absolute;
-  top: 55.5%;
+  top: 59.74%;
   left: 11%;
   width: 78%;
   height: 5.2%;

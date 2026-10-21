@@ -1,21 +1,27 @@
+/*
+ * 🔴 Sem `border-bottom`, a pedido dela.
+ *
+ * Como o bailarino dança encostado ao fundo da grelha (`align-items: end`),
+ * o traço da secção passava-lhe debaixo dos pés e lia-se como um fio
+ * desenhado de propósito ali. A separação entre secções faz-se pelo espaço.
+ */
 .section {
   padding-block: clamp(4.5rem, 14vh, 10rem);
-  border-bottom: 1px solid var(--line);
 }
 
 /*
- * A frase à esquerda, o bailarino no branco que sobrava à direita.
+ * O bailarino à ESQUERDA, a frase à direita — trocados a pedido dela.
  *
- * A coluna do texto mantém a medida que tinha antes de ele chegar (52rem,
- * ver `.body`), para a frase quebrar exatamente nos mesmos sítios — ele
- * entrou no espaço vazio, não à custa do texto.
+ * A coluna do texto mantém a medida de sempre (52rem, ver `.body`) para a
+ * frase quebrar exactamente nos mesmos sítios: só trocaram de lado, a
+ * medida não mudou.
  *
  * `align-items: end` põe-no a dançar em cima da mesma linha onde o texto
  * acaba, e não a meio do ar.
  */
 .grelha {
   display: grid;
-  grid-template-columns: minmax(0, 52rem) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 52rem);
   gap: clamp(1.5rem, 3.5vw, 3rem);
   align-items: end;
 }
@@ -79,9 +85,13 @@
 }
 
 /*
- * Em ecrãs estreitos não há branco de sobra à direita: a duas colunas, ele
- * comeria a medida da frase. Passa para baixo do texto, mais pequeno e ao
- * centro — o texto fica exatamente como estava.
+ * Em ecrãs estreitos não há branco de sobra ao lado: a duas colunas, ele
+ * comeria a medida da frase. Passa para DEPOIS do texto, mais pequeno e ao
+ * centro — o texto fica exactamente como estava.
+ *
+ * ⚠️ O `order` é preciso porque no HTML ele vem primeiro (ver o comentário
+ * no `.tsx`): sem isto, no telemóvel o bailarino abria a secção e a frase
+ * ficava escondida por baixo dele.
  */
 @media (max-width: 60rem) {
   .grelha {
@@ -89,9 +99,14 @@
     gap: clamp(1.5rem, 6vw, 3rem);
   }
 
-  /* Ao centro no telemóvel, a pedido dela — encostado à esquerda ficava
-     a puxar a secção toda para um lado. No desktop continua à direita. */
+  .body {
+    order: 1;
+  }
+
+  /* Ao centro no telemóvel, a pedido dela — encostado a um lado ficava
+     a puxar a secção toda. */
   .palco {
+    order: 2;
     max-width: 14rem;
     justify-self: center;
   }
