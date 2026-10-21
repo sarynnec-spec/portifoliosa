@@ -100,10 +100,21 @@
  * madeira só ocupa uma fração da largura. Foi por isso que o texto apareceu
  * «fora da madeira»: eu centrava-o na prancha toda e ele caía na aresta.
  *
- * A face da FRENTE é onde a madeira fica larga e constante: y 1020..1123.
- * Na imagem com a base cortada (1470 de altura) isso dá 69,39% a 76,39%,
- * com o centro a 72,89% — e é aí que o texto tem de cair. A caixa tem 4,2%
- * de altura, com o topo a 70,79%.
+ * 🔴 A prancha tem DUAS faces, e é essa a origem de três tentativas falhadas.
+ * Medido por BRILHO na página renderizada:
+ *
+ *   67,5% – 72,2%  face SUPERIOR — clara (brilho 165 a 183), vista em
+ *                  perspetiva e meio tapada pelas letras.
+ *   72,5% – 76,4%  face da FRENTE — mais escura (brilho 145 a 160), a toda
+ *                  a largura (72% a 78%). É esta que se lê como «a madeira».
+ *
+ * O centro da face da frente está a 74,4% e é aí que o texto tem de cair.
+ * Enquanto a conta foi «o centro da prancha toda» (72,3%), o texto assentava
+ * em cima da ARESTA entre as duas faces — que é o que ela via.
+ *
+ * A caixa tem 4,2% de altura e o topo a 72,37%: medido pela diferença entre
+ * dois quadros (um com o texto, outro sem), o texto pintado fica centrado a
+ * 74,4%.
  *
  * 🔴 A tinta é ESCURA e não branca. Medido o contraste contra a madeira
  * (média RGB 196,144,105): branco dá 2,79:1 e falha; a tinta da casa dá
@@ -112,7 +123,7 @@
  */
 .viga {
   position: absolute;
-  top: 70.79%;
+  top: 72.37%;
   left: 11%;
   width: 78%;
   height: 4.2%;
