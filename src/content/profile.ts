@@ -36,6 +36,9 @@ export const profile = {
   linkedin: "https://www.linkedin.com/in/sarynne-coelho-ferreira",
   linkedinHandle: "/sarynne-coelho-ferreira",
   github: "https://github.com/sarynnec-spec",
+  /* Dados dela, dados por ela — não inferidos de parte nenhuma. */
+  instagram: "https://www.instagram.com/sarynneferreira/",
+  facebook: "https://www.facebook.com/sarynne.ferreira",
   githubHandle: "@sarynnec-spec",
   cvFile: "/Curriculo-Sarynne-Ferreira.pdf",
   cvFileEn: "/Resume-Sarynne-Ferreira.pdf",
