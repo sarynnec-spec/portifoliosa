@@ -3,13 +3,14 @@
  * da Debbie): viga com as disciplinas escritas, letras a baloiçar, texto por
  * baixo e faixa em movimento no fim.
  *
- * O laranja NÃO é o `--accent` da casa — é o do vídeo dela, medido no
- * ficheiro: RGB(233, 112, 3). Tem de ser este, senão aparece a aresta entre o
- * vídeo e a secção. O `--accent` (#c2481f) entra na faixa do fim, que fica
- * mais escura de propósito, como a barra preta faz na referência.
+ * O laranja NÃO é o `--accent` da casa — é o da imagem dela, medido na
+ * ÚLTIMA LINHA do ficheiro: RGB(253, 118, 5), com desvio de 1. Tem de ser
+ * este, senão aparece a aresta entre a imagem e a secção. O `--accent`
+ * (#c2481f) entra na faixa do fim, que fica mais escura de propósito, como
+ * a barra preta faz na referência.
  */
 .entrada {
-  --laranja: #e97003;
+  --laranja: #fd7605;
   background: var(--laranja);
   color: #fff;
   overflow: hidden;
@@ -20,43 +21,27 @@
  * por cima dos links. Medido: o `<header>` é fixo e tem 109px de altura, e o
  * vídeo só traz 42px de laranja acima da viga.
  *
- * 🔴 Esta folga NÃO pode ser laranja chapado — foi o defeito que ela apanhou.
- * O vídeo tem uma vinheta de estúdio: em baixo mede RGB(233,112,3), mas em
- * cima vai de 195 na margem a 230 ao centro. Com a cor de baixo aqui, o
- * degrau na primeira linha do vídeo media 11 níveis no vermelho e 17 no
- * verde — bem visível.
+ * ⚠️ Enquanto isto foi VÍDEO, esta folga deu duas voltas: o ficheiro tinha
+ * vinheta de estúdio e era preciso um degradê horizontal de 17 pontos para a
+ * imitar — e medido NO BROWSER, porque a conversão YUV→RGB dele não é bit a
+ * bit igual à do ffmpeg (o azul dava 0–3 no ficheiro e 6–10 no ecrã).
  *
- * 🔴 E tem de ser medido NO BROWSER, não no ficheiro. Li o degradê com o
- * ffmpeg e o azul dava 0–3; o que o browser pinta é 6–10, porque a conversão
- * YUV→RGB dele não é bit a bit igual à do ffmpeg. Com os valores do ficheiro
- * sobrava um degrau de +6,6 no azul — que foi o que ela voltou a ver.
- *
- * Os 17 pontos abaixo são a primeira linha do vídeo lida de uma captura da
- * página. Trocar o vídeo obriga a repetir a medição assim, pela captura.
+ * A imagem que ela escolheu não tem nada disso: topo chapado, medido em
+ * RGB(253,112,0) com desvio de 1. Fica uma cor só. Se um dia voltar a ser
+ * vídeo, essa história está no histórico do git (commit b601450).
  */
 .banda {
   width: 100%;
   padding-top: clamp(5.5rem, 9vw, 9rem);
-  background: linear-gradient(
-    to right,
-    rgb(191, 75, 6) 0%,
-    rgb(200, 81, 8) 6.25%,
-    rgb(212, 88, 9) 12.5%,
-    rgb(218, 95, 9) 18.75%,
-    rgb(222, 99, 10) 25%,
-    rgb(224, 102, 8) 31.25%,
-    rgb(227, 104, 9) 37.5%,
-    rgb(227, 105, 10) 43.75%,
-    rgb(227, 105, 10) 50%,
-    rgb(226, 104, 9) 56.25%,
-    rgb(225, 103, 8) 62.5%,
-    rgb(222, 100, 10) 68.75%,
-    rgb(219, 97, 8) 75%,
-    rgb(214, 95, 7) 81.25%,
-    rgb(210, 90, 8) 87.5%,
-    rgb(207, 86, 8) 93.75%,
-    rgb(204, 83, 7) 100%
-  );
+  /*
+   * Primeira linha da imagem, medida NA PÁGINA e não no ficheiro.
+   *
+   * O ficheiro dá RGB(253,112,0); o que o browser pinta é RGB(252,113,4) —
+   * a descodificação do JPEG/WebP dele não é bit a bit igual à do ffmpeg,
+   * tal como já acontecia com o vídeo. Com o valor do ficheiro sobrava um
+   * degrau de +3,5 no azul.
+   */
+  background: rgb(252, 113, 4);
 }
 
 .palco {
@@ -65,41 +50,37 @@
 }
 
 /*
- * `display: block` senão fica um fio de fundo por baixo do vídeo (a linha de
+ * `display: block` senão fica um fio de fundo por baixo da imagem (a linha de
  * base do inline). A proporção vem do ficheiro, para a secção já ter altura
- * antes de ele carregar.
+ * antes de ela carregar.
  */
-.filme {
+.imagem {
   display: block;
   width: 100%;
   height: auto;
-  aspect-ratio: 1920 / 858;
+  aspect-ratio: 2752 / 1536;
 }
 
 /*
- * O texto assenta sobre a viga do vídeo. As medidas são do ficheiro, em
- * percentagem, para acompanharem qualquer largura de ecrã: a viga ocupa
- * y 42..71 de 572 (7,3% a 12,4%) e vai de x 72 a 1219 (5,6% a 95,2%).
- *
- * ⚠️ À primeira medi-a por «píxeis escuros» e deu x 200..1220 — o texto ficou
- * encostado à direita. A metade esquerda da viga está iluminada e é CINZENTA
- * CLARA, por isso escapava ao limiar. O que a define é não ser laranja.
+ * O texto vive no laranja vazio por cima do baloiço. Medido na imagem: a
+ * prancha e as letras ocupam de 48% a 73% da altura, e os 41% de cima estão
+ * livres — daí os 17%, que o deixam acima das letras e abaixo da navegação.
  */
 .viga {
   position: absolute;
-  top: 7.3%;
-  left: 5.6%;
-  width: 89.6%;
-  height: 5.1%;
+  top: 17%;
+  left: 6%;
+  width: 88%;
   margin: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: clamp(0.5rem, 2.2vw, 2.2rem);
   font-family: var(--font-sans);
-  font-size: clamp(0.4rem, 1.08vw, 0.82rem);
+  /* Já não tem de caber numa viga fina — pode respirar. */
+  font-size: clamp(0.58rem, 1.35vw, 1.05rem);
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: #fff;
   white-space: nowrap;
@@ -112,10 +93,11 @@
   gap: clamp(0.5rem, 2.2vw, 2.2rem);
 }
 
+ /* Branco: sobre o laranja, um losango laranja não se via. */
 .losango {
   width: 0.32em;
   height: 0.32em;
-  background: var(--laranja);
+  background: rgba(255, 255, 255, 0.75);
   transform: rotate(45deg);
   flex-shrink: 0;
 }
