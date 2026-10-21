@@ -14,13 +14,43 @@ export default function Contact() {
      afinação — os dois clips não têm o mesmo fundo. */
   const [reagindo, setReagindo] = useState(false);
 
-  /* Os três botões alegram a personagem: passar por cima chega, e o teclado
-     conta na mesma pelo foco. */
+  /*
+   * Qualquer meio de contacto alegra a personagem: passar por cima chega, e
+   * o teclado conta na mesma pelo foco.
+   *
+   * 🔴 Isto estava posto À MÃO em três sítios — o botão principal, o link do
+   * e-mail e o «Copiar e-mail» — e ficavam de fora o telefone, o WhatsApp e
+   * os dois currículos: passava-se o rato por cima deles e ele não levantava
+   * os braços. Ela apanhou.
+   *
+   * Agora é UM par de ouvintes no contentor de todos eles. `pointerover` e
+   * `pointerout` sobem na árvore (ao contrário de `pointerenter`/`leave`),
+   * por isso apanham todos os links e botões lá dentro — e os que vierem a
+   * seguir, sem ninguém se lembrar de os marcar.
+   */
+  const ehContacto = (alvo: EventTarget | null) =>
+    alvo instanceof HTMLElement && alvo.closest("a, button") !== null;
+
   const alegra = {
-    onPointerEnter: () => setHappy(true),
-    onPointerLeave: () => setHappy(false),
-    onFocus: () => setHappy(true),
-    onBlur: () => setHappy(false),
+    onPointerOver: (e: React.PointerEvent) => {
+      if (ehContacto(e.target)) setHappy(true);
+    },
+    onPointerOut: (e: React.PointerEvent) => {
+      if (!ehContacto(e.target)) return;
+      /* Sair de um contacto DIRECTAMENTE para outro não baixa os braços: sem
+         isto, passar o rato ao longo da lista fazia-o recomeçar o gesto a
+         cada link e lia-se como um tremor. */
+      if (ehContacto(e.relatedTarget)) return;
+      setHappy(false);
+    },
+    onFocus: (e: React.FocusEvent) => {
+      if (ehContacto(e.target)) setHappy(true);
+    },
+    onBlur: (e: React.FocusEvent) => {
+      if (!ehContacto(e.target)) return;
+      if (ehContacto(e.relatedTarget)) return;
+      setHappy(false);
+    },
   };
 
   const copyEmail = async () => {
@@ -49,7 +79,8 @@ export default function Contact() {
         <Buddy happy={happy} onReacao={setReagindo} />
       </div>
 
-      <div className={`container ${styles.frente}`}>
+      {/* Os ouvintes vivem aqui, no contentor que leva TODOS os contactos. */}
+      <div className={`container ${styles.frente}`} {...alegra}>
         <div className={styles.texto}>
           <Reveal as="p" className="eyebrow">
             Contacto
@@ -66,17 +97,17 @@ export default function Contact() {
 
         <Reveal className={styles.hire} delay={0.14}>
           <div className={styles.hireSide}>
-            <a className={`${styles.primary} ${styles.cta}`} href={`mailto:${profile.email}`} {...alegra}>
+            <a className={`${styles.primary} ${styles.cta}`} href={`mailto:${profile.email}`}>
               Contactar {profile.firstName}
               <span aria-hidden="true">↗</span>
             </a>
 
             <div className={styles.actions}>
-              <a className={styles.ghost} href={`mailto:${profile.email}`} {...alegra}>
+              <a className={styles.ghost} href={`mailto:${profile.email}`}>
                 {profile.email}
                 <span aria-hidden="true">↗</span>
               </a>
-              <button type="button" className={styles.ghost} onClick={copyEmail} {...alegra}>
+              <button type="button" className={styles.ghost} onClick={copyEmail}>
                 {copied ? "E-mail copiado" : "Copiar e-mail"}
               </button>
             </div>
