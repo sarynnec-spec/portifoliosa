@@ -50,19 +50,21 @@ export default function Entrada() {
             escondido (não há classe `sr-only` neste projeto; pu-la uma vez e
             o título apareceu em letras brancas sobre o laranja).
           */}
-          <h2 style={{ position: "absolute", left: "-9999px" }}>
-            Portefólio — o trabalho
-          </h2>
+          {/*
+            A frase do Rams passou para DENTRO do baloiço, no vão vazio entre
+            as cordas — pedido dela. Mede-se que lá cabe: acima das letras
+            (que só começam aos 47,4% da altura) a imagem é laranja chapado,
+            com 2% de tinta, que são as duas cordas.
+          */}
+          <blockquote className={styles.citacao}>
+            <p>&ldquo;Good design is as little design as possible.&rdquo;</p>
+            <cite>— Dieter Rams</cite>
+          </blockquote>
+
         </div>
       </div>
 
       <div className={`container ${styles.corpo}`}>
-        {/* A frase que ela pediu, em branco sobre o laranja, por baixo do baloiço. */}
-        <blockquote className={styles.citacao}>
-          <p>&ldquo;Good design is as little design as possible.&rdquo;</p>
-          <cite>— Dieter Rams</cite>
-        </blockquote>
-
         <p className={styles.frase}>Onde o design encontra a tecnologia.</p>
 
         <p className={styles.sub}>

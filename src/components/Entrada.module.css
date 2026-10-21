@@ -72,31 +72,38 @@
    * Cortar em cima sobe a prancha no quadro E as cordas continuam a chegar
    * à aresta — cortar em BAIXO teria feito o contrário, descê-la.
    *
-   * 🔴 O corte foi descendo a pedido dela: 450px → 300 → 200. A prancha
-   * passou de 48,3%–62,2% (450) para 54,5%–66,7% (300) e agora para
-   * 57,9%–69,2% (200). Sem corte nenhum estaria em 63,4%–73,2%, mas aí as
-   * cordas acabavam a meio do laranja e ele lia-se a flutuar — que foi o
-   * defeito de origem.
+   * 🔴 SEM CORTE NENHUM, e isso é o que estava certo desde o princípio.
+   *
+   * Andei a cortar o topo (450px → 300 → 200) a tentar que o baloiço não
+   * flutuasse. Era o remédio errado para a doença certa: o que o fazia
+   * flutuar não era a imagem, era a FOLGA laranja que estava por cima dela.
+   * As cordas chegam à primeira linha do ficheiro — medido — por isso basta
+   * a folga a zero (ver `.banda`) e elas sobem até ao cimo da secção
+   * sozinhas, com o baloiço na altura original.
+   *
+   * O único corte que ficou são 66px EM BAIXO (1536 → 1470), para tirar o
+   * laranja chapado que sobrava debaixo da sombra. A sombra em si fica: ela
+   * vive entre os 83% e os 95% da altura (medido comparando cada linha com
+   * a linha 0) e é o que assenta o baloiço no espaço.
    */
-  aspect-ratio: 2752 / 1336;
+  aspect-ratio: 2752 / 1470;
 }
 
 /*
  * O texto vai escrito na FACE LATERAL da prancha, a pedido dela — como a
  * referência o tem na viga.
  *
- * Medido na imagem JÁ CORTADA (2752×1336), linha a linha.
+ * Medido na imagem inteira (2752×1536), linha a linha.
  *
- * 🔴 A conta não pode ser «a prancha inteira»: ela vai de 57,9% a 69,2%,
- * mas a metade de cima é a face SUPERIOR, vista em perspetiva e meio tapada
- * pelas letras — ali a madeira só ocupa 17% a 55% da largura. Foi por isso
- * que o texto apareceu «fora da madeira»: eu centrava-o na prancha toda e
- * ele caía na aresta.
+ * 🔴 A conta não pode ser «a prancha inteira»: a metade de cima dela é a
+ * face SUPERIOR, vista em perspetiva e meio tapada pelas letras — ali a
+ * madeira só ocupa uma fração da largura. Foi por isso que o texto apareceu
+ * «fora da madeira»: eu centrava-o na prancha toda e ele caía na aresta.
  *
- * A face da FRENTE é onde a madeira fica larga e constante: y 864..925, ou
- * seja 64,7% a 69,2%, com 70% a 76% da largura. O centro dela está a 66,5%
- * — e é aí que o texto tem de cair. A caixa tem 4,2% de altura (a face tem
- * 4,5%), com o topo a 64,4%.
+ * A face da FRENTE é onde a madeira fica larga e constante: y 1020..1123.
+ * Na imagem com a base cortada (1470 de altura) isso dá 69,39% a 76,39%,
+ * com o centro a 72,89% — e é aí que o texto tem de cair. A caixa tem 4,2%
+ * de altura, com o topo a 70,79%.
  *
  * 🔴 A tinta é ESCURA e não branca. Medido o contraste contra a madeira
  * (média RGB 196,144,105): branco dá 2,79:1 e falha; a tinta da casa dá
@@ -105,7 +112,7 @@
  */
 .viga {
   position: absolute;
-  top: 64.4%;
+  top: 70.79%;
   left: 11%;
   width: 78%;
   height: 4.2%;
@@ -141,16 +148,38 @@
   flex-shrink: 0;
 }
 
+/*
+ * 🔴 O `padding-top` era clamp(1.25rem, 3vw, 2.5rem) e, com a frase do Rams
+ * a sair daqui para dentro do baloiço, ficava um rasgo de laranja vazio
+ * entre a imagem e «Onde o design encontra a tecnologia». Ela mandou subir
+ * o texto — daí o topo a zero e a sombra do baloiço a servir de respiração.
+ */
 .corpo {
-  padding-top: clamp(1.25rem, 3vw, 2.5rem);
+  padding-top: 0;
   padding-bottom: clamp(2.5rem, 6vw, 4.5rem);
   text-align: center;
 }
 
 /* A frase do Dieter Rams, em branco sobre o laranja — o que ela pediu. */
+/*
+ * A frase vive DENTRO do baloiço, no vão vazio entre as cordas.
+ *
+ * Os 16% saem da medição: acima das letras — que só começam aos 47,4% da
+ * altura — a imagem é laranja chapado, com 2% de tinta, que são as duas
+ * cordas. A caixa fica com 46rem de medida para não lhes ir por cima.
+ *
+ * ⚠️ `pointer-events: none` porque isto está em cima da imagem: sem isso,
+ * selecionar texto aqui apanhava o baloiço por baixo.
+ */
 .citacao {
-  margin: 0 auto;
-  max-width: 46rem;
+  position: absolute;
+  top: 16%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(46rem, 62%);
+  margin: 0;
+  text-align: center;
+  pointer-events: none;
 }
 
 .citacao p {
@@ -248,6 +277,16 @@
  * disciplinas saem de lá e passam a ler-se por baixo do baloiço, antes da
  * citação. Escondê-las perdia conteúdo; encolhê-las mais tornava-as ilegíveis.
  */
+/*
+ * Num telemóvel a prancha fica fina de mais para levar texto legível, e o
+ * vão livre do baloiço fica curto de mais para a frase. Os dois saem de
+ * cima da imagem e passam para debaixo dela.
+ *
+ * 🔴 Medido: a 390px a imagem tem 218px de altura e as letras do PORTFOLIO
+ * começam aos 47,4% (103px). A frase, em cima da imagem, ia dos 19,8% aos
+ * 58,2% — entrava pelas letras adentro. Encolhê-la até caber dava 13px, que
+ * não se lê. Por baixo lê-se.
+ */
 @media (max-width: 48rem) {
   .viga {
     position: static;
@@ -257,5 +296,15 @@
     font-size: 0.6rem;
     padding: clamp(0.9rem, 3vw, 1.25rem) var(--gutter) 0;
     white-space: normal;
+  }
+
+  .citacao {
+    position: static;
+    width: auto;
+    max-width: 30rem;
+    margin: clamp(1.25rem, 5vw, 2rem) auto 0;
+    padding-inline: var(--gutter);
+    transform: none;
+    pointer-events: auto;
   }
 }

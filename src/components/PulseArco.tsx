@@ -132,8 +132,12 @@ const ecransPulse: Cartao[] = (pulse.gallery ?? []).map((g) => ({
  *
  * Em vez disso vai um fotograma com imagem, tirado do próprio vídeo aos
  * 9,0s — o ponto onde a peça tem mais tinta e menos branco de toda a sua
- * duração (varri-a de meio em meio segundo). Passou de 99,6% para 70,8% de
- * branco, com o desvio a subir de 5,5 para 77,8.
+ * duração (varri-a de meio em meio segundo).
+ *
+ * ⚠️ O quadro inteiro desse segundo ainda era 70,8% branco e ela voltou a
+ * apanhá-lo. A peça passa-se sobre branco, por isso nenhum fotograma dela
+ * serve inteiro: o que serve é o RECORTE na foto, que localizei medindo
+ * onde está a tinta (y 577..1426, x 239..840 do original).
  *
  * O cartaz original fica onde estava; isto é um ficheiro à parte.
  */
@@ -154,12 +158,12 @@ const SITES: [string, string][] = [
   ["eco-sem-fio", "Eco Sem Fio — internet segura"],
   ["lode", "LODÊ — atelier de cabelo"],
   ["sofia-sales", "Sofia Sales Clinic — estética"],
-  ["benessere", "Benessere — clínica de estética"],
   /*
-   * 🔴 O «ondelle» saiu a pedido dela, e com ele a versão portuguesa já
-   * tinha saído antes — os dois eram o mesmo desenho, e o cartão ficava
-   * quase todo claro (medido: 175,7 de brilho e 18,9% de branco puro) no
-   * meio de ecrãs escuros.
+   * 🔴 Saíram TRÊS cartões desta família, e é a mesma família de propósito:
+   * o Ondelle, a versão portuguesa dele e o BENESSERE são o mesmo molde,
+   * com a mesma fotografia do ADN. Ela pediu o Ondelle fora e continuou a
+   * vê-lo — era o Benessere, que lhe é igual aos olhos. Medidos: 175,7 /
+   * 175,7 / 176,2 de brilho, todos claros no meio de ecrãs escuros.
    */
   /*
    * 🔴 O «ondelle-pt» saiu. Era o mesmo desenho do Ondelle (a versão
