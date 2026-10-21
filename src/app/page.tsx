@@ -1,5 +1,6 @@
 import Intro from "@/components/Intro";
 import Nav from "@/components/Nav";
+import Entrada from "@/components/Entrada";
 import Hero from "@/components/Hero";
 import Manifesto from "@/components/Manifesto";
 import About from "@/components/About";
@@ -11,6 +12,7 @@ import Work from "@/components/Work";
 import Motion from "@/components/Motion";
 import Vitrine from "@/components/Vitrine";
 import Clientes from "@/components/Clientes";
+import PulseArco from "@/components/PulseArco";
 import Competencias from "@/components/Competencias";
 import Experience from "@/components/Experience";
 import Contact from "@/components/Contact";
@@ -23,6 +25,9 @@ export default function Home() {
       <Intro />
       <Nav />
       <main>
+        {/* A entrada nova vai ANTES do hero antigo, não no lugar dele — o
+            hero com o crachá 3D fica intacto até ela decidir. */}
+        <Entrada />
         <Hero />
         <Manifesto />
         <About />
@@ -34,6 +39,10 @@ export default function Home() {
             colada ao <Work />, que é de onde ela é. */}
         <Vitrine />
         <Clientes />
+        {/* O arco do PULSE entra a seguir aos clientes e ANTES da barra das
+            ferramentas, como ela pediu. O projeto PULSE continua no <Work />,
+            no lugar onde sempre esteve — isto é uma vitrine, não uma mudança. */}
+        <PulseArco />
         <LogoMarquee />
         <Work />
         <Competencias />

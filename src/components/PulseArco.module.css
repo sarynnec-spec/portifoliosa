@@ -1,0 +1,246 @@
+/*
+ * Os ecrãs do PULSE chegam um a um em baralho, abrem em leque até ao arco e
+ * depois rodam — os três movimentos do vídeo de referência que ela mandou.
+ *
+ * CSS 3D e nada mais: sem three.js e sem WebGL, como diz a própria
+ * publicação da referência.
+ */
+.seccao {
+  position: relative;
+  overflow: hidden;
+  /* Começa branca como a página, para as nuvens entrarem depois. */
+  background: var(--paper);
+  /* O topo tem de livrar a navegação, que é fixa e mede 109px — com os 6rem
+     que aqui estavam, a fila de cima do arco ficava por baixo dela. */
+  padding-block: clamp(5rem, 10vw, 9rem) clamp(1.5rem, 3vw, 2.5rem);
+}
+
+/*
+ * A imagem tem 3840×2160. A fonte dela são 1672×940, por isso o 4K são
+ * píxeis a mais e não detalhe a mais — em nuvens não se nota, mas fica dito.
+ */
+.ceu {
+  position: absolute;
+  inset: 0;
+  background: url("/media/pulse/nuvens.webp") center / cover no-repeat;
+  opacity: 0;
+  transition: opacity 0.7s var(--ease-out);
+}
+
+.ceu[data-ligado] {
+  opacity: 1;
+}
+
+/*
+ * A altura sai da conta do arco, não de gosto: com 230° de abertura e o
+ * cartão a 0,34 do raio, o arco mede 2,16 raios de altura — 1,37 acima do
+ * centro da circunferência e 0,79 abaixo. Com o raio no máximo (20rem =
+ * 320px) isso dá 691px, que é o que estes 44rem seguram.
+ *
+ * 🔴 Já cortei isto duas vezes: com o centro a meio (arco cortado em cima) e
+ * com a caixa curta para as pontas descerem. A conta é que manda.
+ */
+.palco {
+  position: relative;
+  height: clamp(23rem, 48vw, 44rem);
+  perspective: 1400px;
+  display: grid;
+  place-items: center;
+}
+
+/*
+ * O raio manda em tudo: a largura do cartão sai dele, para o leque manter a
+ * mesma densidade em qualquer ecrã.
+ *
+ * 0,34 é maior do que a referência (0,275) de propósito — ela pediu mocaps
+ * maiores, e com 18 cartões em 230° isso dá 6° de sobreposição, que é o que
+ * os faz ler-se como um BARALHO de cartas e não como contas de um colar.
+ *
+ * O centro da circunferência vive a 63% da altura do palco — é isso que põe
+ * o arco a encher para cima e as pontas a descerem até junto da barra do fim.
+ */
+.roda {
+  --r: clamp(8.5rem, 23vw, 20rem);
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  display: grid;
+  place-items: center;
+  transform: translateY(13%) rotateX(10deg);
+  transition: transform 1s var(--ease-out);
+}
+
+/* 3.º MOVIMENTO — o arco roda. Balanço de pêndulo e não volta inteira:
+   dando a volta, os ecrãs vinham ao contrário e liam-se como um defeito. */
+.seccao[data-fase="rodar"] .roda {
+  animation: rodar 16s ease-in-out 0.4s infinite;
+}
+
+@keyframes rodar {
+  0%, 100% { transform: translateY(13%) rotateX(10deg) rotate(-3.2deg); }
+  50%      { transform: translateY(13%) rotateX(10deg) rotate(3.2deg); }
+}
+
+.carta {
+  position: absolute;
+  margin: 0;
+  width: calc(var(--r) * 0.34);
+  aspect-ratio: 945 / 2048;
+  border-radius: calc(var(--r) * 0.03);
+  overflow: hidden;
+  background: #0d0d12;
+  box-shadow: 0 1.2rem 2.4rem rgba(12, 10, 24, 0.3);
+  /*
+   * Antes de serem dadas: fora do palco, por baixo. As três funções de
+   * transformação estão na MESMA ORDEM nos três estados — se não estiverem,
+   * o browser não interpola e os cartões saltam para o sítio.
+   */
+  transform: rotate(0deg) translateY(calc(var(--r) * 1.9)) scale(0.9);
+  opacity: 0;
+  transition:
+    transform 0.55s var(--ease-out),
+    opacity 0.25s linear;
+  transition-delay: var(--dar);
+}
+
+/*
+ * 1.º MOVIMENTO — DAR. Chegam um a um, por ordem, e ficam empilhados em
+ * baralho junto ao fundo. O leque ainda não abriu: quase todos no mesmo
+ * ângulo, com um desvio minúsculo para o monte não parecer um cartão só.
+ */
+.seccao[data-fase="dar"] .carta,
+.seccao[data-fase="abrir"] .carta,
+.seccao[data-fase="rodar"] .carta {
+  opacity: 1;
+}
+
+.seccao[data-fase="dar"] .carta {
+  transform: rotate(calc(var(--a) * 0.06)) translateY(calc(var(--r) * 0.55)) scale(0.62);
+}
+
+/*
+ * 2.º MOVIMENTO — ABRIR. `rotate() translateY()` põe o cartão sobre a
+ * circunferência E deixa-o tangente a ela de uma só vez — é a conta que faz
+ * o arco, não há posições escritas à mão.
+ */
+.seccao[data-fase="abrir"] .carta,
+.seccao[data-fase="rodar"] .carta {
+  transform: rotate(var(--a)) translateY(calc(var(--r) * -1)) scale(1);
+  transition:
+    transform 1.05s var(--ease-out),
+    opacity 0.25s linear;
+  transition-delay: var(--abrir);
+}
+
+.carta img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.contador {
+  position: absolute;
+  /* Abaixo do nav fixo, que mede 109px e tapava-o. */
+  top: clamp(6.5rem, 11vw, 10rem);
+  right: var(--gutter);
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 4.5vw, 3.2rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  transition: color 0.7s var(--ease-out);
+}
+
+.contador span {
+  font-size: 0.34em;
+  margin-left: 0.3em;
+  vertical-align: super;
+}
+
+/* Sobre as nuvens a tinta escura perde-se; passa a branca quando elas entram. */
+.seccao:has(.ceu[data-ligado]) .contador {
+  color: #fff;
+  text-shadow: 0 0.1em 0.5em rgba(40, 30, 60, 0.45);
+}
+
+/*
+ * A legenda sobe para dentro do vão do arco — é o que deixa as pontas dos
+ * baloiços descerem até junto da barra do fim. E entra DEPOIS de o arco
+ * assentar, como o texto da referência aparece por baixo no fim.
+ */
+.legenda {
+  position: relative;
+  text-align: center;
+  margin-top: clamp(-10rem, -8vw, -1rem);
+  opacity: 0;
+  transform: translateY(1.5rem);
+  transition:
+    opacity 0.8s var(--ease-out),
+    transform 0.8s var(--ease-out);
+}
+
+.legenda[data-entrou] {
+  opacity: 1;
+  transform: none;
+}
+
+.legenda h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 7vw, 4.5rem);
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+  transition: color 0.7s var(--ease-out);
+}
+
+.categoria {
+  margin: clamp(0.4rem, 1.2vw, 0.7rem) 0 0;
+  font-family: var(--font-mono);
+  font-size: var(--step-xs);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  transition: color 0.7s var(--ease-out);
+}
+
+.seccao:has(.ceu[data-ligado]) .legenda h2,
+.seccao:has(.ceu[data-ligado]) .categoria {
+  color: #fff;
+  text-shadow: 0 0.1em 0.6em rgba(40, 30, 60, 0.5);
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  margin-top: clamp(0.9rem, 2.4vw, 1.4rem);
+  padding: 0.8em 1.5em;
+  font-size: var(--step-sm);
+  font-weight: 600;
+  text-decoration: none;
+  background: var(--ink);
+  color: #fff;
+  transition: background 0.3s var(--ease-out), color 0.3s var(--ease-out);
+}
+
+.link:hover {
+  background: #fff;
+  color: var(--ink);
+}
+
+/* Sem movimento: o arco já está montado, as nuvens e a legenda já lá estão. */
+@media (prefers-reduced-motion: reduce) {
+  .seccao[data-fase="rodar"] .roda {
+    animation: none;
+  }
+
+  .carta,
+  .legenda {
+    transition: none;
+  }
+}

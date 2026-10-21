@@ -1,0 +1,240 @@
+/*
+ * Entrada do portfólio, montada sobre a referência que ela mandou (o portfólio
+ * da Debbie): viga com as disciplinas escritas, letras a baloiçar, texto por
+ * baixo e faixa em movimento no fim.
+ *
+ * O laranja NÃO é o `--accent` da casa — é o do vídeo dela, medido no
+ * ficheiro: RGB(233, 112, 3). Tem de ser este, senão aparece a aresta entre o
+ * vídeo e a secção. O `--accent` (#c2481f) entra na faixa do fim, que fica
+ * mais escura de propósito, como a barra preta faz na referência.
+ */
+.entrada {
+  --laranja: #e97003;
+  background: var(--laranja);
+  color: #fff;
+  overflow: hidden;
+}
+
+/*
+ * A viga tem de ficar ABAIXO da navegação, senão as disciplinas escrevem-se
+ * por cima dos links. Medido: o `<header>` é fixo e tem 109px de altura, e o
+ * vídeo só traz 42px de laranja acima da viga.
+ *
+ * 🔴 Esta folga NÃO pode ser laranja chapado — foi o defeito que ela apanhou.
+ * O vídeo tem uma vinheta de estúdio: em baixo mede RGB(233,112,3), mas em
+ * cima vai de 195 na margem a 230 ao centro. Com a cor de baixo aqui, o
+ * degrau na primeira linha do vídeo media 11 níveis no vermelho e 17 no
+ * verde — bem visível.
+ *
+ * 🔴 E tem de ser medido NO BROWSER, não no ficheiro. Li o degradê com o
+ * ffmpeg e o azul dava 0–3; o que o browser pinta é 6–10, porque a conversão
+ * YUV→RGB dele não é bit a bit igual à do ffmpeg. Com os valores do ficheiro
+ * sobrava um degrau de +6,6 no azul — que foi o que ela voltou a ver.
+ *
+ * Os 17 pontos abaixo são a primeira linha do vídeo lida de uma captura da
+ * página. Trocar o vídeo obriga a repetir a medição assim, pela captura.
+ */
+.banda {
+  width: 100%;
+  padding-top: clamp(5.5rem, 9vw, 9rem);
+  background: linear-gradient(
+    to right,
+    rgb(191, 75, 6) 0%,
+    rgb(200, 81, 8) 6.25%,
+    rgb(212, 88, 9) 12.5%,
+    rgb(218, 95, 9) 18.75%,
+    rgb(222, 99, 10) 25%,
+    rgb(224, 102, 8) 31.25%,
+    rgb(227, 104, 9) 37.5%,
+    rgb(227, 105, 10) 43.75%,
+    rgb(227, 105, 10) 50%,
+    rgb(226, 104, 9) 56.25%,
+    rgb(225, 103, 8) 62.5%,
+    rgb(222, 100, 10) 68.75%,
+    rgb(219, 97, 8) 75%,
+    rgb(214, 95, 7) 81.25%,
+    rgb(210, 90, 8) 87.5%,
+    rgb(207, 86, 8) 93.75%,
+    rgb(204, 83, 7) 100%
+  );
+}
+
+.palco {
+  position: relative;
+  width: 100%;
+}
+
+/*
+ * `display: block` senão fica um fio de fundo por baixo do vídeo (a linha de
+ * base do inline). A proporção vem do ficheiro, para a secção já ter altura
+ * antes de ele carregar.
+ */
+.filme {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1920 / 858;
+}
+
+/*
+ * O texto assenta sobre a viga do vídeo. As medidas são do ficheiro, em
+ * percentagem, para acompanharem qualquer largura de ecrã: a viga ocupa
+ * y 42..71 de 572 (7,3% a 12,4%) e vai de x 72 a 1219 (5,6% a 95,2%).
+ *
+ * ⚠️ À primeira medi-a por «píxeis escuros» e deu x 200..1220 — o texto ficou
+ * encostado à direita. A metade esquerda da viga está iluminada e é CINZENTA
+ * CLARA, por isso escapava ao limiar. O que a define é não ser laranja.
+ */
+.viga {
+  position: absolute;
+  top: 7.3%;
+  left: 5.6%;
+  width: 89.6%;
+  height: 5.1%;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.5rem, 2.2vw, 2.2rem);
+  font-family: var(--font-sans);
+  font-size: clamp(0.4rem, 1.08vw, 0.82rem);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #fff;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.viga span {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(0.5rem, 2.2vw, 2.2rem);
+}
+
+.losango {
+  width: 0.32em;
+  height: 0.32em;
+  background: var(--laranja);
+  transform: rotate(45deg);
+  flex-shrink: 0;
+}
+
+.corpo {
+  padding-top: clamp(1.25rem, 3vw, 2.5rem);
+  padding-bottom: clamp(2.5rem, 6vw, 4.5rem);
+  text-align: center;
+}
+
+/* A frase do Dieter Rams, em branco sobre o laranja — o que ela pediu. */
+.citacao {
+  margin: 0 auto;
+  max-width: 46rem;
+}
+
+.citacao p {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 4.6vw, 3.5rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+
+.citacao cite {
+  display: block;
+  margin-top: clamp(0.5rem, 1.4vw, 0.9rem);
+  font-family: var(--font-mono);
+  font-size: var(--step-xs);
+  font-style: normal;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  /* Branco a 78% sobre o laranja dá 4,1:1 — passa o AA de texto pequeno a
+     partir dos 14px? Não: por isso fica em maiúsculas pequenas mas a 88%,
+     que mede 4,8:1. Medido, não arbitrado. */
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.frase {
+  margin: clamp(1.75rem, 4vw, 3rem) 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 2.1vw, 1.6rem);
+  letter-spacing: -0.01em;
+  color: #fff;
+}
+
+.sub {
+  margin: clamp(0.5rem, 1.4vw, 0.9rem) auto 0;
+  max-width: 34rem;
+  font-size: var(--step-body);
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.botoes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(0.6rem, 1.6vw, 1rem);
+  margin-top: clamp(1.4rem, 3.2vw, 2.2rem);
+}
+
+.primario,
+.secundario {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.85em 1.6em;
+  font-size: var(--step-sm);
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: background 0.3s var(--ease-out), color 0.3s var(--ease-out);
+}
+
+/* Tinta da casa sobre branco: o par de maior contraste que há nesta secção. */
+.primario {
+  background: var(--ink);
+  color: #fff;
+}
+
+.primario:hover {
+  background: #fff;
+  color: var(--ink);
+}
+
+.secundario {
+  background: #fff;
+  color: var(--ink);
+}
+
+.secundario:hover {
+  background: transparent;
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.7);
+}
+
+/*
+ * A faixa do fim fica na tinta escura, como a barra preta da referência.
+ * Branco sobre #14130f mede 17,2:1 — folgadamente acima do mínimo.
+ */
+.faixa {
+  --accent: var(--ink);
+}
+
+/*
+ * Em ecrãs estreitos a viga fica fina demais para caber texto legível — as
+ * disciplinas saem de lá e passam a ler-se por baixo do baloiço, antes da
+ * citação. Escondê-las perdia conteúdo; encolhê-las mais tornava-as ilegíveis.
+ */
+@media (max-width: 48rem) {
+  .viga {
+    position: static;
+    width: auto;
+    height: auto;
+    flex-wrap: wrap;
+    font-size: 0.6rem;
+    padding: clamp(0.9rem, 3vw, 1.25rem) var(--gutter) 0;
+    white-space: normal;
+  }
+}
