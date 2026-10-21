@@ -50,60 +50,85 @@ export default function PulseArco() {
   const [ceu, setCeu] = useState(false);
   const [legenda, setLegenda] = useState(false);
   /*
-   * 🔴 Este arranque é um booleano à parte e NÃO a própria `fase`.
+   * 🔴 O arranque é um contador de voltas e NÃO a própria `fase`.
    *
    * Com os temporizadores num efeito que dependia de `fase`, a primeira
    * mudança de fase corria a limpeza do efeito e CANCELAVA os temporizadores
    * seguintes: o arco ficava preso em «abrir», o contador congelava a 37% e
    * as nuvens e a legenda nunca chegavam. Medido, não suposto.
    *
-   * Com um booleano que só sobe uma vez, o efeito corre uma vez e os quatro
-   * tempos ficam armados até ao fim.
+   * Sendo um número que sobe a cada nova volta, o efeito corre uma vez por
+   * volta e os quatro tempos ficam armados até ao fim dessa volta.
    */
-  const [arrancou, setArrancou] = useState(false);
+  const [volta, setVolta] = useState(0);
+  const relogios = useRef<ReturnType<typeof setTimeout>[]>([]);
 
-  /* Arranca quando a secção entra no ecrã — na referência arranca ao carregar
-     a página, mas aqui ela vive a meio do portfólio. */
+  /*
+   * Arranca quando a secção entra no ecrã e REFAZ-SE sempre que ela sai e
+   * volta — pedido dela.
+   *
+   * Os dois limiares não são o mesmo de propósito: entra aos 20% de secção
+   * visível, mas só se rearma quando ela sai por COMPLETO (rácio 0). Com um
+   * limiar só, uma rolagem a tremer junto à fronteira reiniciava a animação
+   * vezes sem conta.
+   */
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       setFase("rodar");
-      setArrancou(true);
       setConta(100);
       setCeu(true);
       setLegenda(true);
       return;
     }
+    let dentro = false;
     const obs = new IntersectionObserver(
       ([e]) => {
-        if (e.isIntersecting) {
-          setFase("dar");
-          setArrancou(true);
-          obs.disconnect();
+        if (!dentro && e.intersectionRatio >= 0.2) {
+          dentro = true;
+          setVolta((v) => v + 1);
+        } else if (dentro && e.intersectionRatio === 0) {
+          dentro = false;
+          /* Os relógios da volta anterior têm de morrer aqui: fora do ecrã
+             continuavam a disparar e deixavam a secção meio montada. */
+          relogios.current.forEach(clearTimeout);
+          relogios.current = [];
+          setFase("espera");
+          setConta(0);
+          setCeu(false);
+          setLegenda(false);
         }
       },
-      { threshold: 0.2 },
+      { threshold: [0, 0.2] },
     );
     obs.observe(el);
-    return () => obs.disconnect();
+    return () => {
+      obs.disconnect();
+      relogios.current.forEach(clearTimeout);
+    };
   }, []);
 
   /* Os três movimentos, um a seguir ao outro, nos tempos lidos na referência. */
   useEffect(() => {
-    if (!arrancou) return;
-    const t = [
+    if (volta === 0) return;
+    setFase("dar");
+    setConta(0);
+    setCeu(false);
+    setLegenda(false);
+    relogios.current = [
       setTimeout(() => setFase("abrir"), DAR),
       setTimeout(() => setFase("rodar"), ABRIR),
       setTimeout(() => setCeu(true), NUVENS),
       setTimeout(() => setLegenda(true), LEGENDA),
     ];
-    return () => t.forEach(clearTimeout);
-  }, [arrancou]);
+    const meus = relogios.current;
+    return () => meus.forEach(clearTimeout);
+  }, [volta]);
 
   /* O contador sobe do princípio do baralho até o leque estar aberto. */
   useEffect(() => {
-    if (!arrancou) return;
+    if (volta === 0) return;
     const inicio = performance.now();
     let frame = 0;
     const passo = () => {
@@ -113,7 +138,7 @@ export default function PulseArco() {
     };
     frame = requestAnimationFrame(passo);
     return () => cancelAnimationFrame(frame);
-  }, [arrancou]);
+  }, [volta]);
 
   const meio = (ecrans.length - 1) / 2;
 

@@ -62,27 +62,37 @@
 }
 
 /*
- * O texto vive no laranja vazio por cima do baloiço. Medido na imagem: a
- * prancha e as letras ocupam de 48% a 73% da altura, e os 41% de cima estão
- * livres — daí os 17%, que o deixam acima das letras e abaixo da navegação.
+ * O texto vai escrito na FACE LATERAL da prancha, a pedido dela — como a
+ * referência o tem na viga.
+ *
+ * Medido na imagem: a prancha ocupa y 974..1125 (63,4% a 73,2%) e a face da
+ * frente, que é a parte que aparece a toda a largura, vai de 69% a 73,2% e
+ * de x 10% a 90%. São esses os números abaixo.
+ *
+ * 🔴 A tinta é ESCURA e não branca. Medido o contraste contra a madeira
+ * (média RGB 196,144,105): branco dá 2,79:1 e falha; a tinta da casa dá
+ * 6,65:1 — 9,18:1 na madeira mais clara e 3,59:1 no veio mais escuro. O
+ * halo branco ténue existe só para esse pior caso.
  */
 .viga {
   position: absolute;
-  top: 17%;
-  left: 6%;
-  width: 88%;
+  top: 69.2%;
+  left: 11%;
+  width: 78%;
+  height: 3.8%;
   margin: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: clamp(0.5rem, 2.2vw, 2.2rem);
+  gap: clamp(0.4rem, 1.8vw, 1.8rem);
   font-family: var(--font-sans);
-  /* Já não tem de caber numa viga fina — pode respirar. */
-  font-size: clamp(0.58rem, 1.35vw, 1.05rem);
-  font-weight: 600;
-  letter-spacing: 0.16em;
+  /* Tem de caber na face da prancha: 3,8% da altura da imagem. */
+  font-size: clamp(0.36rem, 0.85vw, 0.78rem);
+  font-weight: 700;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: #fff;
+  color: var(--ink);
+  text-shadow: 0 0 0.45em rgba(255, 255, 255, 0.5);
   white-space: nowrap;
   pointer-events: none;
 }
@@ -93,11 +103,11 @@
   gap: clamp(0.5rem, 2.2vw, 2.2rem);
 }
 
- /* Branco: sobre o laranja, um losango laranja não se via. */
+ /* Acompanha a tinta: sobre a madeira clara, um losango branco sumia. */
 .losango {
-  width: 0.32em;
-  height: 0.32em;
-  background: rgba(255, 255, 255, 0.75);
+  width: 0.3em;
+  height: 0.3em;
+  background: rgba(20, 19, 15, 0.7);
   transform: rotate(45deg);
   flex-shrink: 0;
 }
