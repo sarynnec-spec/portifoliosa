@@ -5,14 +5,16 @@ import { projects } from "@/content/projects";
 import styles from "./PulseArco.module.css";
 
 /*
- * Os três movimentos do vídeo de referência (9tv6eg.mp4, 30 fps), lidos na
- * gravação limpa antes de o ficheiro sair dos Downloads:
+ * Os cinco movimentos do vídeo de referência (9tv6eg.mp4, 30 fps), lidos nos
+ * fotogramas que guardei antes de o ficheiro sair dos Downloads:
  *
- *   1. DAR  — f0 a f12 (0 a 0,40 s): os ecrãs chegam um a um e empilham-se
- *             em baralho junto ao fundo, ainda encostados.
- *   2. ABRIR— f12 a f42 (0,40 a 1,40 s): o baralho abre em leque até ao arco.
- *             É aqui que o contador chega a 100.
- *   3. RODAR— f42 em diante: o arco assenta e passa a rodar devagar.
+ *   1. DAR    — f0 a f12: os ecrãs chegam um a um e empilham-se em baralho.
+ *   2. ABRIR  — f12 a f42: o baralho abre em leque até ao arco, que desce
+ *               até junto da barra. É aqui que o contador chega a 100.
+ *   3. ANEL   — f240 a f280: o arco FECHA-SE num anel inclinado e encolhido,
+ *               visto de fora — mostra as laterais.
+ *   4. ENTRAR — f280 a f320: a câmara cai para DENTRO do anel.
+ *   5. CORRER — f320 em diante: o carrossel corre à volta de quem vê.
  *
  *   f72 (2,40 s) — o branco dá lugar às nuvens.
  *
@@ -29,10 +31,16 @@ const LEGENDA = 2900;
  *   f280→f320 (1,3 s) — a câmara ENTRA dentro do anel (o «zoom» que ela diz)
  *   f320 em diante    — abre num carrossel que corre à volta de quem vê
  */
-const ENTRAR = 2800;
-const CORRER = 4100;
+/*
+ * 🔴 Faltava-me o 3.º: entre o arco e o carrossel, a referência FECHA o arco
+ * num anel inclinado e ENCOLHIDO, visto de fora — é o que ela descreve como
+ * «dá uma pequena diminuída mostrando as laterais». Está nos f240 a f280.
+ */
+const ANEL = 2400;
+const ENTRAR = 3900;
+const CORRER = 5300;
 /* Quanto tempo o carrossel corre antes de a volta recomeçar do princípio. */
-const VOLTAR = 11000;
+const VOLTAR = 12800;
 
 /**
  * Abertura do leque e quantos cartões a enchem.
@@ -44,14 +52,19 @@ const VOLTAR = 11000;
  * ⚠️ Repetir os ecrãs não inventa nada: são os mesmos nove, e a volta do
  * arco é grande de mais para nove caberem sem buracos.
  */
-const ABERTURA = 230;
+/*
+ * Ela pediu mais espaçamento entre mocaps, para o leque abrir mais: de 230°
+ * para 250°. Com 18 cartões isso leva o passo de 13,5° para 14,7°, contra
+ * 19,5° de largura angular do cartão — a sobreposição cai de 6° para 4,8°.
+ */
+const ABERTURA = 250;
 const VOLTAS = 2;
 
 const pulse = projects.find((p) => p.slug === "pulse")!;
 const base = pulse.gallery ?? [];
 const ecrans = Array.from({ length: VOLTAS }, () => base).flat();
 
-type Fase = "espera" | "dar" | "abrir" | "entrar" | "correr";
+type Fase = "espera" | "dar" | "abrir" | "anel" | "entrar" | "correr";
 
 export default function PulseArco() {
   const ref = useRef<HTMLElement | null>(null);
@@ -130,6 +143,7 @@ export default function PulseArco() {
       setTimeout(() => setFase("abrir"), DAR),
       setTimeout(() => setCeu(true), NUVENS),
       setTimeout(() => setLegenda(true), LEGENDA),
+      setTimeout(() => setFase("anel"), ANEL),
       setTimeout(() => setFase("entrar"), ENTRAR),
       setTimeout(() => setFase("correr"), CORRER),
       /* Em ciclo: volta ao princípio e refaz os cinco movimentos, sem ser

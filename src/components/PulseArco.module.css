@@ -42,7 +42,13 @@
  */
 .palco {
   position: relative;
-  height: clamp(23rem, 48vw, 44rem);
+  /*
+   * Cresceu com a abertura: a 250° as pontas descem 0,94 raios abaixo do
+   * centro (eram 0,79 a 230°), e o arco todo passa a medir 2,31 raios de
+   * altura. Com o raio no máximo (20rem = 320px) são 740px — e a caixa tem
+   * de os levar com o centro a 64%, que é o que o põe mais em baixo.
+   */
+  height: clamp(26rem, 58vw, 54rem);
   /*
    * A perspetiva entra na conta do carrossel, por isso vive numa variável:
    * para a câmara ficar DENTRO do anel, o aro tem de avançar até `--persp`
@@ -90,8 +96,26 @@
   /* A MESMA lista de funções em todas as fases — translateY, rotateX,
      rotateY, translateZ. Se as listas não baterem certo, o browser não
      interpola e o anel salta para o sítio em vez de lá ir. */
-  transform: translateY(13%) rotateX(10deg) rotateY(0deg) translateZ(0px);
+  /* Descido a pedido dela: 13% → 14%, com a caixa já a dar para isso. */
+  transform: translateY(14%) rotateX(10deg) rotateY(0deg) translateZ(0px)
+    scale(1);
   transition: transform 1s var(--ease-out);
+}
+
+/*
+ * 3.º MOVIMENTO — ANEL. O arco fecha-se e o aro inclina-se para trás,
+ * encolhido, visto de FORA: é a «pequena diminuída a mostrar as laterais».
+ *
+ * 🔴 A 58° o anel ficava ESMAGADO: as cartas são altas e, deitadas assim,
+ * viam-se de perfil e liam-se como riscos. A 22° a elipse aparece e os
+ * ecrãs continuam de pé. Metade fica de costas e some (ver
+ * `backface-visibility`), que é porque na referência o anel se lê como um
+ * «C» e não como um círculo fechado.
+ */
+.seccao[data-fase="anel"] .roda {
+  transform: translateY(6%) rotateX(22deg) rotateY(0deg) translateZ(0px)
+    scale(0.62);
+  transition: transform 1.2s var(--ease-inout);
 }
 
 /*
@@ -108,7 +132,7 @@
 .seccao[data-fase="entrar"] .roda,
 .seccao[data-fase="correr"] .roda {
   transform: translateY(0) rotateX(4deg) rotateY(0deg)
-    translateZ(calc(var(--persp) - var(--rc) * 1.32));
+    translateZ(calc(var(--persp) - var(--rc) * 1.32)) scale(1);
   transition: transform 1.3s var(--ease-inout);
 }
 
@@ -121,11 +145,11 @@
 @keyframes correr {
   from {
     transform: translateY(0) rotateX(4deg) rotateY(0deg)
-      translateZ(calc(var(--persp) - var(--rc) * 1.32));
+      translateZ(calc(var(--persp) - var(--rc) * 1.32)) scale(1);
   }
   to {
     transform: translateY(0) rotateX(4deg) rotateY(-360deg)
-      translateZ(calc(var(--persp) - var(--rc) * 1.32));
+      translateZ(calc(var(--persp) - var(--rc) * 1.32)) scale(1);
   }
 }
 
@@ -185,6 +209,7 @@
  */
 .seccao[data-fase="dar"] .carta,
 .seccao[data-fase="abrir"] .carta,
+.seccao[data-fase="anel"] .carta,
 .seccao[data-fase="entrar"] .carta,
 .seccao[data-fase="correr"] .carta {
   opacity: 1;
@@ -215,6 +240,28 @@
  * No carrossel o cartão deixa o arco 2D e passa a viver na parede de um
  * cilindro: `rotateY(--anel) translateZ(-rc)` reparte os dezoito pela volta
  * inteira, cada um virado para o centro — que é onde a câmara vai estar.
+ */
+/*
+ * No ANEL o aro vê-se de FORA, por isso os ecrãs têm de olhar para fora
+ * (`--gy2: 0deg`). 🔴 Com os 180° do carrossel, de fora viam-se-lhes as
+ * costas, o `backface-visibility` apagava-as e sobravam três riscos deitados.
+ */
+.seccao[data-fase="anel"] .carta {
+  --g2: 0deg;
+  --ty: 0px;
+  --gy: var(--anel);
+  --tz: var(--rc);
+  --gy2: 0deg;
+  --sc: 0.5;
+  transition:
+    transform 1.2s var(--ease-inout),
+    opacity 0.25s linear;
+  transition-delay: calc(var(--abrir) * 0.4);
+}
+
+/*
+ * Já DENTRO do anel, viram-se para dentro — e é essa meia-volta que faz o
+ * aro «abrir» quando a câmara lhe entra.
  */
 .seccao[data-fase="entrar"] .carta,
 .seccao[data-fase="correr"] .carta {
