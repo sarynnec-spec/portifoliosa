@@ -49,7 +49,7 @@ export const summary =
 
 /** Frase-manifesto revelada palavra a palavra no scroll. Construída a partir do perfil do CV. */
 export const manifesto =
-  "Levo um produto da ideia ao código em produção: desenho a base de dados, construo a interface, ligo as APIs e escrevo os testes que provam que funciona.";
+  "Levo um produto da ideia ao código em produção: faço o design, desenho a base de dados, construo a interface, ligo as APIs e escrevo os testes que provam que funciona.";
 
 export const about = {
   heading: "Da gestão comercial ao software e ao design.",

@@ -3,6 +3,23 @@
   border-bottom: 1px solid var(--line);
 }
 
+/*
+ * A frase à esquerda, o bailarino no branco que sobrava à direita.
+ *
+ * A coluna do texto mantém a medida que tinha antes de ele chegar (52rem,
+ * ver `.body`), para a frase quebrar exatamente nos mesmos sítios — ele
+ * entrou no espaço vazio, não à custa do texto.
+ *
+ * `align-items: end` põe-no a dançar em cima da mesma linha onde o texto
+ * acaba, e não a meio do ar.
+ */
+.grelha {
+  display: grid;
+  grid-template-columns: minmax(0, 52rem) minmax(0, 1fr);
+  gap: clamp(1.5rem, 3.5vw, 3rem);
+  align-items: end;
+}
+
 .body {
   max-width: 52rem;
 }
@@ -16,6 +33,63 @@
   flex-wrap: wrap;
   column-gap: 0.28em;
   row-gap: 0.06em;
+}
+
+/*
+ * A proporção vem do ficheiro (696 × 576) e está escrita como `aspect-ratio`
+ * para a caixa já ter altura antes de o vídeo chegar — sem isso a secção
+ * saltava quando ele carregasse.
+ *
+ * O quadro é mais largo do que o bailarino precisa de propósito: a sombra
+ * dele tem de ter onde desvanecer até ao branco, senão era cortada a direito
+ * na margem e o rectângulo do vídeo aparecia. O `max-width` já conta com
+ * essa folga, para ele acabar do mesmo tamanho na página.
+ */
+.palco {
+  width: 100%;
+  max-width: 22rem;
+  aspect-ratio: 696 / 576;
+  justify-self: center;
+  cursor: pointer;
+}
+
+/*
+ * O fundo do ficheiro já foi levado a branco puro no próprio vídeo, mas a
+ * compressão de croma do H.264 devolve manchas em RGB(255, 255, 250) —
+ * medidas em 5,8% dos pixéis do fundo. São cinco níveis só no azul, e
+ * chegam para desenhar um creme ténue por cima do branco da página.
+ *
+ * `brightness(1.02)` leva 250 a 255 e deixa a impureza em 1,4% (o que resta
+ * é a sombra verdadeira debaixo dos pés, que tem mesmo de ser cinzenta).
+ * Medido: nenhum pixel do bailarino muda mais de seis níveis.
+ *
+ * ⚠️ `mix-blend-mode: multiply` não serve aqui — multiply contra branco
+ * devolve a mesma cor, logo nunca tiraria o creme. É a mesma armadilha já
+ * documentada em AnimacaoCanto.module.css.
+ */
+.danca {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: brightness(1.02);
+}
+
+/*
+ * Em ecrãs estreitos não há branco de sobra à direita: a duas colunas, ele
+ * comeria a medida da frase. Passa para baixo do texto, mais pequeno e ao
+ * centro — o texto fica exatamente como estava.
+ */
+@media (max-width: 60rem) {
+  .grelha {
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(1.5rem, 6vw, 3rem);
+  }
+
+  .palco {
+    max-width: 14rem;
+    justify-self: start;
+  }
 }
 
 .word {
