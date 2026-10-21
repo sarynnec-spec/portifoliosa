@@ -23,6 +23,16 @@ const DAR = 600;
 const ABRIR = 1600;
 const NUVENS = 2400;
 const LEGENDA = 2900;
+/*
+ * 4.º e 5.º movimentos, lidos nos fotogramas 220 a 340 da referência:
+ *   f220→f280 (2,0 s) — o arco fecha-se num anel inclinado
+ *   f280→f320 (1,3 s) — a câmara ENTRA dentro do anel (o «zoom» que ela diz)
+ *   f320 em diante    — abre num carrossel que corre à volta de quem vê
+ */
+const ENTRAR = 2800;
+const CORRER = 4100;
+/* Quanto tempo o carrossel corre antes de a volta recomeçar do princípio. */
+const VOLTAR = 11000;
 
 /**
  * Abertura do leque e quantos cartões a enchem.
@@ -41,7 +51,7 @@ const pulse = projects.find((p) => p.slug === "pulse")!;
 const base = pulse.gallery ?? [];
 const ecrans = Array.from({ length: VOLTAS }, () => base).flat();
 
-type Fase = "espera" | "dar" | "abrir" | "rodar";
+type Fase = "espera" | "dar" | "abrir" | "entrar" | "correr";
 
 export default function PulseArco() {
   const ref = useRef<HTMLElement | null>(null);
@@ -76,7 +86,7 @@ export default function PulseArco() {
     const el = ref.current;
     if (!el) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setFase("rodar");
+      setFase("correr");
       setConta(100);
       setCeu(true);
       setLegenda(true);
@@ -118,9 +128,13 @@ export default function PulseArco() {
     setLegenda(false);
     relogios.current = [
       setTimeout(() => setFase("abrir"), DAR),
-      setTimeout(() => setFase("rodar"), ABRIR),
       setTimeout(() => setCeu(true), NUVENS),
       setTimeout(() => setLegenda(true), LEGENDA),
+      setTimeout(() => setFase("entrar"), ENTRAR),
+      setTimeout(() => setFase("correr"), CORRER),
+      /* Em ciclo: volta ao princípio e refaz os cinco movimentos, sem ser
+         preciso sair e voltar ao ecrã. */
+      setTimeout(() => setVolta((v) => v + 1), VOLTAR),
     ];
     const meus = relogios.current;
     return () => meus.forEach(clearTimeout);
@@ -160,6 +174,8 @@ export default function PulseArco() {
                   "--dar": `${i * (DAR / ecrans.length)}ms`,
                   /* A ABRIR, o leque parte do meio para fora. */
                   "--abrir": `${Math.abs(i - meio) * 55}ms`,
+                  /* No carrossel os cartões repartem-se pela volta inteira. */
+                  "--anel": `${(i * 360) / ecrans.length}deg`,
                 } as React.CSSProperties
               }
             >

@@ -43,7 +43,18 @@
 .palco {
   position: relative;
   height: clamp(23rem, 48vw, 44rem);
-  perspective: 1400px;
+  /*
+   * A perspetiva entra na conta do carrossel, por isso vive numa variável:
+   * para a câmara ficar DENTRO do anel, o aro tem de avançar até `--persp`
+   * menos meio raio. Ver `.roda` na fase «entrar».
+   */
+  /*
+   * 🔴 Tem de acompanhar a largura do ecrã. Com os 1400px fixos, num
+   * telemóvel de 390 a perspetiva era monstruosa e NENHUMA carta aparecia no
+   * carrossel (medido: 0 visíveis a 390, 10 a 1440).
+   */
+  --persp: clamp(700px, 97vw, 1400px);
+  perspective: var(--persp);
   display: grid;
   place-items: center;
 }
@@ -61,25 +72,61 @@
  */
 .roda {
   --r: clamp(8.5rem, 23vw, 20rem);
+  /*
+   * Raio do carrossel. Sai de uma conta, não de gosto: para as cartas do
+   * fundo ficarem a 1/3 do tamanho das dos lados — a proporção medida na
+   * referência — a câmara tem de ficar a meio raio da parede de cá, o que
+   * dá `translateZ(--persp - --rc/2)`.
+   */
+  /* Amarrado à perspetiva, para a profundidade se ler igual em qualquer
+     largura: é a razão rc/perspetiva que manda no efeito, não o px. */
+  --rc: calc(var(--persp) * 0.29);
   position: relative;
   width: 100%;
   height: 100%;
   transform-style: preserve-3d;
   display: grid;
   place-items: center;
-  transform: translateY(13%) rotateX(10deg);
+  /* A MESMA lista de funções em todas as fases — translateY, rotateX,
+     rotateY, translateZ. Se as listas não baterem certo, o browser não
+     interpola e o anel salta para o sítio em vez de lá ir. */
+  transform: translateY(13%) rotateX(10deg) rotateY(0deg) translateZ(0px);
   transition: transform 1s var(--ease-out);
 }
 
-/* 3.º MOVIMENTO — o arco roda. Balanço de pêndulo e não volta inteira:
-   dando a volta, os ecrãs vinham ao contrário e liam-se como um defeito. */
-.seccao[data-fase="rodar"] .roda {
-  animation: rodar 16s ease-in-out 0.4s infinite;
+/*
+ * 4.º MOVIMENTO — ENTRAR. A câmara cai para dentro do anel — o «zoom» que
+ * ela descreve.
+ *
+ * 🔴 `--persp - --rc/2` não é um número à sorte. A câmara em CSS está a
+ * `--persp` do plano; o anel avançado até aí põe a parede de cá ATRÁS dela
+ * (fica cortada, como deve) e a do fundo a 1,5 raios — o que dá às cartas
+ * do fundo um terço do tamanho das dos lados, que é a proporção medida na
+ * referência. Com os 1,25 raios que aqui estavam, a câmara ficava toda
+ * FORA do anel e via-se o aro de lado, não de dentro.
+ */
+.seccao[data-fase="entrar"] .roda,
+.seccao[data-fase="correr"] .roda {
+  transform: translateY(0) rotateX(4deg) rotateY(0deg)
+    translateZ(calc(var(--persp) - var(--rc) * 1.32));
+  transition: transform 1.3s var(--ease-inout);
 }
 
-@keyframes rodar {
-  0%, 100% { transform: translateY(13%) rotateX(10deg) rotate(-3.2deg); }
-  50%      { transform: translateY(13%) rotateX(10deg) rotate(3.2deg); }
+/* 5.º MOVIMENTO — CORRER. O carrossel dá a volta inteira, e pode: os
+   cartões olham para dentro, por isso nunca aparecem ao contrário. */
+.seccao[data-fase="correr"] .roda {
+  animation: correr 26s linear 0.2s infinite;
+}
+
+@keyframes correr {
+  from {
+    transform: translateY(0) rotateX(4deg) rotateY(0deg)
+      translateZ(calc(var(--persp) - var(--rc) * 1.32));
+  }
+  to {
+    transform: translateY(0) rotateX(4deg) rotateY(-360deg)
+      translateZ(calc(var(--persp) - var(--rc) * 1.32));
+  }
 }
 
 .carta {
@@ -92,11 +139,38 @@
   background: #0d0d12;
   box-shadow: 0 1.2rem 2.4rem rgba(12, 10, 24, 0.3);
   /*
+   * 🔴 É isto que torna o carrossel possível sem truques.
+   *
+   * Dentro do anel, as cartas da parede de CÁ ficam a um palmo da lente e
+   * cresciam até milhões de píxeis de largura (medido). Mas elas estão
+   * viradas para dentro, ou seja, de COSTAS para quem vê — e assim o
+   * browser não as desenha. Fica só a parede do fundo, que é exactamente o
+   * que a referência mostra.
+   */
+  backface-visibility: hidden;
+  /*
    * Antes de serem dadas: fora do palco, por baixo. As três funções de
    * transformação estão na MESMA ORDEM nos três estados — se não estiverem,
    * o browser não interpola e os cartões saltam para o sítio.
    */
-  transform: rotate(0deg) translateY(calc(var(--r) * 1.9)) scale(0.9);
+  /*
+   * Uma só lista de funções para TODAS as fases — do baralho ao arco e do
+   * arco ao carrossel. Só os valores é que mudam. Com listas diferentes o
+   * browser não interpola, e a passagem do arco para o anel saltava.
+   */
+  --g2: 0deg;
+  --ty: calc(var(--r) * 1.9);
+  --gy: 0deg;
+  --tz: 0px;
+  --gy2: 0deg;
+  --sc: 0.9;
+  /*
+   * O segundo `rotateY` depois do `translateZ` é o que vira a carta para
+   * DENTRO do cilindro. Sem ele via-se-lhe as costas e os ecrãs apareciam
+   * espelhados — o «PULSE» lia-se ao contrário.
+   */
+  transform: rotate(var(--g2)) translateY(var(--ty)) rotateY(var(--gy))
+    translateZ(var(--tz)) rotateY(var(--gy2)) scale(var(--sc));
   opacity: 0;
   transition:
     transform 0.55s var(--ease-out),
@@ -111,12 +185,15 @@
  */
 .seccao[data-fase="dar"] .carta,
 .seccao[data-fase="abrir"] .carta,
-.seccao[data-fase="rodar"] .carta {
+.seccao[data-fase="entrar"] .carta,
+.seccao[data-fase="correr"] .carta {
   opacity: 1;
 }
 
 .seccao[data-fase="dar"] .carta {
-  transform: rotate(calc(var(--a) * 0.06)) translateY(calc(var(--r) * 0.55)) scale(0.62);
+  --g2: calc(var(--a) * 0.06);
+  --ty: calc(var(--r) * 0.55);
+  --sc: 0.62;
 }
 
 /*
@@ -124,13 +201,44 @@
  * circunferência E deixa-o tangente a ela de uma só vez — é a conta que faz
  * o arco, não há posições escritas à mão.
  */
-.seccao[data-fase="abrir"] .carta,
-.seccao[data-fase="rodar"] .carta {
-  transform: rotate(var(--a)) translateY(calc(var(--r) * -1)) scale(1);
+.seccao[data-fase="abrir"] .carta {
+  --g2: var(--a);
+  --ty: calc(var(--r) * -1);
+  --sc: 1;
   transition:
     transform 1.05s var(--ease-out),
     opacity 0.25s linear;
   transition-delay: var(--abrir);
+}
+
+/*
+ * No carrossel o cartão deixa o arco 2D e passa a viver na parede de um
+ * cilindro: `rotateY(--anel) translateZ(-rc)` reparte os dezoito pela volta
+ * inteira, cada um virado para o centro — que é onde a câmara vai estar.
+ */
+.seccao[data-fase="entrar"] .carta,
+.seccao[data-fase="correr"] .carta {
+  --g2: 0deg;
+  --ty: 0px;
+  --gy: var(--anel);
+  --tz: var(--rc);
+  --gy2: 180deg;
+  /*
+   * Dentro do anel tudo cresce com a perspetiva. Com a câmara a 0,6 raios da
+   * parede, as cartas dos lados ficam 5,8× e as do fundo 2,2× — a proporção
+   * de ~2,7:1 que a referência tem. O 0,5 é o que as traz de volta a um
+   * tamanho que cabe no ecrã.
+   *
+   * 🔴 O 1,5 raios de recuo saiu de uma VARREDURA medida, não de conta no
+   * papel: com 0,6 só se viam 6 cartas e a maior ia a 378px; com 0,9 a maior
+   * disparava para 1735px; com 1,2 para 723. A 1,5 dão 8 cartas visíveis,
+   * vão de 1280px (enche o ecrã de 1440) e a maior nos 290px.
+   */
+  --sc: 0.72;
+  transition:
+    transform 1.3s var(--ease-inout),
+    opacity 0.25s linear;
+  transition-delay: calc(var(--abrir) * 0.5);
 }
 
 .carta img {
@@ -235,7 +343,7 @@
 
 /* Sem movimento: o arco já está montado, as nuvens e a legenda já lá estão. */
 @media (prefers-reduced-motion: reduce) {
-  .seccao[data-fase="rodar"] .roda {
+  .seccao[data-fase="correr"] .roda {
     animation: none;
   }
 
