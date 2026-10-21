@@ -122,9 +122,31 @@ const ecransPulse: Cartao[] = (pulse.gallery ?? []).map((g) => ({
  * apontou. Não é uma lista escrita à mão: é o campo `ratio` a decidir, por
  * isso qualquer peça nova entra ou sai sozinha conforme o formato.
  */
+/*
+ * 🔴 O cartaz do reel de apresentação não serve PARA AQUI.
+ *
+ * Medido: 99,6% dos píxeis dele são brancos, com desvio de 5,5 — é o
+ * primeiro fotograma do vídeo, que abre em branco. Como cartaz do <video>
+ * na secção Motion está certo (é mesmo assim que a peça começa), mas no
+ * meio da roda lia-se como um telemóvel apagado, e ela apanhou-o duas vezes.
+ *
+ * Em vez disso vai um fotograma com imagem, tirado do próprio vídeo aos
+ * 9,0s — o ponto onde a peça tem mais tinta e menos branco de toda a sua
+ * duração (varri-a de meio em meio segundo). Passou de 99,6% para 70,8% de
+ * branco, com o desvio a subir de 5,5 para 77,8.
+ *
+ * O cartaz original fica onde estava; isto é um ficheiro à parte.
+ */
+const CARTAZ_PROPRIO: Record<string, string> = {
+  "reel-apresentacao": "/media/pulse/reel-sarynne.webp",
+};
+
 const pecasMotion: Cartao[] = reels
   .filter((r) => r.ratio !== "4/5")
-  .map((r) => ({ src: r.poster, alt: `${r.title} — ${r.category}` }));
+  .map((r) => ({
+    src: CARTAZ_PROPRIO[r.slug] ?? r.poster,
+    alt: `${r.title} — ${r.category}`,
+  }));
 
 /* As capturas e o nome do site a que pertencem, para a alternativa textual. */
 const SITES: [string, string][] = [
@@ -133,7 +155,12 @@ const SITES: [string, string][] = [
   ["lode", "LODÊ — atelier de cabelo"],
   ["sofia-sales", "Sofia Sales Clinic — estética"],
   ["benessere", "Benessere — clínica de estética"],
-  ["ondelle", "Ondelle Aesthetics — med spa"],
+  /*
+   * 🔴 O «ondelle» saiu a pedido dela, e com ele a versão portuguesa já
+   * tinha saído antes — os dois eram o mesmo desenho, e o cartão ficava
+   * quase todo claro (medido: 175,7 de brilho e 18,9% de branco puro) no
+   * meio de ecrãs escuros.
+   */
   /*
    * 🔴 O «ondelle-pt» saiu. Era o mesmo desenho do Ondelle (a versão
    * portuguesa do mesmo site), e para não ficarem dois cartões iguais
