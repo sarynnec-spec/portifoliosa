@@ -32,7 +32,12 @@
  */
 .banda {
   width: 100%;
-  padding-top: clamp(5.5rem, 9vw, 9rem);
+  /*
+   * Era clamp(5.5rem, 9vw, 9rem) para livrar a navegação fixa quando esta
+   * secção abria a página. Agora vive a meio do portefólio e a navegação já
+   * não a tapa — só precisa de respiração normal.
+   */
+  padding-top: clamp(2.5rem, 5vw, 4.5rem);
   /*
    * Primeira linha da imagem, medida NA PÁGINA e não no ficheiro.
    *

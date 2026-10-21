@@ -156,8 +156,17 @@
 .carta {
   position: absolute;
   margin: 0;
-  width: calc(var(--r) * 0.34);
-  aspect-ratio: 945 / 2048;
+  /*
+   * 0,30 e não 0,34: os cartões passaram de 18 (nove repetidos) para 23
+   * todos diferentes, e com 23 em 250° o passo cai para 11,4°. A 0,34 cada
+   * cartão media 19,5° de largura angular e sobrepunha-se 8°; a 0,30 mede
+   * 13,5° e sobra folga de 2,1° — mais espaçamento do que antes, que foi o
+   * que ela pediu.
+   */
+  width: calc(var(--r) * 0.30);
+  /* A forma vem de cada cartão: ecrã de app, cartaz de motion ou site em
+     telemóvel têm proporções diferentes. */
+  aspect-ratio: var(--prop, 945 / 2048);
   border-radius: calc(var(--r) * 0.03);
   overflow: hidden;
   background: #0d0d12;

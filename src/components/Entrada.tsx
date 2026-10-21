@@ -44,13 +44,15 @@ export default function Entrada() {
             ))}
           </p>
           {/*
-            ⚠️ Não existe classe `sr-only` neste projeto — pu-la e o título
-            apareceu em letras brancas por cima do laranja. Fica escondido como
-            a Marquee já o faz, por estilo inline.
+            🔴 Era um <h1> quando esta secção abria a página. Agora ela vive a
+            meio, depois do <Hero />, que já tem o <h1> do nome — dois <h1>
+            partiam o esqueleto do documento. Passou a <h2>, e continua
+            escondido (não há classe `sr-only` neste projeto; pu-la uma vez e
+            o título apareceu em letras brancas sobre o laranja).
           */}
-          <h1 style={{ position: "absolute", left: "-9999px" }}>
-            Sarynne Ferreira — portfólio de design
-          </h1>
+          <h2 style={{ position: "absolute", left: "-9999px" }}>
+            Portefólio — o trabalho
+          </h2>
         </div>
       </div>
 

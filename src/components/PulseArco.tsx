@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { projects } from "@/content/projects";
+import { reels } from "@/content/reels";
 import styles from "./PulseArco.module.css";
 
 /*
@@ -23,8 +24,18 @@ import styles from "./PulseArco.module.css";
  */
 const DAR = 600;
 const ABRIR = 1600;
-const NUVENS = 2400;
-const LEGENDA = 2900;
+/*
+ * 🔴 As nuvens entravam aos 2,4s, ainda com o arco a abrir — e ela apanhou:
+ * na referência o fundo AINDA É BRANCO no f240 e no f260, com o anel já
+ * formado e a rodar. Só no f280 é que as nuvens aparecem, meio segundo antes
+ * de a câmara entrar.
+ *
+ * Daí 3400: depois de o anel rodar (ANEL = 2400) e mesmo antes de ENTRAR
+ * (3900). A legenda segue o mesmo princípio — na referência o texto só se lê
+ * com o carrossel já a correr.
+ */
+const NUVENS = 3400;
+const LEGENDA = 5600;
 /*
  * 4.º e 5.º movimentos, lidos nos fotogramas 220 a 340 da referência:
  *   f220→f280 (2,0 s) — o arco fecha-se num anel inclinado
@@ -43,26 +54,70 @@ const CORRER = 5300;
 const VOLTAR = 12800;
 
 /**
- * Abertura do leque e quantos cartões a enchem.
+ * Abertura do leque.
  *
- * A referência tem ~14 cartões em ~200°. Aqui os 9 ecrãs do PULSE entram
- * DUAS vezes (18 cartões) e o leque abre 230°, que é o que põe as pontas a
- * apontar para baixo, até junto da barra do fim.
- *
- * ⚠️ Repetir os ecrãs não inventa nada: são os mesmos nove, e a volta do
- * arco é grande de mais para nove caberem sem buracos.
- */
-/*
- * Ela pediu mais espaçamento entre mocaps, para o leque abrir mais: de 230°
- * para 250°. Com 18 cartões isso leva o passo de 13,5° para 14,7°, contra
- * 19,5° de largura angular do cartão — a sobreposição cai de 6° para 4,8°.
+ * 250° é o que põe as pontas a apontar para baixo, até junto da barra do
+ * fim, e foi ela que pediu que subisse de 230° — mais espaçamento entre
+ * mocaps.
  */
 const ABERTURA = 250;
-const VOLTAS = 2;
+
+/**
+ * O que vai dentro do arco.
+ *
+ * ⚠️ Antes eram os 9 ecrãs do PULSE REPETIDOS duas vezes, porque nove não
+ * chegavam para encher a volta. Ela mandou acabar com a repetição e pôr lá
+ * os vídeos, as peças de motion e os sites — e há material de sobra:
+ *
+ *   9  ecrãs do PULSE          (/media/pulse/*.jpg)
+ *   7  cartazes das peças de motion (os do `reels.ts`)
+ *   7  sites dela em TELEMÓVEL (/media/pulse/sites/*.webp)
+ *  ──
+ *  23 cartões, todos diferentes.
+ *
+ * 🔴 Os sites são capturas REAIS a 390×844, tiradas aos sites no ar — não
+ * são as capas de computador recortadas. As capas que o projeto já tinha
+ * são todas deitadas (1440×639, 1280×854, …): metidas num ecrã de telemóvel
+ * sobrava uma nesga do meio. Ela pediu «os sites no mocap celular», e um
+ * site em telemóvel é o site visto em telemóvel.
+ *
+ * Cada cartão leva a SUA proporção: o leque mistura formas, como a
+ * referência também mistura.
+ */
+type Cartao = { src: string; alt: string; prop: string };
 
 const pulse = projects.find((p) => p.slug === "pulse")!;
-const base = pulse.gallery ?? [];
-const ecrans = Array.from({ length: VOLTAS }, () => base).flat();
+
+const ecransPulse: Cartao[] = (pulse.gallery ?? []).map((g) => ({
+  src: g.src,
+  alt: g.alt,
+  prop: "945 / 2048",
+}));
+
+const pecasMotion: Cartao[] = reels.map((r) => ({
+  src: r.poster,
+  alt: `${r.title} — ${r.category}`,
+  prop: r.ratio === "4/5" ? "4 / 5" : "9 / 16",
+}));
+
+/* As capturas e o nome do site a que pertencem, para a alternativa textual. */
+const SITES: [string, string][] = [
+  ["autoshop", "AutoShop — stand automóvel"],
+  ["eco-sem-fio", "Eco Sem Fio — internet segura"],
+  ["lode", "LODÊ — atelier de cabelo"],
+  ["sofia-sales", "Sofia Sales Clinic — estética"],
+  ["benessere", "Benessere — clínica de estética"],
+  ["ondelle", "Ondelle Aesthetics — med spa"],
+  ["ondelle-pt", "Ondelle Estética — versão portuguesa"],
+];
+
+const sitesTelemovel: Cartao[] = SITES.map(([f, nome]) => ({
+  src: `/media/pulse/sites/${f}.webp`,
+  alt: `${nome}, visto no telemóvel`,
+  prop: "390 / 844",
+}));
+
+const ecrans: Cartao[] = [...ecransPulse, ...pecasMotion, ...sitesTelemovel];
 
 type Fase = "espera" | "dar" | "abrir" | "anel" | "entrar" | "correr";
 
@@ -85,6 +140,69 @@ export default function PulseArco() {
    */
   const [volta, setVolta] = useState(0);
   const relogios = useRef<ReturnType<typeof setTimeout>[]>([]);
+  /* O travão do scroll só morde uma vez por carregamento — ver `travar`. */
+  const jaTravou = useRef(false);
+
+  /*
+   * Trava o scroll enquanto os movimentos passam, a pedido dela.
+   *
+   * ⚠️ Isto tira o controlo a quem está a ler, e é das coisas que mais
+   * irrita num site. Fica com quatro saídas, todas necessárias:
+   *
+   *   1. SÓ UMA VEZ por carregamento. A animação repete-se em ciclo e
+   *      rearma-se ao voltar à secção — travar de cada vez prendia a pessoa
+   *      sempre que passasse por aqui.
+   *   2. Solta-se sozinho ao fim dos movimentos (CORRER).
+   *   3. Solta-se à PRIMEIRA tecla, roda do rato ou gesto — quem quer passar,
+   *      passa. O travão existe para quem não reagiu, não para prender.
+   *   4. Rede de segurança: solta-se de qualquer maneira meio segundo depois,
+   *      mesmo que algo acima falhe. Ninguém fica preso numa página.
+   *
+   * Quem pediu menos movimento no sistema nunca é travado.
+   */
+  const travar = (ms: number) => {
+    if (jaTravou.current) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    jaTravou.current = true;
+
+    const lenis = window.__lenis;
+    const html = document.documentElement;
+    let solto = false;
+    let ouvir: ReturnType<typeof setTimeout>;
+    const soltar = () => {
+      if (solto) return;
+      solto = true;
+      clearTimeout(ouvir);
+      lenis?.start();
+      html.style.overflow = "";
+      window.removeEventListener("wheel", soltar);
+      window.removeEventListener("touchstart", soltar);
+      window.removeEventListener("keydown", soltar);
+    };
+
+    lenis?.stop();
+    /* O `overflow` apanha o caso de o Lenis não estar lá (ex.: reduced
+       motion desligou-o noutro separador) — sem isto, nada travava. */
+    html.style.overflow = "hidden";
+
+    /*
+     * 🔴 As saídas por gesto só começam a ouvir 700ms depois.
+     *
+     * Medido: sem esta espera o travão durava ~150ms. Quem chega aqui chega
+     * A ROLAR, e o próprio gesto que trouxe a pessoa à secção — com a
+     * inércia que lhe vem atrás — disparava logo o `wheel` e soltava tudo.
+     * A espera deixa esse gesto acabar; o seguinte já é uma decisão.
+     */
+    ouvir = setTimeout(() => {
+      if (solto) return;
+      window.addEventListener("wheel", soltar, { passive: true });
+      window.addEventListener("touchstart", soltar, { passive: true });
+      window.addEventListener("keydown", soltar);
+    }, 700);
+    relogios.current.push(ouvir);
+    relogios.current.push(setTimeout(soltar, ms));
+    relogios.current.push(setTimeout(soltar, ms + 500));
+  };
 
   /*
    * Arranca quando a secção entra no ecrã e REFAZ-SE sempre que ela sai e
@@ -111,12 +229,15 @@ export default function PulseArco() {
         if (!dentro && e.intersectionRatio >= 0.2) {
           dentro = true;
           setVolta((v) => v + 1);
+          travar(CORRER);
         } else if (dentro && e.intersectionRatio === 0) {
           dentro = false;
           /* Os relógios da volta anterior têm de morrer aqui: fora do ecrã
              continuavam a disparar e deixavam a secção meio montada. */
           relogios.current.forEach(clearTimeout);
           relogios.current = [];
+          window.__lenis?.start();
+          document.documentElement.style.overflow = "";
           setFase("espera");
           setConta(0);
           setCeu(false);
@@ -129,6 +250,8 @@ export default function PulseArco() {
     return () => {
       obs.disconnect();
       relogios.current.forEach(clearTimeout);
+      window.__lenis?.start();
+      document.documentElement.style.overflow = "";
     };
   }, []);
 
@@ -179,7 +302,7 @@ export default function PulseArco() {
         <div className={styles.roda}>
           {ecrans.map((e, i) => (
             <figure
-              key={`${e.src}-${i}`}
+              key={e.src}
               className={styles.carta}
               style={
                 {
@@ -190,18 +313,12 @@ export default function PulseArco() {
                   "--abrir": `${Math.abs(i - meio) * 55}ms`,
                   /* No carrossel os cartões repartem-se pela volta inteira. */
                   "--anel": `${(i * 360) / ecrans.length}deg`,
+                  /* Cada cartão com a SUA forma — o leque mistura formatos. */
+                  "--prop": e.prop,
                 } as React.CSSProperties
               }
             >
-              {/* Só a primeira volta é que se anuncia: na segunda os ecrãs
-                  repetem-se, e um leitor dizia dezoito nomes para nove ecrãs. */}
-              <img
-                src={e.src}
-                alt={i < base.length ? e.alt : ""}
-                aria-hidden={i < base.length ? undefined : true}
-                loading="lazy"
-                decoding="async"
-              />
+              <img src={e.src} alt={e.alt} loading="lazy" decoding="async" />
             </figure>
           ))}
         </div>

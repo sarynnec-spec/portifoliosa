@@ -3,6 +3,13 @@
 import { useEffect } from "react";
 import Lenis from "lenis";
 
+declare global {
+  interface Window {
+    /** Exposto para o PulseArco poder travar o scroll. Ver abaixo. */
+    __lenis?: Lenis;
+  }
+}
+
 /**
  * Scroll suave global. Desliga-se por completo quando o utilizador pede
  * menos movimento no sistema operativo.
@@ -39,10 +46,21 @@ export default function SmoothScroll() {
 
     document.addEventListener("click", onAnchorClick);
 
+    /*
+     * O PulseArco precisa de travar o scroll enquanto os movimentos passam,
+     * e quem manda no scroll é este Lenis — pôr `overflow: hidden` no body
+     * não o pára, porque ele move a página por conta própria.
+     *
+     * Fica à mão aqui em vez de num contexto de React porque é o único sítio
+     * que lhe pega, e um contexto obrigava a embrulhar a página inteira.
+     */
+    window.__lenis = lenis;
+
     return () => {
       document.removeEventListener("click", onAnchorClick);
       cancelAnimationFrame(frame);
       lenis.destroy();
+      delete window.__lenis;
     };
   }, []);
 
