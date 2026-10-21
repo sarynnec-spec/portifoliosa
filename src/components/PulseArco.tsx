@@ -53,6 +53,26 @@ const CORRER = 5300;
 /* Quanto tempo o carrossel corre antes de a volta recomeçar do princípio. */
 const VOLTAR = 12800;
 
+/*
+ * Quanto tempo o scroll fica travado.
+ *
+ * 🔴 Era até CORRER (5300) e prendia cedo de mais: a secção mal tinha
+ * entrado no ecrã, ainda não se via nada, e já estava travada. Ela pediu
+ * «uma leve travada» e que desse para VER os movimentos — daí duas mudanças:
+ * trava mais tarde (só quando a peça está mesmo à vista, ver o limiar do
+ * observador) e durante menos tempo.
+ */
+const TRAVAO = 3400;
+
+/*
+ * Quanto da secção tem de estar à vista para a animação arrancar.
+ *
+ * Eram 20% — arrancava (e travava) com a secção a espreitar pela aresta de
+ * baixo, e os primeiros movimentos passavam fora do ecrã. A 55% a peça já
+ * está lá, e é isso que ela quer ver.
+ */
+const ENTRADA = 0.55;
+
 /**
  * Abertura do leque.
  *
@@ -81,24 +101,30 @@ const ABERTURA = 250;
  * sobrava uma nesga do meio. Ela pediu «os sites no mocap celular», e um
  * site em telemóvel é o site visto em telemóvel.
  *
- * Cada cartão leva a SUA proporção: o leque mistura formas, como a
- * referência também mistura.
+ * ⚠️ TODOS no mesmo formato de telemóvel, a pedido dela. Os cartazes 9/16
+ * levam um recorte pequeno nas pontas (object-fit: cover) para caberem na
+ * mesma forma — misturar proporções fazia o leque parecer desalinhado.
  */
-type Cartao = { src: string; alt: string; prop: string };
+type Cartao = { src: string; alt: string };
 
 const pulse = projects.find((p) => p.slug === "pulse")!;
 
 const ecransPulse: Cartao[] = (pulse.gallery ?? []).map((g) => ({
   src: g.src,
   alt: g.alt,
-  prop: "945 / 2048",
 }));
 
-const pecasMotion: Cartao[] = reels.map((r) => ({
-  src: r.poster,
-  alt: `${r.title} — ${r.category}`,
-  prop: r.ratio === "4/5" ? "4 / 5" : "9 / 16",
-}));
+/*
+ * 🔴 Só entram as peças em pé, de telemóvel.
+ *
+ * As do `reels.ts` marcadas "4/5" — a Midea e a Teka — ficam de fora: ao
+ * lado de ecrãs de telemóvel liam-se como um erro, e foi a Midea que ela
+ * apontou. Não é uma lista escrita à mão: é o campo `ratio` a decidir, por
+ * isso qualquer peça nova entra ou sai sozinha conforme o formato.
+ */
+const pecasMotion: Cartao[] = reels
+  .filter((r) => r.ratio !== "4/5")
+  .map((r) => ({ src: r.poster, alt: `${r.title} — ${r.category}` }));
 
 /* As capturas e o nome do site a que pertencem, para a alternativa textual. */
 const SITES: [string, string][] = [
@@ -108,16 +134,34 @@ const SITES: [string, string][] = [
   ["sofia-sales", "Sofia Sales Clinic — estética"],
   ["benessere", "Benessere — clínica de estética"],
   ["ondelle", "Ondelle Aesthetics — med spa"],
-  ["ondelle-pt", "Ondelle Estética — versão portuguesa"],
+  /*
+   * 🔴 O «ondelle-pt» saiu. Era o mesmo desenho do Ondelle (a versão
+   * portuguesa do mesmo site), e para não ficarem dois cartões iguais
+   * apanhei-o rolado — foi parar a uma zona BRANCA da página, que no meio
+   * dos ecrãs escuros se lia como um cartão em branco. Ela apanhou-o. Um
+   * site que só se distingue por rolar não dá cartão.
+   */
 ];
 
 const sitesTelemovel: Cartao[] = SITES.map(([f, nome]) => ({
   src: `/media/pulse/sites/${f}.webp`,
   alt: `${nome}, visto no telemóvel`,
-  prop: "390 / 844",
 }));
 
-const ecrans: Cartao[] = [...ecransPulse, ...pecasMotion, ...sitesTelemovel];
+/*
+ * Quantas vezes o conjunto dá a volta.
+ *
+ * As peças em pé que ela tem dão 21 cartões — e 21 não enchem a roda com o
+ * tamanho que ela pediu. Ela mandou gerar volume e repetir se preciso, por
+ * isso o conjunto entra DUAS vezes: 42 cartões, e o leque fecha-se numa
+ * banda cheia em vez de uma fila de contas.
+ *
+ * Repetir não inventa trabalho nenhum: são as mesmas peças, outra vez.
+ */
+const VOLTAS = 2;
+
+const conjunto: Cartao[] = [...ecransPulse, ...pecasMotion, ...sitesTelemovel];
+const ecrans: Cartao[] = Array.from({ length: VOLTAS }, () => conjunto).flat();
 
 type Fase = "espera" | "dar" | "abrir" | "anel" | "entrar" | "correr";
 
@@ -152,7 +196,8 @@ export default function PulseArco() {
    *   1. SÓ UMA VEZ por carregamento. A animação repete-se em ciclo e
    *      rearma-se ao voltar à secção — travar de cada vez prendia a pessoa
    *      sempre que passasse por aqui.
-   *   2. Solta-se sozinho ao fim dos movimentos (CORRER).
+   *   2. Solta-se sozinho a meio dos movimentos — uma travada LEVE, não até
+   *      ao fim. Ver `TRAVAO`.
    *   3. Solta-se à PRIMEIRA tecla, roda do rato ou gesto — quem quer passar,
    *      passa. O travão existe para quem não reagiu, não para prender.
    *   4. Rede de segurança: solta-se de qualquer maneira meio segundo depois,
@@ -208,10 +253,10 @@ export default function PulseArco() {
    * Arranca quando a secção entra no ecrã e REFAZ-SE sempre que ela sai e
    * volta — pedido dela.
    *
-   * Os dois limiares não são o mesmo de propósito: entra aos 20% de secção
-   * visível, mas só se rearma quando ela sai por COMPLETO (rácio 0). Com um
-   * limiar só, uma rolagem a tremer junto à fronteira reiniciava a animação
-   * vezes sem conta.
+   * Os dois limiares não são o mesmo de propósito: entra com a secção já
+   * bem à vista (`ENTRADA`), mas só se rearma quando ela sai por COMPLETO
+   * (rácio 0). Com um limiar só, uma rolagem a tremer junto à fronteira
+   * reiniciava a animação vezes sem conta.
    */
   useEffect(() => {
     const el = ref.current;
@@ -226,10 +271,10 @@ export default function PulseArco() {
     let dentro = false;
     const obs = new IntersectionObserver(
       ([e]) => {
-        if (!dentro && e.intersectionRatio >= 0.2) {
+        if (!dentro && e.intersectionRatio >= ENTRADA) {
           dentro = true;
           setVolta((v) => v + 1);
-          travar(CORRER);
+          travar(TRAVAO);
         } else if (dentro && e.intersectionRatio === 0) {
           dentro = false;
           /* Os relógios da volta anterior têm de morrer aqui: fora do ecrã
@@ -244,7 +289,7 @@ export default function PulseArco() {
           setLegenda(false);
         }
       },
-      { threshold: [0, 0.2] },
+      { threshold: [0, ENTRADA] },
     );
     obs.observe(el);
     return () => {
@@ -302,7 +347,7 @@ export default function PulseArco() {
         <div className={styles.roda}>
           {ecrans.map((e, i) => (
             <figure
-              key={e.src}
+              key={`${e.src}-${i}`}
               className={styles.carta}
               style={
                 {
@@ -313,12 +358,18 @@ export default function PulseArco() {
                   "--abrir": `${Math.abs(i - meio) * 55}ms`,
                   /* No carrossel os cartões repartem-se pela volta inteira. */
                   "--anel": `${(i * 360) / ecrans.length}deg`,
-                  /* Cada cartão com a SUA forma — o leque mistura formatos. */
-                  "--prop": e.prop,
                 } as React.CSSProperties
               }
             >
-              <img src={e.src} alt={e.alt} loading="lazy" decoding="async" />
+              {/* Só a primeira volta é que se anuncia: na segunda as peças
+                  repetem-se, e um leitor dizia 42 nomes para 21 peças. */}
+              <img
+                src={e.src}
+                alt={i < conjunto.length ? e.alt : ""}
+                aria-hidden={i < conjunto.length ? undefined : true}
+                loading="lazy"
+                decoding="async"
+              />
             </figure>
           ))}
         </div>
@@ -329,11 +380,20 @@ export default function PulseArco() {
         <span>%</span>
       </p>
 
+      {/*
+        🔴 Dizia «PULSE · UX/UI Design · App de ginásio» e mandava para o
+        trabalho. Já não serve: a roda deixou de ser só o PULSE — leva os
+        ecrãs da app, os cartazes das peças de motion e os sites dela em
+        telemóvel. O texto passou a falar de PROJETOS e a seta vai para o
+        MOTION, que é o que ela pediu.
+      */}
       <div className={`container ${styles.legenda}`} data-entrou={legenda || undefined}>
-        <h2 id="pulse-arco-titulo">{pulse.title}</h2>
-        <p className={styles.categoria}>{pulse.category}</p>
-        <a className={styles.link} href="#trabalho">
-          Ver o projeto
+        <h2 id="pulse-arco-titulo">Projetos</h2>
+        <p className={styles.categoria}>
+          Apps · Sites · Motion Graphics
+        </p>
+        <a className={styles.link} href="#motion">
+          Ver as peças de motion
           <span aria-hidden="true">→</span>
         </a>
       </div>

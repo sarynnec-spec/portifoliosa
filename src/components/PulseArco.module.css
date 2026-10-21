@@ -93,11 +93,22 @@
   transform-style: preserve-3d;
   display: grid;
   place-items: center;
-  /* A MESMA lista de funções em todas as fases — translateY, rotateX,
-     rotateY, translateZ. Se as listas não baterem certo, o browser não
-     interpola e o anel salta para o sítio em vez de lá ir. */
+  /*
+   * A MESMA lista de funções em todas as fases — translateY, rotateX,
+   * translateZ, rotateY, scale. Se as listas não baterem certo, o browser
+   * não interpola e o anel salta para o sítio em vez de lá ir.
+   *
+   * 🔴 O translateZ vem ANTES do rotateY, e a ordem é o que conta.
+   *
+   * Estava ao contrário e o carrossel ANDAVA PARA O LADO em vez de girar
+   * sobre si: `rotateY(θ) translateZ(T)` roda primeiro o referencial e só
+   * depois avança T, por isso o centro do anel descrevia um círculo de raio
+   * T. Medido: desvio de até −660px num palco de 1440. Assim — avançar
+   * primeiro, rodar depois — o eixo fica onde a câmara está e o anel gira à
+   * volta de quem vê.
+   */
   /* Descido a pedido dela: 13% → 14%, com a caixa já a dar para isso. */
-  transform: translateY(14%) rotateX(10deg) rotateY(0deg) translateZ(0px)
+  transform: translateY(14%) rotateX(10deg) translateZ(0px) rotateY(0deg)
     scale(1);
   transition: transform 1s var(--ease-out);
 }
@@ -113,7 +124,7 @@
  * «C» e não como um círculo fechado.
  */
 .seccao[data-fase="anel"] .roda {
-  transform: translateY(6%) rotateX(22deg) rotateY(0deg) translateZ(0px)
+  transform: translateY(6%) rotateX(22deg) translateZ(0px) rotateY(0deg)
     scale(0.62);
   transition: transform 1.2s var(--ease-inout);
 }
@@ -131,8 +142,8 @@
  */
 .seccao[data-fase="entrar"] .roda,
 .seccao[data-fase="correr"] .roda {
-  transform: translateY(0) rotateX(4deg) rotateY(0deg)
-    translateZ(calc(var(--persp) - var(--rc) * 1.32)) scale(1);
+  transform: translateY(0) rotateX(4deg)
+    translateZ(calc(var(--persp) - var(--rc) * 1.32)) rotateY(0deg) scale(1);
   transition: transform 1.3s var(--ease-inout);
 }
 
@@ -144,12 +155,13 @@
 
 @keyframes correr {
   from {
-    transform: translateY(0) rotateX(4deg) rotateY(0deg)
-      translateZ(calc(var(--persp) - var(--rc) * 1.32)) scale(1);
+    transform: translateY(0) rotateX(4deg)
+      translateZ(calc(var(--persp) - var(--rc) * 1.32)) rotateY(0deg) scale(1);
   }
   to {
-    transform: translateY(0) rotateX(4deg) rotateY(-360deg)
-      translateZ(calc(var(--persp) - var(--rc) * 1.32)) scale(1);
+    transform: translateY(0) rotateX(4deg)
+      translateZ(calc(var(--persp) - var(--rc) * 1.32)) rotateY(-360deg)
+      scale(1);
   }
 }
 
@@ -163,10 +175,11 @@
    * 13,5° e sobra folga de 2,1° — mais espaçamento do que antes, que foi o
    * que ela pediu.
    */
-  width: calc(var(--r) * 0.30);
-  /* A forma vem de cada cartão: ecrã de app, cartaz de motion ou site em
-     telemóvel têm proporções diferentes. */
-  aspect-ratio: var(--prop, 945 / 2048);
+  /* Maiores, a pedido dela — para encherem mais o palco. */
+  width: calc(var(--r) * 0.36);
+  /* Forma ÚNICA de telemóvel para todos: é o que os alinha. Os cartazes
+     9/16 levam um recorte pequeno nas pontas, que o `cover` trata. */
+  aspect-ratio: 945 / 2048;
   border-radius: calc(var(--r) * 0.03);
   overflow: hidden;
   background: #0d0d12;
@@ -290,7 +303,13 @@
    * disparava para 1735px; com 1,2 para 723. A 1,5 dão 8 cartas visíveis,
    * vão de 1280px (enche o ecrã de 1440) e a maior nos 290px.
    */
-  --sc: 0.72;
+  /*
+   * 0,75 e não mais: medido a 0,95 cada cartão ficava com 418px de altura e
+   * a parede abria 2710px num ecrã de 1440 — enchia tudo e o céu desaparecia
+   * por trás. A 0,75 ficam 332px e as nuvens voltam a ver-se, que é onde a
+   * peça se passa.
+   */
+  --sc: 0.75;
   transition:
     transform 1.3s var(--ease-inout),
     opacity 0.25s linear;
